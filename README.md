@@ -1,137 +1,125 @@
-# 🟡 Unstop Clone - Django Based Web App
+🟡 UNSTOP CLONE - DJANGO BASED WEB APP
 
-This project is a functional clone of the Unstop platform built using **Django** and **MySQL**.  
+This project is a functional clone of the Unstop platform built using Django and MySQL.
 It includes multi-step registration, user dashboards, admin panel, event listings, and more.
 
----
-
-## ✅ Features
+--------------------------------------------------
+✅ FEATURES:
+--------------------------------------------------
 
 - Candidate & Recruiter Registration (multi-step forms)
-- Clean and responsive frontend using Bootstrap
-- Admin panel with login authentication
-- Profile management for users
+- Responsive frontend using Bootstrap
+- Admin panel with authentication
+- Profile management
 - MySQL database integration
 - Static and media file handling
 
----
+--------------------------------------------------
+🚀 HOW TO SET UP THIS PROJECT LOCALLY:
+--------------------------------------------------
 
-## 🚀 How to Setup This Project Locally
-
-Follow these steps to run the project on your system:
-
-1. **Clone the Repository**
-   ```bash
+1. Clone the repository
    git clone https://github.com/Shubham-Goswami-Github/unstop-clone.git
    cd unstop-clone
-Create and Activate Virtual Environment
 
-For Windows:
+2. Create and activate virtual environment
 
-bash
-Copy
-Edit
-python -m venv venv
-venv\Scripts\activate
-For Mac/Linux:
+   For Windows:
+     python -m venv venv
+     venv\Scripts\activate
 
-bash
-Copy
-Edit
-python3 -m venv venv
-source venv/bin/activate
-Install Project Dependencies
+   For Mac/Linux:
+     python3 -m venv venv
+     source venv/bin/activate
 
-bash
-Copy
-Edit
-pip install -r requirements.txt
-If requirements.txt is missing:
+3. Install dependencies
+   pip install -r requirements.txt
 
-bash
-Copy
-Edit
-pip install django mysqlclient
-Import MySQL Database
+   (If requirements.txt is not available, run:
+    pip install django mysqlclient)
 
-Start your MySQL server
+4. Import MySQL database
 
-Create a new database (example name: unstopdb)
+   - Start your MySQL server
+   - Create a new database (e.g. unstopdb)
+   - Import the SQL file from:
+     database/unstopdb.sql
+   (You can use phpMyAdmin, MySQL Workbench, or MySQL CLI)
 
-Import the SQL dump file located at:
+5. Update database settings in unstop_clone/settings.py
 
-pgsql
-Copy
-Edit
-database/unstopdb.sql
-Use MySQL Workbench, phpMyAdmin, or MySQL CLI to import.
+   DATABASES = {
+       'default': {
+           'ENGINE': 'django.db.backends.mysql',
+           'NAME': 'unstopdb',
+           'USER': 'your_mysql_username',
+           'PASSWORD': 'your_mysql_password',
+           'HOST': 'localhost',
+           'PORT': '3306',
+       }
+   }
 
-Update MySQL Settings in settings.py
+6. Run migrations
+   python manage.py makemigrations
+   python manage.py migrate
 
-Open unstop_clone/settings.py and configure your DB settings:
+7. Create superuser
+   python manage.py createsuperuser
 
-python
-Copy
-Edit
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'unstopdb',
-        'USER': 'your_mysql_username',
-        'PASSWORD': 'your_mysql_password',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
-}
-Run Migrations
+8. Run the server
+   python manage.py runserver
 
-bash
-Copy
-Edit
-python manage.py makemigrations
-python manage.py migrate
-Create Superuser (Admin Login)
+   Open in browser:
+   http://127.0.0.1:8000/
 
-bash
-Copy
-Edit
-python manage.py createsuperuser
-Run the Server
+--------------------------------------------------
+🔑 ADMIN PANEL:
+--------------------------------------------------
 
-bash
-Copy
-Edit
-python manage.py runserver
-Now open browser and visit:
-http://127.0.0.1:8000/
-
-🔑 Admin Panel
 URL: http://127.0.0.1:8000/admin/
+Login using your superuser credentials
 
-Login using the superuser credentials you created earlier
+--------------------------------------------------
+📁 PROJECT STRUCTURE:
+--------------------------------------------------
 
-📁 Folder Structure
-php
-Copy
-Edit
 unstop-clone/
 │
 ├── database/
-│   └── unstopdb.sql             ← MySQL dump file
+│   └── unstopdb.sql
 │
-├── unstop_clone/                ← Django project settings
+├── unstop_clone/
 │   ├── settings.py
 │   ├── urls.py
 │   └── ...
 │
-├── mainapp/                     ← Core Django app
+├── mainapp/
 │   ├── models.py
 │   ├── views.py
 │   ├── urls.py
 │   └── ...
 │
-├── static/                      ← CSS, JS, assets
-├── media/                       ← Uploaded media files
-├── templates/                   ← HTML Templates
+├── static/
+├── media/
+├── templates/
 ├── manage.py
-└── README.md
+└── readme.txt
+
+--------------------------------------------------
+👨‍💻 AUTHOR:
+--------------------------------------------------
+
+Shubham Goswami  
+GitHub: https://github.com/Shubham-Goswami-Github
+
+--------------------------------------------------
+📬 CONTRIBUTIONS:
+--------------------------------------------------
+
+Pull requests are welcome. For major changes, open an issue first.
+
+--------------------------------------------------
+📝 LICENSE:
+--------------------------------------------------
+
+This project is for educational and learning purposes only.
