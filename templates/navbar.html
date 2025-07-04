@@ -1,0 +1,88 @@
+{% load static %}
+
+<style>
+  /* static/css/style.css */
+  .w-20 {
+    width: 20% !important;
+  }
+
+  .btn-for-business {
+    background-color: rgba(255, 255, 0, 0.3);
+    border: 1px solid orange;
+    min-width: 160px;
+    height: 38px; /* Same height as Login button */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+
+<!-- templates/navbar.html -->
+<nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm px-3 py-2">
+  <div class="container-fluid">
+    <!-- Logo -->
+    <a class="navbar-brand me-3" href="#">
+  <img src="{% static 'images/unstop-logo.svg' %}" alt="Unstop" height="32">
+</a>
+
+
+    <!-- Search Bar (just beside logo, slightly left aligned) -->
+    <form class="d-flex me-auto w-20 position-relative">
+      <span class="position-absolute top-50 translate-middle-y ms-3 text-muted">
+        <i class="bi bi-search"></i>
+      </span>
+      <input class="form-control ps-5 rounded-pill" type="search" placeholder="Search events, opportunities..." aria-label="Search">
+    </form>
+
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#unstopNavbar" aria-controls="unstopNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Content -->
+    <div class="collapse navbar-collapse" id="unstopNavbar">
+
+      <!-- Nav Links -->
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="#">Internships</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Jobs</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Competitions</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Mentorships</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Practice</a></li>
+
+        <!-- More Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            More
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Courses</a></li>
+            <li><a class="dropdown-item" href="#">Scholarships</a></li>
+            <li><a class="dropdown-item" href="#">Cultural Events</a></li>
+            <li><a class="dropdown-item" href="#">Workshops</a></li>
+            <li><a class="dropdown-item" href="#">Conferences</a></li>
+            <li><a class="dropdown-item" href="#">Blogs</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- Right Side Buttons -->
+      <div class="d-flex align-items-center gap-2 ms-3">
+        <!-- Login Button -->
+        <a href="/login/" class="btn btn-primary rounded-pill px-4">Login</a>
+
+
+        <!-- Host Button -->
+        <a href="#" class="btn btn-outline-dark rounded-pill px-4 d-flex align-items-center">
+          <i class="bi bi-plus-lg me-2"></i> Host
+        </a>
+
+        <!-- For Business Button -->
+        <a href="#" class="btn btn-for-business rounded-pill px-3">
+          <i class="bi bi-briefcase me-2 fs-5"></i> For Business
+        </a>
+      </div>
+
+    </div>
+  </div>
+</nav>

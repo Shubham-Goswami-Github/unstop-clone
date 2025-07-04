@@ -1,0 +1,128 @@
+{% load static %}
+<style>
+  .tab-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 cards in a row */
+    gap: 30px;
+    padding: 30px 20px;
+    justify-content: center;
+    max-width: 1000px;
+    margin: auto;
+  }
+
+  .tab-card {
+    height: 160px;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s;
+    cursor: pointer;
+  }
+
+  .tab-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .tab-text {
+    text-align: left;
+  }
+
+  .tab-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #1a73e8;
+    margin-bottom: 5px;
+  }
+
+  .tab-desc {
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.2rem;
+  }
+
+  .tab-desc span {
+    font-weight: 500;
+    color: #555;
+  }
+
+  .tab-img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+  }
+
+  .tab-more-icon {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+    color: #1a73e8;
+  }
+
+  .tab-more-icon img {
+    height: 24px;
+    width: 24px;
+  }
+
+  @media (max-width: 768px) {
+    .tab-grid {
+      grid-template-columns: 1fr; /* On mobile, show 1 card per row */
+    }
+  }
+</style>
+
+<!-- 2 × 3 Tab Grid Layout -->
+<div class="tab-grid">
+  <div class="tab-card" style="background-color: #f0f8ff;">
+    <div class="tab-text">
+      <div class="tab-title">Internships</div>
+      <p class="tab-desc">Gain <br><span>Practical<br>Experience</span></p>
+    </div>
+    <img src="{% static 'images/U1.webp' %}" alt="Internships" class="tab-img">
+  </div>
+
+  <div class="tab-card" style="background-color: #fff8e7;">
+    <div class="tab-text">
+      <div class="tab-title">Jobs</div>
+      <p class="tab-desc">Explore <br><span>Diverse Careers</span></p>
+    </div>
+    <img src="{% static 'images/U2.webp' %}" alt="Jobs" class="tab-img">
+  </div>
+
+  <div class="tab-card" style="background-color: #e6f7f4;">
+    <div class="tab-text">
+      <div class="tab-title">Competitions</div>
+      <p class="tab-desc">Battle <br><span>For Excellence</span></p>
+    </div>
+    <img src="{% static 'images/U3.webp' %}" alt="Competitions" class="tab-img">
+  </div>
+
+  <div class="tab-card" style="background-color: #f5eefc;">
+    <div class="tab-text">
+      <div class="tab-title">Mentorships</div>
+      <p class="tab-desc">Guidance <br><span>From Top Mentors</span></p>
+    </div>
+    <img src="{% static 'images/U4.webp' %}" alt="Mentorships" class="tab-img">
+  </div>
+
+  <div class="tab-card" style="background-color: #e8f5e9;">
+    <div class="tab-text">
+      <div class="tab-title">Practice</div>
+      <p class="tab-desc">Refine <br><span>Skills Daily</span></p>
+    </div>
+    <img src="{% static 'images/U5.webp' %}" alt="Practice" class="tab-img">
+  </div>
+
+  <div class="tab-card" style="background-color: #fff3e0;">
+    <div class="tab-text tab-more-icon">
+      <img src="https://cdn.unstop.com/assets/icons/menu_2.svg" alt="More">
+      More
+    </div>
+    <img src="{% static 'images/U1.webp' %}" alt="More" class="tab-img">
+  </div>
+</div>

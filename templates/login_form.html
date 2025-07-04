@@ -1,0 +1,247 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Page</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body, html {
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: #f1f1f1;
+    }
+
+    .outer-wrapper {
+      width: 90%;
+      max-width: 1000px;
+      margin: 50px auto;
+      background: #fff;
+      border-radius: 40px 12px 40px 100px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.1);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .login-wrapper {
+      display: flex;
+      height: 600px;
+      position: relative;
+    }
+
+    .login-left {
+      background: #ffe100;
+      width: 50%;
+      border-radius: 0 100px 0 100px;
+      overflow: hidden;
+      margin: 20px;
+      position: relative;
+    }
+
+    .login-left img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      position: absolute;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .login-left img.active {
+      opacity: 1;
+    }
+
+    .login-right {
+      width: 50%;
+      padding: 40px;
+      padding-right: 60px;
+      position: relative;
+    }
+
+    .login-right h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .login-option {
+      background: #f3f3f3;
+      padding: 12px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      cursor: pointer;
+    }
+
+    .login-option.google i {
+      color: #DB4437;
+    }
+
+    .login-option.linkedin i {
+      color: #0077b5;
+    }
+
+    .divider {
+      text-align: center;
+      margin: 25px 0 20px;
+      position: relative;
+      color: #666;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .divider::before, .divider::after {
+      content: "";
+      height: 1px;
+      width: 40%;
+      background: #ccc;
+      position: absolute;
+      top: 50%;
+    }
+
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+
+    .divider span {
+      background: #fff;
+      padding: 0 12px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .login-right small {
+      font-size: 12px;
+      display: block;
+      margin: 5px 0 10px;
+      color: #555;
+    }
+
+    .forgot-password {
+      font-size: 13px;
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      color: #1a73e8;
+      gap: 5px;
+      margin-bottom: 20px;
+    }
+
+    .login-btn {
+      width: 100%;
+      background: transparent;
+      color: #1a73e8;
+      padding: 12px;
+      border: 2px solid #1a73e8;
+      border-radius: 20px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .login-btn:hover {
+      background: #1a73e8;
+      color: #fff;
+    }
+
+    .signup-text {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .signup-text a {
+      color: #1a73e8;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    @media(max-width: 768px) {
+      .login-wrapper {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .login-left, .login-right {
+        width: 100%;
+        height: 300px;
+      }
+
+      .login-right {
+        height: auto;
+        padding: 30px;
+      }
+
+      .outer-wrapper {
+        border-radius: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="outer-wrapper">
+  <div class="login-wrapper">
+    <!-- Left Section with Slideshow -->
+    <div class="login-left">
+      <img src="{% static 'images/F1.webp' %}" class="active" />
+      <img src="{% static 'images/F2.webp' %}" />
+      <img src="{% static 'images/F3.webp' %}" />
+      <img src="{% static 'images/F4.webp' %}" />
+    </div>
+
+    <!-- Right Form Section -->
+    <div class="login-right">
+      <h2>Login</h2>
+
+      <div class="login-option google"><i class="fa-brands fa-google"></i> Continue as Shubham</div>
+      <div class="login-option linkedin"><i class="fa-brands fa-linkedin"></i> Login with LinkedIn</div>
+
+      <div class="divider"><span>Login via Email</span></div>
+
+      <div class="form-group">
+        <input type="email" placeholder="Enter your email">
+        <small>We'll send an OTP for secure login</small>
+      </div>
+
+      <div class="form-group">
+        <input type="password" placeholder="Enter your password">
+        <div class="forgot-password"><i class="fa-solid fa-lock"></i> Forgot password?</div>
+      </div>
+
+      <button class="login-btn">Log In</button>
+
+      <div class="signup-text">
+        Don’t have an account? <a href="/register/">Sign up</a>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const images = document.querySelectorAll('.login-left img');
+  let current = 0;
+
+  setInterval(() => {
+    images[current].classList.remove('active');
+    current = (current + 1) % images.length;
+    images[current].classList.add('active');
+  }, 4000);
+</script>
+
+</body>
+</html>

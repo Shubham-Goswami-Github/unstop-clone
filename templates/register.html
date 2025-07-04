@@ -1,0 +1,966 @@
+{% load static %}
+{% csrf_token %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register Page</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body, html {
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: #f1f1f1;
+    }
+
+    .outer-wrapper {
+      width: 90%;
+      max-width: 1000px;
+      margin: 50px auto;
+      background: #fff;
+      border-radius: 40px 12px 40px 100px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.1);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .login-wrapper {
+      display: flex;
+      height: 600px;
+    }
+
+    .login-left {
+      background: #ffe100;
+      width: 50%;
+      border-radius: 0 100px 0 100px;
+      overflow: hidden;
+      margin: 20px;
+      position: relative;
+    }
+
+    .login-left img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      position: absolute;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .login-left img.active {
+      opacity: 1;
+    }
+
+    .register-right {
+      width: 50%;
+      padding: 30px 50px;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .register-right h2 {
+      font-size: 26px;
+      margin-bottom: 5px;
+    }
+
+    .register-right p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .option-card {
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-height: 120px;
+      border: 2px solid transparent;
+    }
+
+    .option-card:hover {
+      transform: scale(1.02);
+      border-color: #999;
+    }
+
+    .option-card.selected {
+      border-color: #1a73e8;
+    }
+
+    .option-card i {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .candidate-card {
+      background: rgba(255, 152, 0, 0.1);
+    }
+
+    .recruiter-card {
+      background: rgba(33, 150, 243, 0.1);
+    }
+
+    .option-card i.fa-user {
+      color: #ff9800;
+    }
+
+    .option-card i.fa-magnifying-glass {
+      color: #2196f3;
+    }
+
+    .option-card strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .option-card small {
+      font-size: 13px;
+      color: #444;
+    }
+
+    .bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 30px;
+    }
+
+    .login-link {
+      font-size: 14px;
+    }
+
+    .login-link a {
+      color: #1a73e8;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .next-btn {
+      background: transparent;
+      border: 2px solid #1a73e8;
+      color: #1a73e8;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .next-btn:hover {
+      background: #1a73e8;
+      color: white;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .gender-options {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .gender-box {
+      flex: 1;
+      border: 1px dotted #aaa;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .gender-box:hover {
+      background-color: #f0f0f0;
+    }
+
+    .gender-box i {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    .checkbox-group {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .password-group {
+      position: relative;
+    }
+
+    .password-group input {
+      padding-right: 40px;
+    }
+
+    .password-group i {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #888;
+    }
+
+    @media(max-width: 768px) {
+      .login-wrapper {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .login-left, .register-right {
+        width: 100%;
+        height: 300px;
+      }
+
+      .outer-wrapper {
+        border-radius: 20px;
+      }
+
+      .register-right {
+        padding: 20px;
+        height: auto;
+      }
+
+      .bottom-bar {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+
+.gender-box {
+  border: 2px solid transparent;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.gender-box.selected {
+  border-color: #1976d2;
+  background-color: rgba(25, 118, 210, 0.1);
+}
+
+.circle-option {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px dotted #aaa;
+  margin: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.circle-option:hover {
+  background-color: #f0f0f0;
+}
+
+.circle-option.selected {
+  background-color: #1a73e8;
+  color: white;
+  border-color: #1a73e8;
+  font-weight: bold;
+}
+.circle-option-college {
+  display: inline-block;
+  padding: 8px 16px;
+  margin: 5px;
+  border-radius: 30px;
+  border: 1px dotted #aaa;
+  cursor: pointer;
+  font-size: 13px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.circle-option-college:hover {
+  background-color: #f5f5f5;
+}
+
+.circle-option-college.selected {
+  border-color: #1a73e8;
+  background-color: #e8f0fe;
+  color: #1a73e8;
+  font-weight: bold;
+}
+
+.user-type-card {
+  flex: 1 0 48%;
+  min-height: 120px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  text-align: center;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.user-type-card i {
+  font-size: 30px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.user-type-card:hover {
+  transform: scale(1.02);
+  border-color: #1a73e8;
+}
+
+.user-type-card.selected {
+  border-color: #1a73e8;
+  background-color: #e8f0fe !important;
+  font-weight: bold;
+  color: #1a73e8;
+}
+
+.career-purpose-card {
+  flex: 1 0 48%;
+  min-height: 120px;
+  border: 1px dotted #aaa;
+  border-radius: 12px;
+  text-align: center;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  background-color: rgba(0, 0, 0, 0.02); /* fallback default */
+}
+
+.career-purpose-card i {
+  font-size: 28px;
+  margin-bottom: 10px;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.career-purpose-card:hover i {
+  transform: scale(1.1);
+}
+
+.career-purpose-card:hover {
+  border-color: #1a73e8;
+}
+
+.career-purpose-card.selected {
+  border-color: #1a73e8;
+  background-color: #e8f0fe !important;
+  font-weight: bold;
+  color: #1a73e8;
+}
+
+
+  </style>
+</head>
+<body>
+
+<div class="outer-wrapper">
+  <div class="login-wrapper">
+    <!-- Left Section -->
+    <div class="login-left">
+      <img src="{% static 'images/F1.webp' %}" class="active" />
+      <img src="{% static 'images/F2.webp' %}" />
+      <img src="{% static 'images/F3.webp' %}" />
+      <img src="{% static 'images/F4.webp' %}" />
+    </div>
+
+    <!-- Right Section -->
+    <div class="register-right" id="registerSection">
+      <div id="choiceSection">
+        <h2>Create New Account</h2>
+        <p>Join Unstop and find your dream job or recruit talented candidates</p>
+
+        <div class="option-card candidate-card" id="candidateCard" onclick="selectCard('candidate')">
+          <i class="fa-solid fa-user"></i>
+          <strong>Sign Up as Candidate</strong>
+          <small>Compete, learn and apply for jobs and internships</small>
+        </div>
+
+        <div class="option-card recruiter-card" id="recruiterCard" onclick="selectCard('recruiter')">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <strong>Sign Up as Recruiter</strong>
+          <small>Host Competitions, Hire Talent, and offer career opportunities</small>
+        </div>
+
+        <div class="bottom-bar">
+          <div class="login-link">Already have an account? <a href="/login/">Login</a></div>
+          <button class="next-btn" onclick="showCandidateForm()">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  let candidateData = {};  // ✅ Global object to hold form data across steps
+
+
+  const images = document.querySelectorAll('.login-left img');
+  let current = 0;
+  setInterval(() => {
+    images[current].classList.remove('active');
+    current = (current + 1) % images.length;
+    images[current].classList.add('active');
+  }, 4000);
+
+  function selectCard(type) {
+    document.getElementById('candidateCard').classList.remove('selected');
+    document.getElementById('recruiterCard').classList.remove('selected');
+    if (type === 'candidate') {
+      document.getElementById('candidateCard').classList.add('selected');
+    } else {
+      document.getElementById('recruiterCard').classList.add('selected');
+    }
+  }
+
+  function togglePassword(icon, fieldId) {
+    const input = document.getElementById(fieldId);
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.remove("fa-eye");
+      icon.classList.add("fa-eye-slash");
+    } else {
+      input.type = "password";
+      icon.classList.add("fa-eye");
+      icon.classList.remove("fa-eye-slash");
+    }
+  }
+function selectGender(elem, genderValue) {
+  const colorMap = {
+    Male: '#1e88e5',
+    Female: '#e91e63',
+    Other: '#9e9e9e'
+  };
+  document.querySelectorAll('.gender-box').forEach(el => {
+    el.classList.remove('selected');
+    el.style.borderColor = 'transparent';
+    el.style.backgroundColor = 'transparent';
+  });
+  elem.classList.add('selected');
+  elem.style.borderColor = colorMap[genderValue];
+  elem.style.backgroundColor = colorMap[genderValue] + '20'; // add transparency
+  document.getElementById('selectedGender').value = genderValue;
+}
+function showCandidateForm() {
+  const section = document.getElementById('registerSection');
+  section.innerHTML = `
+    <form id="candidateForm">
+      <h2><i class="fa-solid fa-arrow-left" onclick="window.location.reload()" style="cursor:pointer; margin-right:10px;"></i> Sign Up as Candidate</h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <input type="text" id="firstName" name="first_name" placeholder="First Name *" required value="${candidateData.first_name || ''}">
+        </div>
+        <div class="form-group">
+          <input type="text" id="lastName" name="last_name" placeholder="Last Name *" required value="${candidateData.last_name || ''}">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <input type="email" id="email" name="email" placeholder="Email *" required value="${candidateData.email || ''}">
+      </div>
+      <div class="form-group">
+        <input type="tel" id="phone" name="phone" placeholder="Phone Number *" required value="${candidateData.phone || ''}">
+      </div>
+
+      <div class="gender-options" id="genderOptions">
+        <div class="gender-box" onclick="selectGender(this, 'Male')">
+          <i class="fa-solid fa-mars" style="color:#1e88e5; font-size: 20px;"></i><div>Male</div>
+        </div>
+        <div class="gender-box" onclick="selectGender(this, 'Female')">
+          <i class="fa-solid fa-venus" style="color:#e91e63; font-size: 20px;"></i><div>Female</div>
+        </div>
+        <div class="gender-box" onclick="selectGender(this, 'Other')">
+          <i class="fa-solid fa-genderless" style="color:#9e9e9e; font-size: 20px;"></i><div>Other</div>
+        </div>
+      </div>
+      <input type="hidden" id="selectedGender" name="gender" required value="${candidateData.gender || ''}">
+
+      <div class="form-row">
+        <div class="form-group password-group">
+          <input type="password" id="passwordField" name="password" placeholder="Password *" required value="${candidateData.password || ''}">
+          <i class="fa-solid fa-eye" onclick="togglePassword(this, 'passwordField')"></i>
+        </div>
+        <div class="form-group password-group">
+          <input type="password" id="confirmPassword" name="confirm_password" placeholder="Confirm Password *" required>
+          <i class="fa-solid fa-eye" onclick="togglePassword(this, 'confirmPassword')"></i>
+        </div>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="info" name="agreed_info" ${candidateData.agreed_info ? 'checked' : ''} required>
+        <label for="info">All information is correct</label>
+      </div>
+      <div class="checkbox-group">
+        <input type="checkbox" id="loop" name="stay_in_loop" ${candidateData.stay_in_loop ? 'checked' : ''}>
+        <label for="loop">Stay in the LOOP</label>
+      </div>
+
+      <div class="bottom-bar">
+        <div class="login-link">Already have an account? <a href="/login/">Login</a></div>
+        <button type="submit" class="next-btn">Next</button>
+      </div>
+    </form>
+  `;
+
+  // Restore gender selection UI
+  setTimeout(() => {
+    if (candidateData.gender) {
+      const genderBoxes = document.querySelectorAll('.gender-box');
+      genderBoxes.forEach(box => {
+        if (box.textContent.trim() === candidateData.gender) {
+          selectGender(box, candidateData.gender);
+        }
+      });
+    }
+  }, 100);
+
+  // Submit → Save to candidateData → Go to next
+document.getElementById('candidateForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  candidateData.first_name = document.getElementById('firstName')?.value || '';
+  candidateData.last_name = document.getElementById('lastName')?.value || '';
+  candidateData.email = document.getElementById('email')?.value || '';
+  candidateData.phone = document.getElementById('phone')?.value || '';
+  candidateData.gender = document.getElementById('selectedGender')?.value || '';
+  candidateData.password = document.getElementById('passwordField')?.value || '';
+  candidateData.agreed_info = document.getElementById('info')?.checked || false;
+  candidateData.stay_in_loop = document.getElementById('loop')?.checked || false;
+
+  if (!candidateData.gender) {
+    alert('Please select your gender!');
+    return;
+  }
+
+  showUserTypeStep();
+});
+
+}
+
+
+
+function showUserTypeStep() {
+  const section = document.getElementById('registerSection');
+  section.innerHTML = `
+    <h2><i class="fa-solid fa-arrow-left" onclick="showCandidateForm()" style="cursor:pointer; margin-right:10px;"></i> Ready to Be Unstoppable</h2>
+    <p>Let's add some basic information</p>
+
+    <label style="font-weight: bold;">User Type *</label>
+    <div class="form-row" style="flex-wrap: wrap; gap: 14px;">
+      <div class="user-type-card" onclick="selectUserType(this, 'school')" style="background-color: #fff8e1;">
+        <i class="fa-solid fa-school" style="color: #ff9800;"></i>
+        <div>School</div>
+      </div>
+      <div class="user-type-card" onclick="selectUserType(this, 'college')" style="background-color: #e8eaf6;">
+        <i class="fa-solid fa-graduation-cap" style="color: #3f51b5;"></i>
+        <div>College Student</div>
+      </div>
+      <div class="user-type-card" onclick="selectUserType(this, 'fresher')" style="background-color: #e0f2f1;">
+        <i class="fa-solid fa-user-clock" style="color: #009688;"></i>
+        <div>Fresher</div>
+      </div>
+      <div class="user-type-card" onclick="selectUserType(this, 'professional')" style="background-color: #efebe9;">
+        <i class="fa-solid fa-briefcase" style="color: #795548;"></i>
+        <div>Professional</div>
+      </div>
+    </div>
+
+    <div class="login-link" style="margin-top: 20px;">Already have an account? <a href="/login/">Login</a></div>
+
+    <div id="userDetailsFields"></div>
+
+    <div class="bottom-bar" style="margin-top: 30px;">
+      <button class="next-btn" onclick="showCandidateForm()">
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </button>
+      <button class="next-btn" onclick="storeUserTypeFieldsAndNext()">Next</button>
+
+    </div>
+  `;
+
+  // ✅ Re-select previously selected user type (if any)
+  if (candidateData.user_type) {
+    const cards = document.querySelectorAll('.user-type-card');
+    cards.forEach(card => {
+      if (card.textContent.trim().toLowerCase() === candidateData.user_type) {
+        selectUserType(card, candidateData.user_type); // triggers form render
+      }
+    });
+  }
+}
+function selectUserType(el, type) {
+  document.querySelectorAll('.user-type-card').forEach(card => card.classList.remove('selected'));
+  el.classList.add('selected');
+
+  candidateData.user_type = type;  // 🔥 Save user type here
+
+  if (type === 'school') {
+    showSchoolFields();
+  } else if (type === 'college' || type === 'fresher') {
+    showCollegeFields();
+  } else if (type === 'professional') {
+    showProfessionalFields();
+  }
+}
+function storeUserTypeFieldsAndNext() {
+  const selectedTypeCard = document.querySelector('.user-type-card.selected');
+  if (!selectedTypeCard) {
+    alert("Please select a user type!");
+    return;
+  }
+
+  const type = candidateData.user_type;  // already stored in selectUserType()
+  
+  // 🧠 Fetch relevant inputs safely
+  if (type === 'school') {
+    candidateData.school_name = document.getElementById('schoolName')?.value || '';
+    candidateData.current_class = parseInt(document.querySelector('.circle-option.selected')?.getAttribute('data-class')) || null;
+    candidateData.school_city = document.getElementById('schoolCity')?.value || '';
+  }
+
+  if (type === 'college' || type === 'fresher') {
+    candidateData.domain = document.querySelector('.circle-option-college.selected')?.getAttribute('data-domain') || '';
+    candidateData.course_name = document.getElementById('courseName')?.value || '';
+    candidateData.start_year = document.getElementById('startYear')?.value || '';
+    candidateData.end_year = document.getElementById('endYear')?.value || '';
+    candidateData.college_name = document.getElementById('collegeName')?.value || '';
+    candidateData.college_city = document.getElementById('collegeCity')?.value || '';
+  }
+
+  if (type === 'professional') {
+    candidateData.experience_years = document.getElementById('experienceYears')?.value || '';
+    candidateData.current_job_role = document.getElementById('jobRole')?.value || '';
+    candidateData.current_company = document.getElementById('company')?.value || '';
+    candidateData.job_start_year = document.getElementById('jobStartYear')?.value || '';
+    candidateData.job_end_year = document.getElementById('jobEndYear')?.value || '';
+    candidateData.job_city = document.getElementById('jobCity')?.value || '';
+  }
+
+  console.log("✅ User Type Saved:", candidateData.user_type);
+  console.log("✅ User Extra Fields Saved:", candidateData);
+
+  showCareerPurposeStep();  // ✅ Move to next step
+}
+
+
+function showSchoolFields() {
+  const schoolName = candidateData.school_name || '';
+  const currentClass = candidateData.current_class || '';
+  const schoolCity = candidateData.school_city || '';
+
+  document.getElementById('userDetailsFields').innerHTML = `
+    <div class="form-group">
+      <input type="text" id="schoolName" name="school_name" placeholder="School Name *" value="${schoolName}">
+    </div>
+
+    <div class="form-group">
+      <label>Current Class *</label>
+      <div style="display: flex; flex-wrap: wrap;">
+        ${[...Array(12).keys()].map(i => {
+          const cls = i + 1;
+          const selected = currentClass == cls ? 'selected' : '';
+          return `<div class="circle-option ${selected}" onclick="selectCircleOption(this)" data-class="${cls}">${cls}</div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <input type="text" id="schoolCity" name="school_city" placeholder="School City *" value="${schoolCity}">
+    </div>
+  `;
+}
+
+function showCollegeFields() {
+  const domain = candidateData.domain || '';
+  const courseName = candidateData.course_name || '';
+  const startYear = candidateData.start_year || '';
+  const endYear = candidateData.end_year || '';
+  const collegeName = candidateData.college_name || '';
+  const collegeCity = candidateData.college_city || '';
+
+  document.getElementById('userDetailsFields').innerHTML = `
+    <div class="form-group">
+      <label>Domain *</label>
+      <div id="domainOptions">
+        ${['Management', 'Engineering', 'Arts & Science', 'Medicine', 'Law'].map(d => {
+          const selected = domain === d ? 'selected' : '';
+          return `<div class="circle-option-college ${selected}" onclick="selectCollegeOption(this)" data-domain="${d}">${d}</div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <input type="text" id="courseName" name="course_name" placeholder="Course Name *" value="${courseName}">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <input type="text" id="startYear" name="start_year" placeholder="Start Year *" value="${startYear}">
+      </div>
+      <div class="form-group">
+        <input type="text" id="endYear" name="end_year" placeholder="End Year *" value="${endYear}">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <input type="text" id="collegeName" name="college_name" placeholder="College Name *" value="${collegeName}">
+    </div>
+    
+    <div class="form-group">
+      <input type="text" id="collegeCity" name="college_city" placeholder="College City *" value="${collegeCity}">
+    </div>
+  `;
+}
+
+
+
+function showFresherFields() {
+  showCollegeFields();
+}
+function selectCircleOption(el) {
+  el.parentElement.querySelectorAll('.circle-option').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+
+  candidateData.current_class = parseInt(el.getAttribute('data-class'));  // ✅ save class
+}
+
+
+function selectCollegeOption(el) {
+  document.querySelectorAll('.circle-option-college').forEach(opt => opt.classList.remove('selected'));
+  el.classList.add('selected');
+
+  candidateData.domain = el.getAttribute('data-domain');  // ✅ save domain
+}
+function showProfessionalFields() {
+  const experienceYears = candidateData.experience_years || '';
+  const jobRole = candidateData.current_job_role || '';
+  const company = candidateData.current_company || '';
+  const jobStartYear = candidateData.job_start_year || '';
+  const jobEndYear = candidateData.job_end_year || '';
+  const jobCity = candidateData.job_city || '';
+
+  document.getElementById('userDetailsFields').innerHTML = `
+    <div class="form-group">
+      <input type="text" id="experienceYears" name="experience_years" placeholder="Experience (in years) *" value="${experienceYears}">
+    </div>
+
+    <div class="form-group">
+      <input type="text" id="jobRole" name="current_job_role" placeholder="Current Job Role *" value="${jobRole}">
+    </div>
+
+    <div class="form-group">
+      <input type="text" id="company" name="current_company" placeholder="Current Company *" value="${company}">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <input type="text" id="jobStartYear" name="job_start_year" placeholder="Start Year *" value="${jobStartYear}">
+      </div>
+      <div class="form-group">
+        <input type="text" id="jobEndYear" name="job_end_year" placeholder="End Year *" value="${jobEndYear}">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <input type="text" id="jobCity" name="job_city" placeholder="Job City *" value="${jobCity}">
+    </div>
+  `;
+}
+
+
+  function showCareerPurposeStep() {
+ // 🔥 Collect Step 2 data before DOM replacement
+  candidateData.school_name = document.getElementById('schoolName')?.value || '';
+  candidateData.school_city = document.getElementById('schoolCity')?.value || '';
+  candidateData.current_class = parseInt(document.querySelector('.circle-option.selected')?.getAttribute('data-class')) || null;
+
+  candidateData.domain = document.querySelector('.circle-option-college.selected')?.getAttribute('data-domain') || '';
+  candidateData.course_name = document.getElementById('courseName')?.value || '';
+  candidateData.start_year = document.getElementById('startYear')?.value || '';
+  candidateData.end_year = document.getElementById('endYear')?.value || '';
+  candidateData.college_name = document.getElementById('collegeName')?.value || '';
+  candidateData.college_city = document.getElementById('collegeCity')?.value || '';
+
+  candidateData.experience_years = document.getElementById('experienceYears')?.value || '';
+  candidateData.current_job_role = document.getElementById('jobRole')?.value || '';
+  candidateData.current_company = document.getElementById('company')?.value || '';
+  candidateData.job_start_year = document.getElementById('jobStartYear')?.value || '';
+  candidateData.job_end_year = document.getElementById('jobEndYear')?.value || '';
+  candidateData.job_city = document.getElementById('jobCity')?.value || '';
+
+  const section = document.getElementById('registerSection');
+  const savedPurpose = candidateData.career_purpose?.replace(/_/g, ' ')?.toLowerCase() || '';
+
+  const purposeOptions = [
+    { label: "To Find a Job", icon: "fa-briefcase", color: "#fbc02d", bg: "rgba(255, 235, 59, 0.1)" },
+    { label: "Compete & Upskill", icon: "fa-bolt", color: "#2196f3", bg: "rgba(33, 150, 243, 0.1)" },
+    { label: "To Host an Event", icon: "fa-calendar-plus", color: "#4caf50", bg: "rgba(76, 175, 80, 0.1)" },
+    { label: "To be a Mentor", icon: "fa-chalkboard-teacher", color: "#9c27b0", bg: "rgba(156, 39, 176, 0.1)" },
+  ];
+
+  const purposeHTML = purposeOptions.map(p => {
+    const isSelected = p.label.toLowerCase() === savedPurpose;
+    return `
+      <div class="career-purpose-card ${isSelected ? 'selected' : ''}" onclick="selectPurpose(this)" style="background-color: ${p.bg};">
+        <i class="fa-solid ${p.icon}" style="color: ${p.color};"></i>
+        <div>${p.label}</div>
+      </div>
+    `;
+  }).join('');
+
+  section.innerHTML = `
+    <h2><i class="fa-solid fa-arrow-left" onclick="showUserTypeStep()" style="cursor:pointer; margin-right:10px;"></i> Ready to Be Unstoppable!</h2>
+    <p>Plan Your Career</p>
+
+    <label style="font-weight: bold; display: block; margin-bottom: 14px; margin-top: 20px;">Purpose *</label>
+    <div class="form-row" style="flex-wrap: wrap; gap: 14px;" id="purposeOptions">
+      ${purposeHTML}
+    </div>
+
+    <div class="login-link" style="margin-top: 20px;">Already have an account? <a href="/login/">Login</a></div>
+
+    <div class="bottom-bar" style="margin-top: 30px;">
+      <button class="next-btn" onclick="showUserTypeStep()">
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </button>
+      <button class="next-btn" id="finishBtn" onclick="completeRegistration()">Finish</button>
+    </div>
+  `;
+}
+
+document.addEventListener('click', function(e) {
+  if (e.target && e.target.id === 'finishBtn') {
+    e.preventDefault();
+    completeRegistration();
+  }
+});
+
+
+  function togglePassword(icon, fieldId) {
+    const input = document.getElementById(fieldId);
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.remove("fa-eye");
+      icon.classList.add("fa-eye-slash");
+    } else {
+      input.type = "password";
+      icon.classList.add("fa-eye");
+      icon.classList.remove("fa-eye-slash");
+    }
+  }
+
+function selectPurpose(el) {
+  document.querySelectorAll('.career-purpose-card').forEach(card => card.classList.remove('selected'));
+  el.classList.add('selected');
+  candidateData.career_purpose = el.innerText.trim().toLowerCase().replace(/\s+/g, '_');
+}
+
+
+function getCSRFToken() {
+  let cookieValue = null;
+  const cookies = document.cookie.split(';');
+  for (let cookie of cookies) {
+    cookie = cookie.trim();
+    if (cookie.startsWith('csrftoken=')) {
+      cookieValue = cookie.substring('csrftoken='.length);
+      break;
+    }
+  }
+  return cookieValue;
+}function completeRegistration() {
+  const getVal = (selector) => document.querySelector(selector)?.value || '';
+  const getText = (selector) => document.querySelector(selector)?.textContent.trim() || '';
+  const getChecked = (selector) => document.querySelector(selector)?.checked || false;
+  const getAttr = (selector, attr) => document.querySelector(selector)?.getAttribute(attr) || '';
+
+  // Merge all values into formData
+  const formData = {
+    ...candidateData,  // 👈🔥 Yeh line zaroori hai — pehle wale step ka data
+    user_type: document.querySelector('.user-type-card.selected')?.getAttribute('onclick')?.match(/'(.*?)'/)?.[1] || '',
+
+    // School
+    school_name: getVal('#schoolName'),
+    current_class: parseInt(getAttr('.circle-option.selected', 'data-class')) || null,
+    school_city: getVal('#schoolCity'),
+
+    // College/Fresher
+    domain: getAttr('.circle-option-college.selected', 'data-domain'),
+    course_name: getVal('#courseName'),
+    start_year: getVal('#startYear'),
+    end_year: getVal('#endYear'),
+    college_name: getVal('#collegeName'),
+    college_city: getVal('#collegeCity'),
+
+    // Professional
+    experience_years: getVal('#experienceYears'),
+    current_job_role: getVal('#jobRole'),
+    current_company: getVal('#company'),
+    job_start_year: getVal('#jobStartYear'),
+    job_end_year: getVal('#jobEndYear'),
+    job_city: getVal('#jobCity'),
+
+    // Purpose
+    career_purpose: getText('.career-purpose-card.selected').toLowerCase().replace(/\s+/g, '_'),
+  };
+
+  console.log('📤 Sending to backend:', formData);
+
+  fetch('/submit-candidate-form/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCSRFToken()
+    },
+    body: JSON.stringify(formData)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === 'success') {
+      alert('Registration successful!');
+      window.location.href = '/login/';
+    } else {
+      alert('Error: ' + data.message);
+    }
+  })
+  .catch(error => {
+    alert('Error submitting form: ' + error);
+  });
+}
+
+
+
+</script>
+
+</body>
+</html>

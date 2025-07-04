@@ -1,0 +1,54 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    .split-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+    }
+
+    .split-left {
+      flex: 1 1 400px;
+    }
+
+    .split-right {
+      flex: 1 1 600px;
+    }
+
+    @media (max-width: 768px) {
+      .split-section {
+        flex-direction: column;
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  {% include "navbar.html" %}
+
+  <div class="split-section">
+    <div class="split-left">
+      {% include 'slogan.html' %}
+    </div>
+    <div class="split-right">
+      {% include 'unstop_tabs.html' %}
+    </div>
+  </div>
+
+  {% include 'industry_strip.html' %}
+
+  {% include 'banner_slider.html' %}
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
