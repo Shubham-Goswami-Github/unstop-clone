@@ -1,0 +1,16 @@
+{% extends "admin_panel/admin_base.html" %}
+{% block content %}
+  <div class="container">
+    <h3 class="mb-4">College Details</h3>
+    <div class="card p-4 shadow-sm">
+      <h5>{{ college.name }}</h5>
+      <p><strong>Address:</strong> {{ college.address }}</p>
+      <p><strong>City:</strong> {{ college.city }}</p>
+      <p><strong>Email:</strong> {{ college.email }}</p>
+      <p><strong>Phone:</strong> {{ college.contact_number }}</p>
+      <p><strong>Approved:</strong> {{ college.is_approved|yesno:"Yes,No" }}</p>
+      <p><strong>Domains Accepted:</strong> {{ college.domains_accepted }}</p>
+      <p><strong>Courses Accepted:</strong> {{ college.courses_accepted }}</p>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "admin_panel/admin_base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h3>Edit School</h3>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label>School Name</label>
+      <input type="text" class="form-control" name="name" value="{{ school.name }}" required>
+    </div>
+    <div class="mb-3">
+      <label>Address</label>
+      <input type="text" class="form-control" name="address" value="{{ school.address }}">
+    </div>
+    <div class="mb-3">
+      <label>City</label>
+      <input type="text" class="form-control" name="city" value="{{ school.city }}">
+    </div>
+    <div class="mb-3">
+      <label>Contact Number</label>
+      <input type="text" class="form-control" name="contact_number" value="{{ school.contact_number }}">
+    </div>
+    <div class="mb-3">
+      <label>Email</label>
+      <input type="email" class="form-control" name="email" value="{{ school.email }}">
+    </div>
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" name="is_approved" id="isApproved" {% if school.is_approved %}checked{% endif %}>
+      <label class="form-check-label" for="isApproved">Approved</label>
+    </div>
+    <button type="submit" class="btn btn-success">Update</button>
+    <a href="{% url 'schools_list' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

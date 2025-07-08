@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
+
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
@@ -30,7 +31,7 @@ class CandidateProfile(models.Model):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=15)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
-    password = models.CharField(max_length=128)  # store hashed passwords
+    password = models.CharField(max_length=128)
     agreed_info = models.BooleanField(default=False)
     stay_in_loop = models.BooleanField(default=False)
     user_type = models.CharField(max_length=20, choices=USER_TYPES)
@@ -56,10 +57,16 @@ class CandidateProfile(models.Model):
     job_end_year = models.CharField(max_length=10, blank=True, null=True)
     job_city = models.CharField(max_length=100, blank=True, null=True)
 
+    # Foreign Keys (if you are using)
+    school = models.ForeignKey('School', null=True, blank=True, on_delete=models.SET_NULL)
+    college = models.ForeignKey('College', null=True, blank=True, on_delete=models.SET_NULL)
+    company = models.ForeignKey('Company', null=True, blank=True, on_delete=models.SET_NULL)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.first_name} ({self.email})"
+
 
 
 class CareerPurpose(models.Model):
@@ -75,3 +82,48 @@ class CareerPurpose(models.Model):
 
     def __str__(self):
         return f"{self.candidate.email} - {self.purpose}"
+    
+
+class School(models.Model):
+    name = models.CharField(max_length=150)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    contact_number = models.CharField(max_length=20, blank=True, null=True)  # ✅ Corrected
+    email = models.EmailField(blank=True, null=True)
+    is_approved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+from django.db import models
+
+class College(models.Model):
+    name = models.CharField(max_length=150)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    contact_number = models.CharField(max_length=20, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    is_approved = models.BooleanField(default=False)
+    domains_accepted = models.TextField(blank=True, null=True, help_text="Comma-separated subjects like: Computer Science, Mechanical")
+    courses_accepted = models.TextField(blank=True, null=True, help_text="Comma-separated courses like: B.Tech, M.Tech")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+    
+
+# mainapp/models.py
+
+class Company(models.Model):
+    name = models.CharField(max_length=150)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    contact_number = models.CharField(max_length=20, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    is_approved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

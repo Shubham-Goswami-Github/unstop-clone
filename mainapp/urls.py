@@ -1,5 +1,15 @@
 from django.urls import path
 from . import views
+from .views import admin_panel_dashboard_view
+from .views import schools_list_view
+from .views import add_school_view
+from .views import school_detail_view 
+from .views import edit_school_view
+from .views import delete_school_view
+from .views import view_colleges, add_college_view, edit_college_view, delete_college_view ,college_detail_view ,view_companies, add_company, edit_company, delete_company , company_detail_view
+
+
+
 
 urlpatterns = [
     path('', views.home_view, name='home'),  # 👈 root URL
@@ -11,4 +21,24 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
     path('submit-candidate-form/', views.submit_candidate_form, name='submit_candidate_form'),
+    path('adminpaneldashboard/', admin_panel_dashboard_view, name='admin_panel_dashboard'),
+    path('adminpaneldashboard/schools/', schools_list_view, name='schools_list'),
+    path('adminpaneldashboard/schools/add/', add_school_view, name='add_school'),
+    path('adminpaneldashboard/schools/<int:school_id>/', school_detail_view, name='school_detail'),
+    path('adminpaneldashboard/schools/edit/<int:school_id>/', edit_school_view, name='edit_school'),
+    path('adminpaneldashboard/schools/delete/<int:school_id>/', delete_school_view, name='delete_school'),
+    path('adminpaneldashboard/colleges/', view_colleges, name='colleges_list'),
+    path('adminpaneldashboard/colleges/add/', add_college_view, name='add_college'),
+    path('adminpaneldashboard/colleges/edit/<int:college_id>/', edit_college_view, name='edit_college'),
+    path('adminpaneldashboard/colleges/delete/<int:college_id>/', delete_college_view, name='delete_college'),
+    path('adminpaneldashboard/colleges/<int:college_id>/', college_detail_view, name='college_detail'),
+    path('adminpaneldashboard/companies/', view_companies, name='companies_list'),
+    path('adminpaneldashboard/companies/add/', add_company, name='add_company'),
+    path('adminpaneldashboard/companies/edit/<int:company_id>/', edit_company, name='edit_company'),
+    path('adminpaneldashboard/companies/delete/<int:company_id>/', delete_company, name='delete_company'),
+    path('adminpaneldashboard/companies/<int:company_id>/', company_detail_view, name='company_detail'),
+
+    path('fetch-dropdown-data/', views.fetch_dropdown_data, name='fetch_dropdown_data'),
+
+    
 ]

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  
+</head>
+<style>
+    body {
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 250px;
+      background-color: #161b22;
+      color: #fff;
+      padding: 20px;
+      position: fixed;
+      height: 100vh;
+    }
+    .sidebar a {
+      display: block;
+      color: #ddd;
+      padding: 10px;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+    .sidebar a:hover,
+    .sidebar a.active {
+      background-color: #30363d;
+      color: #fff;
+    }
+    .content {
+      margin-left: 260px;
+      padding: 30px;
+      width: 100%;
+    }
+  </style>
+<body>
+
+<div class="sidebar">
+  <h4 class="text-warning mb-4"><i class="fas fa-terminal me-2"></i>Admin Panel</h4>
+
+ <a href="{% url 'admin_panel_dashboard' %}" class="{% if request.resolver_match.url_name == 'admin_panel_dashboard' %}active{% endif %}">
+  <i class="fas fa-home me-2"></i>Dashboard
+</a>
+
+  <a href="{% url 'schools_list' %}" class="{% if request.resolver_match.url_name == 'schools_list' %}active{% endif %}">
+    <i class="fas fa-school me-2"></i>Schools
+  </a>
+
+  <a href="{% url 'colleges_list' %}" class="{% if request.resolver_match.url_name == 'colleges_list' %}active{% endif %}">
+    <i class="fas fa-university me-2"></i>Colleges
+  </a>
+
+  <a href="{% url 'companies_list' %}">
+  <i class="fas fa-building me-2"></i>Companies
+</a>
+
+  <a href="#"><i class="fas fa-users me-2"></i>Candidates</a>
+  <a href="#"><i class="fas fa-cogs me-2"></i>Settings</a>
+</div>
+
+
+<div class="content">
+  {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

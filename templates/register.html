@@ -7,6 +7,15 @@
   <meta charset="UTF-8">
   <title>Register Page</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+
+  <!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -378,6 +387,15 @@
   color: #1a73e8;
 }
 
+input[list] {
+  padding: 8px;
+  font-size: 14px;
+}
+
+datalist option {
+  font-size: 14px;
+}
+
 
   </style>
 </head>
@@ -640,13 +658,14 @@ function storeUserTypeFieldsAndNext() {
     return;
   }
 
-  const type = candidateData.user_type;  // already stored in selectUserType()
-  
-  // 🧠 Fetch relevant inputs safely
+  const type = candidateData.user_type;
+
+  // ✅ Save fields BEFORE DOM changes
   if (type === 'school') {
     candidateData.school_name = document.getElementById('schoolName')?.value || '';
     candidateData.current_class = parseInt(document.querySelector('.circle-option.selected')?.getAttribute('data-class')) || null;
     candidateData.school_city = document.getElementById('schoolCity')?.value || '';
+    
   }
 
   if (type === 'college' || type === 'fresher') {
@@ -667,21 +686,33 @@ function storeUserTypeFieldsAndNext() {
     candidateData.job_city = document.getElementById('jobCity')?.value || '';
   }
 
-  console.log("✅ User Type Saved:", candidateData.user_type);
-  console.log("✅ User Extra Fields Saved:", candidateData);
+  console.log("✅ USER TYPE STEP FINAL DATA BEFORE CAREER:", candidateData);
 
-  showCareerPurposeStep();  // ✅ Move to next step
+  showCareerPurposeStep();
 }
 
-
 function showSchoolFields() {
+  if (!dropdownData || !dropdownData.schools) {
+    console.warn("Dropdown data not loaded yet.");
+    return;
+  }
+
   const schoolName = candidateData.school_name || '';
   const currentClass = candidateData.current_class || '';
   const schoolCity = candidateData.school_city || '';
 
+  const schoolOptions = dropdownData.schools.map(s => {
+    const selected = s.name === schoolName ? 'selected' : '';
+    return `<option value="${s.name}" data-id="${s.id}" data-city="${s.city}" ${selected}>${s.name}</option>`;
+  }).join('');
+
   document.getElementById('userDetailsFields').innerHTML = `
     <div class="form-group">
-      <input type="text" id="schoolName" name="school_name" placeholder="School Name *" value="${schoolName}">
+      <label for="schoolName">School Name *</label>
+      <select id="schoolName" name="school_name" required onchange="handleSchoolChange()">
+        <option value="">Select School</option>
+        ${schoolOptions}
+      </select>
     </div>
 
     <div class="form-group">
@@ -699,9 +730,32 @@ function showSchoolFields() {
       <input type="text" id="schoolCity" name="school_city" placeholder="School City *" value="${schoolCity}">
     </div>
   `;
+
+  // Manually call change if already selected
+  setTimeout(() => {
+    if (schoolName) handleSchoolChange();
+  }, 0);
 }
 
+function handleSchoolChange() {
+  const select = document.getElementById('schoolName');
+  const selectedOption = select.options[select.selectedIndex];
+
+  const schoolId = selectedOption.getAttribute('data-id');
+  const city = selectedOption.getAttribute('data-city');
+
+  // ✅ Set in candidateData
+  candidateData.school_id = schoolId ? parseInt(schoolId) : null;
+  document.getElementById('schoolCity').value = city || '';
+}
+
+
 function showCollegeFields() {
+  if (!dropdownData || !dropdownData.domains) {
+    console.warn("Dropdown data not yet loaded.");
+    return;
+  }
+
   const domain = candidateData.domain || '';
   const courseName = candidateData.course_name || '';
   const startYear = candidateData.start_year || '';
@@ -709,19 +763,42 @@ function showCollegeFields() {
   const collegeName = candidateData.college_name || '';
   const collegeCity = candidateData.college_city || '';
 
+  const domainOptions = dropdownData.domains.map(d => {
+    const selected = d === domain ? 'selected' : '';
+    return `<div class="circle-option-college ${selected}" onclick="selectCollegeOption(this)" data-domain="${d}">${d}</div>`;
+  }).join('');
+
+  const courseOptions = dropdownData.courses.map(c => {
+    const selected = c === courseName ? 'selected' : '';
+    return `<option value="${c}" ${selected}>${c}</option>`;
+  }).join('');
+
+  const collegeOptions = dropdownData.colleges.map(c => {
+    const selected = c.name === collegeName ? 'selected' : '';
+    const safeCourses = c.courses_accepted ? c.courses_accepted.replace(/"/g, '&quot;') : '[]'; // escape quotes
+    return `
+      <option 
+        value="${c.name}" 
+        data-id="${c.id}" 
+        data-city="${c.city || ''}" 
+        data-courses="${safeCourses}"
+        ${selected}
+      >${c.name}</option>`;
+  }).join('');
+
   document.getElementById('userDetailsFields').innerHTML = `
     <div class="form-group">
       <label>Domain *</label>
       <div id="domainOptions">
-        ${['Management', 'Engineering', 'Arts & Science', 'Medicine', 'Law'].map(d => {
-          const selected = domain === d ? 'selected' : '';
-          return `<div class="circle-option-college ${selected}" onclick="selectCollegeOption(this)" data-domain="${d}">${d}</div>`;
-        }).join('')}
+        ${domainOptions}
       </div>
     </div>
 
     <div class="form-group">
-      <input type="text" id="courseName" name="course_name" placeholder="Course Name *" value="${courseName}">
+      <select id="courseName" name="course_name" required>
+        <option value="">Select Course *</option>
+        ${courseOptions}
+      </select>
     </div>
 
     <div class="form-row">
@@ -734,20 +811,65 @@ function showCollegeFields() {
     </div>
 
     <div class="form-group">
-      <input type="text" id="collegeName" name="college_name" placeholder="College Name *" value="${collegeName}">
+      <select id="collegeName" name="college_name" required onchange="handleCollegeChange()">
+        <option value="">Select College *</option>
+        ${collegeOptions}
+      </select>
     </div>
-    
+
     <div class="form-group">
       <input type="text" id="collegeCity" name="college_city" placeholder="College City *" value="${collegeCity}">
     </div>
   `;
+
+  // Trigger onchange if college already selected
+  setTimeout(() => {
+    if (collegeName) handleCollegeChange();
+    if (domain) updateCourseDropdown();
+  }, 0);
 }
 
+function handleCollegeChange() {
+  const select = document.getElementById('collegeName');
+  const selectedOption = select.options[select.selectedIndex];
+
+  const city = selectedOption.getAttribute('data-city') || '';
+  const id = selectedOption.getAttribute('data-id') || null;
+  const coursesJSON = selectedOption.getAttribute('data-courses') || '[]';
+
+  document.getElementById('collegeCity').value = city;
+
+  candidateData.college_id = id;
+  candidateData.college_city = city;
+
+  let courseList = [];
+  try {
+    courseList = JSON.parse(coursesJSON);
+  } catch (err) {
+    console.warn("Invalid courses JSON:", coursesJSON);
+  }
+
+  updateCourseDropdown(courseList);
+}
+
+
+
+
+function updateCourseDropdown(courseList = []) {
+  const courseSelect = document.getElementById('courseName');
+  const selected = candidateData.course_name || '';
+
+  courseSelect.innerHTML = `<option value="">Select Course</option>` +
+    courseList.map(course => `
+      <option value="${course}" ${course === selected ? 'selected' : ''}>${course}</option>
+    `).join('');
+}
 
 
 function showFresherFields() {
   showCollegeFields();
 }
+
 function selectCircleOption(el) {
   el.parentElement.querySelectorAll('.circle-option').forEach(e => e.classList.remove('selected'));
   el.classList.add('selected');
@@ -762,13 +884,28 @@ function selectCollegeOption(el) {
 
   candidateData.domain = el.getAttribute('data-domain');  // ✅ save domain
 }
+
+
 function showProfessionalFields() {
+  if (!dropdownData || !dropdownData.companies) {
+    console.warn("Dropdown data not loaded yet.");
+    return;
+  }
+
   const experienceYears = candidateData.experience_years || '';
   const jobRole = candidateData.current_job_role || '';
   const company = candidateData.current_company || '';
   const jobStartYear = candidateData.job_start_year || '';
   const jobEndYear = candidateData.job_end_year || '';
   const jobCity = candidateData.job_city || '';
+
+  const companyOptions = dropdownData.companies.map(c => {
+  const name = typeof c === 'string' ? c : c.name;
+  const city = typeof c === 'string' ? '' : c.city || '';
+  const id = typeof c === 'string' ? '' : c.id || '';
+  const selected = name === company ? 'selected' : '';
+  return `<option value="${name}" data-city="${city}" data-id="${id}" ${selected}>${name}</option>`;
+}).join('');
 
   document.getElementById('userDetailsFields').innerHTML = `
     <div class="form-group">
@@ -780,7 +917,11 @@ function showProfessionalFields() {
     </div>
 
     <div class="form-group">
-      <input type="text" id="company" name="current_company" placeholder="Current Company *" value="${company}">
+      <label for="company" style="margin-bottom: 8px; display: block; font-weight: 600;">Current Company *</label>
+      <select id="company" name="current_company" style="width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px;" onchange="handleCompanyChange()">
+        <option value="">Select Company</option>
+        ${companyOptions}
+      </select>
     </div>
 
     <div class="form-row">
@@ -794,31 +935,55 @@ function showProfessionalFields() {
 
     <div class="form-group">
       <input type="text" id="jobCity" name="job_city" placeholder="Job City *" value="${jobCity}">
+
     </div>
   `;
+
+  // Initialize Select2 with professional styling
+  setTimeout(() => {
+    $('#company').select2({
+      placeholder: "Search company...",
+      allowClear: true,
+      width: 'resolve',
+      dropdownAutoWidth: true
+    });
+
+    if (company) handleCompanyChange();
+  }, 0);
 }
 
 
-  function showCareerPurposeStep() {
- // 🔥 Collect Step 2 data before DOM replacement
-  candidateData.school_name = document.getElementById('schoolName')?.value || '';
-  candidateData.school_city = document.getElementById('schoolCity')?.value || '';
-  candidateData.current_class = parseInt(document.querySelector('.circle-option.selected')?.getAttribute('data-class')) || null;
 
-  candidateData.domain = document.querySelector('.circle-option-college.selected')?.getAttribute('data-domain') || '';
-  candidateData.course_name = document.getElementById('courseName')?.value || '';
-  candidateData.start_year = document.getElementById('startYear')?.value || '';
-  candidateData.end_year = document.getElementById('endYear')?.value || '';
-  candidateData.college_name = document.getElementById('collegeName')?.value || '';
-  candidateData.college_city = document.getElementById('collegeCity')?.value || '';
 
-  candidateData.experience_years = document.getElementById('experienceYears')?.value || '';
-  candidateData.current_job_role = document.getElementById('jobRole')?.value || '';
-  candidateData.current_company = document.getElementById('company')?.value || '';
-  candidateData.job_start_year = document.getElementById('jobStartYear')?.value || '';
-  candidateData.job_end_year = document.getElementById('jobEndYear')?.value || '';
-  candidateData.job_city = document.getElementById('jobCity')?.value || '';
+function handleCompanyChange() 
+{
+  
+  const select = document.getElementById('company');
+  const selectedCompanyName = select.value;
 
+  const matchedCompany = dropdownData.companies.find(c => {
+    return typeof c === 'string'
+      ? c === selectedCompanyName
+      : c.name === selectedCompanyName;
+  });
+
+  const city = typeof matchedCompany === 'string' ? '' : (matchedCompany?.city || '');
+  document.getElementById('jobCity').value = city;
+
+  // Save company ID if available
+  candidateData.company_id = (typeof matchedCompany === 'object' && matchedCompany.id) ? matchedCompany.id : null;
+
+}
+
+
+
+
+
+
+
+
+
+ function showCareerPurposeStep() {
   const section = document.getElementById('registerSection');
   const savedPurpose = candidateData.career_purpose?.replace(/_/g, ' ')?.toLowerCase() || '';
 
@@ -854,17 +1019,18 @@ function showProfessionalFields() {
       <button class="next-btn" onclick="showUserTypeStep()">
         <i class="fa-solid fa-arrow-left"></i> Back
       </button>
-      <button class="next-btn" id="finishBtn" onclick="completeRegistration()">Finish</button>
+      <button class="next-btn" id="finishBtn">Finish</button>
     </div>
   `;
-}
 
-document.addEventListener('click', function(e) {
-  if (e.target && e.target.id === 'finishBtn') {
+  // ✅ Attach event listener after DOM render
+  document.getElementById('finishBtn').addEventListener('click', function (e) {
     e.preventDefault();
     completeRegistration();
-  }
-});
+  });
+}
+
+
 
 
   function togglePassword(icon, fieldId) {
@@ -905,34 +1071,8 @@ function getCSRFToken() {
   const getAttr = (selector, attr) => document.querySelector(selector)?.getAttribute(attr) || '';
 
   // Merge all values into formData
-  const formData = {
-    ...candidateData,  // 👈🔥 Yeh line zaroori hai — pehle wale step ka data
-    user_type: document.querySelector('.user-type-card.selected')?.getAttribute('onclick')?.match(/'(.*?)'/)?.[1] || '',
+  const formData = { ...candidateData };
 
-    // School
-    school_name: getVal('#schoolName'),
-    current_class: parseInt(getAttr('.circle-option.selected', 'data-class')) || null,
-    school_city: getVal('#schoolCity'),
-
-    // College/Fresher
-    domain: getAttr('.circle-option-college.selected', 'data-domain'),
-    course_name: getVal('#courseName'),
-    start_year: getVal('#startYear'),
-    end_year: getVal('#endYear'),
-    college_name: getVal('#collegeName'),
-    college_city: getVal('#collegeCity'),
-
-    // Professional
-    experience_years: getVal('#experienceYears'),
-    current_job_role: getVal('#jobRole'),
-    current_company: getVal('#company'),
-    job_start_year: getVal('#jobStartYear'),
-    job_end_year: getVal('#jobEndYear'),
-    job_city: getVal('#jobCity'),
-
-    // Purpose
-    career_purpose: getText('.career-purpose-card.selected').toLowerCase().replace(/\s+/g, '_'),
-  };
 
   console.log('📤 Sending to backend:', formData);
 
@@ -959,6 +1099,23 @@ function getCSRFToken() {
 }
 
 
+
+
+let dropdownData = {};
+
+fetch('/fetch-dropdown-data/')
+  .then(response => response.json())
+  .then(data => {
+    dropdownData = data;
+
+    console.log("Dropdown data loaded:", dropdownData);
+
+    // ✅ Call this only after dropdownData is ready
+    showCandidateForm(); // or showSchoolFields() or showCollegeFields()
+  })
+  .catch(error => {
+    console.error('Error loading dropdown data:', error);
+  });
 
 </script>
 

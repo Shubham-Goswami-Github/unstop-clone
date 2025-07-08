@@ -1,0 +1,28 @@
+{% extends "admin_panel/admin_base.html" %}
+
+
+{% block content %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<div class="container mt-5">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <h4><i class="fas fa-school me-2"></i>School Details</h4>
+    </div>
+    <div class="card-body">
+      <table class="table table-striped">
+        <tr><th>Name:</th><td>{{ school.name }}</td></tr>
+        <tr><th>Address:</th><td>{{ school.address }}</td></tr>
+        <tr><th>Email:</th><td>{{ school.email }}</td></tr>
+        <tr><th>Phone:</th><td>{{ school.contact_number }}</td></tr>
+        <tr><th>City:</th><td>{{ school.city }}</td></tr>
+        <tr><th>Approved:</th><td>{{ school.is_approved|yesno:"Yes,No" }}</td></tr>
+      </table>
+      <a href="{% url 'schools_list' %}" class="btn btn-outline-secondary mt-3">
+<i class="fas fa-arrow-left me-1"></i>Back</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
