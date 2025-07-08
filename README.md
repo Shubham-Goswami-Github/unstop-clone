@@ -76,9 +76,7 @@ It includes multi-step registration, user dashboards, admin panel, event listing
 🔑 ADMIN PANEL:
 --------------------------------------------------
 
-URL: http://127.0.0.1:8000/admin/
-Login using your superuser credentials
-
+http://127.0.0.1:8000/adminpaneldashboard/
 --------------------------------------------------
 📁 PROJECT STRUCTURE:
 --------------------------------------------------
