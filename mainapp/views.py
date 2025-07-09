@@ -125,17 +125,60 @@ def submit_candidate_form(request):
 
 
 
-from django.shortcuts import render
 from .models import School, College, Company, CandidateProfile
 
 def admin_panel_dashboard_view(request):
+    # Total organizations count
+    total_schools = School.objects.count()
+    total_colleges = College.objects.count()
+    total_companies = Company.objects.count()
+
+    # Total candidate count
+    total_candidates = CandidateProfile.objects.count()
+
+    # Candidate type-wise count
+    school_candidates_count = CandidateProfile.objects.filter(user_type='school').count()
+    college_candidates_count = CandidateProfile.objects.filter(user_type='college').count()
+    experienced_candidates_count = CandidateProfile.objects.filter(user_type='professional').count()
+    fresher_candidates_count = CandidateProfile.objects.filter(user_type='fresher').count()
+
+    # Schools with candidate count
+    schools = School.objects.all()
+    for school in schools:
+        school.candidate_count = CandidateProfile.objects.filter(school_id=school.id).count()
+
+    colleges = College.objects.all()
+    for college in colleges:
+        college.candidate_count = CandidateProfile.objects.filter(college_id=college.id).count()
+
+    companies = Company.objects.all()
+    for company in companies:
+        company.candidate_count = CandidateProfile.objects.filter(company_id=company.id).count()
+
     context = {
-        'school_count': School.objects.count(),
-        'college_count': College.objects.count(),
-        'company_count': Company.objects.count(),
-        'candidate_count': CandidateProfile.objects.count(),
+        # Total registered orgs
+        'school_count': total_schools,
+        'college_count': total_colleges,
+        'company_count': total_companies,
+
+        # Total candidates overall
+        'candidate_count': total_candidates,
+
+        # Candidates by user type
+        'school_candidates_count': school_candidates_count,
+        'college_candidates_count': college_candidates_count,
+        'experienced_count': experienced_candidates_count,
+        'fresher_count': fresher_candidates_count,
+
+        # Lists for detail
+        'schools': schools,
+        'colleges': colleges,
+        'companies': companies,
+        
     }
+
     return render(request, 'admin_panel/admin_dashboard.html', context)
+
 
 
 from .models import School  # 👈 model tu bana chuka hai
@@ -356,3 +399,116 @@ def fetch_dropdown_data(request):
         'domains': sorted([d.strip() for d in domains if d.strip()]),
         'courses': sorted([c.strip() for c in courses if c.strip()])
     })
+
+from .models import CandidateProfile, School, College, Company
+
+def candidates_summary(request):
+    school_count = CandidateProfile.objects.filter(user_type='school').count()
+    college_count = CandidateProfile.objects.filter(user_type='college').count()
+    experienced_count = CandidateProfile.objects.filter(user_type='professional').count()
+
+    # Annotate each with count of registered candidates
+    schools = School.objects.all()
+    for school in schools:
+        school.candidate_count = CandidateProfile.objects.filter(user_type='school', school_id=school.id).count()
+
+    colleges = College.objects.all()
+    for college in colleges:
+        college.candidate_count = CandidateProfile.objects.filter(user_type='college', college_id=college.id).count()
+
+    companies = Company.objects.all()
+    for company in companies:
+        company.candidate_count = CandidateProfile.objects.filter(user_type='professional', company_id=company.id).count()
+
+    return render(request, 'admin_panel/candidates_summary.html', {
+        'school_count': school_count,
+        'college_count': college_count,
+        'experienced_count': experienced_count,
+        'schools': schools,
+        'colleges': colleges,
+        'companies': companies
+    })
+
+
+# views.py
+from django.shortcuts import get_object_or_404
+
+def view_candidates_by_org(request, org_type, org_id):
+    org_model = {'school': School, 'college': College, 'company': Company}.get(org_type)
+    if not org_model:
+        return HttpResponse("Invalid organization type", status=400)
+
+    organization = get_object_or_404(org_model, id=org_id)
+    if org_type == 'school':
+        candidates = CandidateProfile.objects.filter(user_type='school', school_id=org_id)
+    elif org_type == 'college':
+        candidates = CandidateProfile.objects.filter(user_type='college', college_id=org_id)
+    elif org_type == 'company':
+        candidates = CandidateProfile.objects.filter(user_type='professional', company_id=org_id)
+
+    return render(request, 'admin_panel/view_candidates.html', {
+        'organization': organization,
+        'org_type': org_type,
+        'candidates': candidates,
+    })
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import CandidateProfile
+from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+
+def view_candidate(request, candidate_id):
+    candidate = get_object_or_404(CandidateProfile, id=candidate_id)
+    return render(request, 'admin_panel/view_candidate_detail.html', {'candidate': candidate})
+
+def edit_candidate(request, candidate_id):
+    candidate = get_object_or_404(CandidateProfile, id=candidate_id)
+    if request.method == 'POST':
+        candidate.first_name = request.POST.get('first_name')
+        candidate.last_name = request.POST.get('last_name')
+        candidate.email = request.POST.get('email')
+        candidate.phone_number = request.POST.get('phone_number')
+        candidate.gender = request.POST.get('gender')
+        candidate.save()
+        messages.success(request, "Candidate updated successfully!")
+        return redirect('view_candidates_by_org', org_type=candidate.user_type, org_id=getattr(candidate, f"{candidate.user_type}_id"))
+    return render(request, 'admin_panel/edit_candidate.html', {'candidate': candidate})
+
+@csrf_exempt
+def delete_candidate(request, candidate_id):
+    candidate = get_object_or_404(CandidateProfile, id=candidate_id)
+    org_type = candidate.user_type
+    org_id = getattr(candidate, f"{org_type}_id")
+    candidate.delete()
+    messages.success(request, "Candidate deleted successfully.")
+    return redirect('view_candidates_by_org', org_type=org_type, org_id=org_id)
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import CandidateProfile
+
+def view_freshers(request):
+    freshers = CandidateProfile.objects.filter(user_type='fresher')
+    return render(request, 'admin_panel/freshers_list.html', {'freshers': freshers})
+
+def view_fresher(request, pk):
+    fresher = get_object_or_404(CandidateProfile, pk=pk)
+    return render(request, 'admin_panel/fresher_detail.html', {'fresher': fresher})
+
+def edit_fresher(request, pk):
+    fresher = get_object_or_404(CandidateProfile, pk=pk)
+    if request.method == 'POST':
+        # Update logic (simple example)
+        fresher.first_name = request.POST.get('first_name')
+        fresher.last_name = request.POST.get('last_name')
+        fresher.email = request.POST.get('email')
+        fresher.save()
+        return redirect('freshers_list')
+    return render(request, 'admin_panel/edit_fresher.html', {'fresher': fresher})
+
+def delete_fresher(request, pk):
+    fresher = get_object_or_404(CandidateProfile, pk=pk)
+    fresher.delete()
+    return redirect('freshers_list')

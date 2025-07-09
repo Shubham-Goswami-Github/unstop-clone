@@ -690,7 +690,6 @@ function storeUserTypeFieldsAndNext() {
 
   showCareerPurposeStep();
 }
-
 function showSchoolFields() {
   if (!dropdownData || !dropdownData.schools) {
     console.warn("Dropdown data not loaded yet.");
@@ -707,17 +706,17 @@ function showSchoolFields() {
   }).join('');
 
   document.getElementById('userDetailsFields').innerHTML = `
-    <div class="form-group">
-      <label for="schoolName">School Name *</label>
-      <select id="schoolName" name="school_name" required onchange="handleSchoolChange()">
+    <div class="form-group mb-3">
+      <label for="schoolName" style="font-weight: 500; margin-bottom: 6px;">School Name <span style="color: red;">*</span></label>
+      <select id="schoolName" name="school_name" class="form-control" required onchange="handleSchoolChange()" style="padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px;">
         <option value="">Select School</option>
         ${schoolOptions}
       </select>
     </div>
 
-    <div class="form-group">
-      <label>Current Class *</label>
-      <div style="display: flex; flex-wrap: wrap;">
+    <div class="form-group mb-3">
+      <label style="font-weight: 500; margin-bottom: 6px;">Current Class <span style="color: red;">*</span></label>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px;">
         ${[...Array(12).keys()].map(i => {
           const cls = i + 1;
           const selected = currentClass == cls ? 'selected' : '';
@@ -726,8 +725,9 @@ function showSchoolFields() {
       </div>
     </div>
 
-    <div class="form-group">
-      <input type="text" id="schoolCity" name="school_city" placeholder="School City *" value="${schoolCity}">
+    <div class="form-group mb-2">
+      <label for="schoolCity" style="font-weight: 500; margin-bottom: 6px;">School City <span style="color: red;">*</span></label>
+      <input type="text" id="schoolCity" name="school_city" class="form-control" placeholder="School City" value="${schoolCity}" style="padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px;">
     </div>
   `;
 
@@ -736,6 +736,7 @@ function showSchoolFields() {
     if (schoolName) handleSchoolChange();
   }, 0);
 }
+
 
 function handleSchoolChange() {
   const select = document.getElementById('schoolName');
@@ -748,7 +749,6 @@ function handleSchoolChange() {
   candidateData.school_id = schoolId ? parseInt(schoolId) : null;
   document.getElementById('schoolCity').value = city || '';
 }
-
 
 function showCollegeFields() {
   if (!dropdownData || !dropdownData.domains) {
@@ -775,7 +775,7 @@ function showCollegeFields() {
 
   const collegeOptions = dropdownData.colleges.map(c => {
     const selected = c.name === collegeName ? 'selected' : '';
-    const safeCourses = c.courses_accepted ? c.courses_accepted.replace(/"/g, '&quot;') : '[]'; // escape quotes
+    const safeCourses = c.courses_accepted ? c.courses_accepted.replace(/"/g, '&quot;') : '[]';
     return `
       <option 
         value="${c.name}" 
@@ -787,42 +787,50 @@ function showCollegeFields() {
   }).join('');
 
   document.getElementById('userDetailsFields').innerHTML = `
-    <div class="form-group">
-      <label>Domain *</label>
-      <div id="domainOptions">
-        ${domainOptions}
-      </div>
-    </div>
 
-    <div class="form-group">
-      <select id="courseName" name="course_name" required>
-        <option value="">Select Course *</option>
-        ${courseOptions}
-      </select>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <input type="text" id="startYear" name="start_year" placeholder="Start Year *" value="${startYear}">
-      </div>
-      <div class="form-group">
-        <input type="text" id="endYear" name="end_year" placeholder="End Year *" value="${endYear}">
-      </div>
-    </div>
-
-    <div class="form-group">
-      <select id="collegeName" name="college_name" required onchange="handleCollegeChange()">
-        <option value="">Select College *</option>
+    <!-- College Name Dropdown -->
+    <div class="form-group mb-3">
+      <label for="collegeName" style="font-weight: 500; margin-bottom: 6px;">College Name <span style="color: red;">*</span></label>
+      <select id="collegeName" name="college_name" class="form-control" required onchange="handleCollegeChange()" style="padding: 10px; border-radius: 6px;">
+        <option value="">Select College</option>
         ${collegeOptions}
       </select>
     </div>
 
-    <div class="form-group">
-      <input type="text" id="collegeCity" name="college_city" placeholder="College City *" value="${collegeCity}">
+    <!-- Course Name Dropdown -->
+    <div class="form-group mb-3">
+      <label for="courseName" style="font-weight: 500; margin-bottom: 6px;">Course Name <span style="color: red;">*</span></label>
+      <select id="courseName" name="course_name" class="form-control" required style="padding: 10px; border-radius: 6px;">
+        <option value="">Select Course</option>
+        ${courseOptions}
+      </select>
+    </div>
+
+    <!-- Start and End Year -->
+    <div class="form-row mb-3" style="display: flex; gap: 10px;">
+      <div class="form-group" style="flex: 1;">
+        <input type="text" id="startYear" name="start_year" placeholder="Start Year *" value="${startYear}" class="form-control">
+      </div>
+      <div class="form-group" style="flex: 1;">
+        <input type="text" id="endYear" name="end_year" placeholder="End Year *" value="${endYear}" class="form-control">
+      </div>
+    </div>
+
+    <!-- College City -->
+    <div class="form-group mb-3">
+      <label for="collegeCity" style="font-weight: 500; margin-bottom: 6px;">College City <span style="color: red;">*</span></label>
+      <input type="text" id="collegeCity" name="college_city" value="${collegeCity}" class="form-control" placeholder="College City">
+    </div>
+
+    <!-- Domain Circles -->
+    <div class="form-group mb-2">
+      <label style="font-weight: 500; margin-bottom: 6px;">Domain <span style="color: red;">*</span></label>
+      <div id="domainOptions" style="display: flex; flex-wrap: wrap; gap: 8px;">
+        ${domainOptions}
+      </div>
     </div>
   `;
 
-  // Trigger onchange if college already selected
   setTimeout(() => {
     if (collegeName) handleCollegeChange();
     if (domain) updateCourseDropdown();

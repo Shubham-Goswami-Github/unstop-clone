@@ -6,9 +6,8 @@ from .views import add_school_view
 from .views import school_detail_view 
 from .views import edit_school_view
 from .views import delete_school_view
-from .views import view_colleges, add_college_view, edit_college_view, delete_college_view ,college_detail_view ,view_companies, add_company, edit_company, delete_company , company_detail_view
-
-
+from .views import view_colleges, add_college_view, edit_college_view, delete_college_view ,college_detail_view ,view_companies, add_company, edit_company, delete_company , company_detail_view , view_candidates_by_org, view_candidate, edit_candidate, delete_candidate,view_freshers
+from .views import view_freshers, view_fresher, edit_fresher, delete_fresher
 
 
 urlpatterns = [
@@ -39,6 +38,24 @@ urlpatterns = [
     path('adminpaneldashboard/companies/<int:company_id>/', company_detail_view, name='company_detail'),
 
     path('fetch-dropdown-data/', views.fetch_dropdown_data, name='fetch_dropdown_data'),
+    path('adminpaneldashboard/candidates/', views.candidates_summary, name='candidates_summary'),
+    # urls.py
+    path('adminpaneldashboard/candidates/<str:org_type>/<int:org_id>/', view_candidates_by_org, name='view_candidates_by_org'),
+    # urls.py
+    path('adminpaneldashboard/freshers/', view_freshers, name='freshers_list'),
+    path('adminpaneldashboard/freshers/<int:pk>/view/', view_fresher, name='view_fresher'),
+    path('adminpaneldashboard/freshers/<int:pk>/edit/', edit_fresher, name='edit_fresher'),
+    path('adminpaneldashboard/freshers/<int:pk>/delete/', delete_fresher, name='delete_fresher'),
+    # mainapp/urls.py
+
+    # urls.py
+    path('adminpaneldashboard/view-candidate/<int:candidate_id>/', view_candidate, name='view_candidate'),
+    path('adminpaneldashboard/edit-candidate/<int:candidate_id>/', edit_candidate, name='edit_candidate'),
+    path('adminpaneldashboard/delete-candidate/<int:candidate_id>/', delete_candidate, name='delete_candidate'),
+
+
+
+
 
     
 ]

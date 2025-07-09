@@ -1,0 +1,17 @@
+{% extends 'admin_panel/admin_base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h4 class="mb-4 text-info"><i class="fas fa-user me-2"></i>Fresher Candidate Details</h4>
+  <div class="card shadow rounded-4">
+    <div class="card-body">
+      <p><strong>Full Name:</strong> {{ fresher.first_name }} {{ fresher.last_name }}</p>
+      <p><strong>Email:</strong> {{ fresher.email }}</p>
+      <p><strong>Phone:</strong> {{ fresher.phone }}</p>
+      <p><strong>Gender:</strong> {{ fresher.gender|title }}</p>
+      <p><strong>User Type:</strong> {{ fresher.user_type|title }}</p>
+      <p><strong>Registered At:</strong> {{ fresher.created_at|date:"M d, Y H:i" }}</p>
+    </div>
+  </div>
+  <a href="{% url 'freshers_list' %}" class="btn btn-secondary mt-3"><i class="fas fa-arrow-left me-1"></i>Back to List</a>
+</div>
+{% endblock %}
