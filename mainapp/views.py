@@ -512,3 +512,59 @@ def delete_fresher(request, pk):
     fresher = get_object_or_404(CandidateProfile, pk=pk)
     fresher.delete()
     return redirect('freshers_list')
+
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.hashers import check_password
+from mainapp.models import CandidateProfile
+
+def login_view(request):
+    if request.method == "POST":
+        identifier = request.POST.get('username_or_email')
+        password = request.POST.get('password')
+
+        try:
+            # Try email first, fallback to phone
+            candidate = CandidateProfile.objects.get(email=identifier)
+        except CandidateProfile.DoesNotExist:
+            try:
+                candidate = CandidateProfile.objects.get(phone=identifier)
+            except CandidateProfile.DoesNotExist:
+                candidate = None
+
+        if candidate and check_password(password, candidate.password):
+            # ✅ Login successful: Set required session values
+            request.session['candidate_id'] = candidate.id
+            request.session['candidate_name'] = candidate.first_name
+            request.session['candidate_email'] = candidate.email
+            request.session['candidate_phone'] = candidate.phone
+
+            return redirect('home')  # Redirect to home page
+        else:
+            messages.error(request, "Invalid credentials. Please try again.")
+
+    return render(request, "login_form.html")
+
+
+def logout_view(request):
+    request.session.flush()
+    return redirect('home')  # or any page you want
+
+
+
+from django.shortcuts import render
+
+def internship_page(request):
+    return render(request, 'internships.html')
+
+from django.shortcuts import render
+
+def job_page(request):
+    return render(request, 'jobs.html')
+
+def competitions_page(request):
+    return render(request, 'competitions.html')
+

@@ -1,5 +1,6 @@
 {% load static %}
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <style>
   /* static/css/style.css */
   .w-20 {
@@ -15,6 +16,56 @@
     align-items: center;
     justify-content: center;
   }
+
+
+  .user-sidebar {
+  position: fixed;
+  top: 0;
+  right: -300px;
+  height: 100%;
+  width: 300px;
+  background-color: #f8f9fa;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+  transition: right 0.3s ease-in-out;
+  z-index: 1050;
+  padding: 20px;
+  border-left: 3px solid #0d6efd;
+}
+
+.user-sidebar.active {
+  right: 0;
+}
+
+.user-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.sidebar-links li {
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.sidebar-links li:hover {
+  color: #0d6efd;
+}
+
+  .navbar .nav-link {
+    position: relative;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .navbar .nav-link.active {
+    background-color: rgba(0, 123, 255, 0.1); /* transparent blue */
+    border-bottom: 3px solid #0d6efd; /* blue bottom border */
+    font-weight: 600;
+  }
+
+
 </style>
 
 <!-- templates/navbar.html -->
@@ -44,11 +95,24 @@
 
       <!-- Nav Links -->
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link" href="#">Internships</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Jobs</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Competitions</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Mentorships</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Practice</a></li>
+
+  <li class="nav-item">
+    <a class="nav-link {% if request.path == '/internships/' %}active{% endif %}" href="{% url 'internships' %}">Internships</a>
+  </li>
+
+  <li class="nav-item">
+     <a class="nav-link {% if request.path == '/jobs/' %}active{% endif %}" href="{% url 'jobs' %}">Jobs</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if request.path == '/competitions/' %}active{% endif %}" href="{% url 'competitions' %}">Competitions</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Mentorships</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Practice</a>
+  </li>
+
 
         <!-- More Dropdown -->
         <li class="nav-item dropdown">
@@ -66,23 +130,72 @@
         </li>
       </ul>
 
-      <!-- Right Side Buttons -->
-      <div class="d-flex align-items-center gap-2 ms-3">
-        <!-- Login Button -->
-        <a href="/login/" class="btn btn-primary rounded-pill px-4">Login</a>
+     
+ <!-- templates/navbar.html -->
+{% if request.session.candidate_name %}
+  <div class="d-flex align-items-center gap-2 ms-3">
+    <div class="dropdown">
+      <button class="btn btn-light border rounded-circle p-2" id="userToggle">
+        <i class="fas fa-user text-primary"></i>
+      </button>
+    </div>
+  </div>
+{% else %}
+  <div class="d-flex align-items-center gap-2 ms-3">
+    <a href="/login/" class="btn btn-primary rounded-pill px-4">Login</a>
+    <a href="#" class="btn btn-outline-dark rounded-pill px-4 d-flex align-items-center">
+      <i class="bi bi-plus-lg me-2"></i> Host
+    </a>
+    <a href="#" class="btn btn-for-business rounded-pill px-3">
+      <i class="bi bi-briefcase me-2 fs-5"></i> For Business
+    </a>
+  </div>
+{% endif %}
 
 
-        <!-- Host Button -->
-        <a href="#" class="btn btn-outline-dark rounded-pill px-4 d-flex align-items-center">
-          <i class="bi bi-plus-lg me-2"></i> Host
-        </a>
 
-        <!-- For Business Button -->
-        <a href="#" class="btn btn-for-business rounded-pill px-3">
-          <i class="bi bi-briefcase me-2 fs-5"></i> For Business
-        </a>
-      </div>
+</div>
 
     </div>
   </div>
 </nav>
+<!-- User Sidebar -->
+<div id="userSidebar" class="user-sidebar">
+  <div class="user-sidebar-header">
+    <h5><i class="fas fa-user-circle me-2"></i>{{ request.session.candidate_name }}</h5>
+    <button id="closeSidebar" class="btn-close btn-sm ms-auto"></button>
+  </div>
+  <div class="user-sidebar-content">
+    <p><i class="fas fa-envelope me-2"></i>{{ request.session.candidate_email }}</p>
+    <p><i class="fas fa-phone me-2"></i>{{ request.session.candidate_phone }}</p>
+    <hr>
+    <ul class="list-unstyled sidebar-links">
+      <li><i class="fas fa-file-alt me-2"></i>Registrations / Applications</li>
+      <li><i class="fas fa-briefcase me-2"></i>My Jobs</li>
+      <li><i class="fas fa-trophy me-2"></i>My Opportunities</li>
+      <li><i class="fas fa-music me-2"></i>My Festivals</li>
+      <li><i class="fas fa-users me-2"></i>My Referrals</li>
+      <li><i class="fas fa-sync-alt me-2"></i>My Rounds</li>
+      <li><i class="fas fa-gift me-2"></i>Unstop Rewards</li>
+      <li><i class="fas fa-cog me-2"></i>Settings</li>
+      <li><a href="/logout/" class="text-danger"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+    </ul>
+  </div>
+</div>
+<script>
+  const userToggle = document.getElementById("userToggle");
+  const userSidebar = document.getElementById("userSidebar");
+  const closeSidebar = document.getElementById("closeSidebar");
+
+  if (userToggle && userSidebar && closeSidebar) {
+    userToggle.addEventListener("click", () => {
+      userSidebar.classList.add("active");
+    });
+
+    closeSidebar.addEventListener("click", () => {
+      userSidebar.classList.remove("active");
+    });
+  }
+</script>
+<!-- YEH ADD KAR LAST ME -->
+{% block content %}{% endblock %}
