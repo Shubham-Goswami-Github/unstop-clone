@@ -8,3 +8,15 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
+# mainapp/forms.py
+from django import forms
+from .models import Internship
+
+class InternshipForm(forms.ModelForm):
+    class Meta:
+        model = Internship
+        fields = '__all__'
+        widgets = {
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
+        }

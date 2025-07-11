@@ -87,8 +87,8 @@
 </head>
 
 <body>
-<div class="sidebar">
-    <!-- Centered Logo & Heading -->
+  <div class="sidebar">
+  <!-- Centered Logo & Heading -->
   <div class="text-center mb-4">
     <img src="{% static 'images/unstop-logo.svg' %}" alt="Unstop" height="40" class="mb-2">
     <h5 class="text-white fw-semibold">
@@ -96,15 +96,30 @@
     </h5>
   </div>
 
-
   <!-- Dashboard -->
   <a href="{% url 'admin_panel_dashboard' %}" class="{% if request.resolver_match.url_name == 'admin_panel_dashboard' %}active{% endif %}">
     <i class="fas fa-home me-2"></i>Dashboard
   </a>
 
+  <!-- Add Info Dropdown -->
+  <div id="add-info-dropdown" class="{% if request.resolver_match.url_name == 'add_internship' %}dropdown-open{% endif %}">
+    <a href="javascript:void(0);" onclick="toggleDropdown('add-info-dropdown')" class="{% if request.resolver_match.url_name == 'add_internship' %}active{% endif %}">
+      <i class="fas fa-plus me-2"></i>Add Info
+    </a>
+    <div class="dropdown-menu-custom">
+ <a href="{% url 'internship_list' %}" class="{% if request.resolver_match.url_name == 'internship_list' %}active{% endif %}">
+    <i class="fas fa-briefcase me-2"></i>View Internships
+</a>
+      <a href="#"><i class="fas fa-briefcase me-2"></i>Add Jobs</a>
+      <a href="#"><i class="fas fa-trophy me-2"></i>Add Competitions</a>
+      <a href="#"><i class="fas fa-user-tie me-2"></i>Add Mentors</a>
+      <a href="#"><i class="fas fa-laptop-code me-2"></i>Add Practice</a>
+    </div>
+  </div>
+
   <!-- Organizations Dropdown -->
   <div id="org-dropdown" class="{% if request.resolver_match.url_name == 'schools_list' or request.resolver_match.url_name == 'colleges_list' or request.resolver_match.url_name == 'companies_list' %}dropdown-open{% endif %}">
-    <a href="javascript:void(0);" onclick="toggleDropdown()" class="{% if request.resolver_match.url_name == 'schools_list' or request.resolver_match.url_name == 'colleges_list' or request.resolver_match.url_name == 'companies_list' %}active{% endif %}">
+    <a href="javascript:void(0);" onclick="toggleDropdown('org-dropdown')" class="{% if request.resolver_match.url_name == 'schools_list' or request.resolver_match.url_name == 'colleges_list' or request.resolver_match.url_name == 'companies_list' %}active{% endif %}">
       <i class="fas fa-building me-2"></i>Organizations
     </a>
     <div class="dropdown-menu-custom">
@@ -129,19 +144,24 @@
     <i class="fas fa-users me-2"></i>Candidates
   </a>
 
-  <a href="#">
-    <i class="fas fa-cogs me-2"></i>Settings
-  </a>
+  <a href="#"><i class="fas fa-cogs me-2"></i>Settings</a>
 </div>
+
 
 <div class="content">
   {% block content %}{% endblock %}
 </div>
 
+
 <script>
   function toggleDropdown() {
     const dropdown = document.getElementById('org-dropdown');
     dropdown.classList.toggle('dropdown-open');
+  }
+
+  function toggleDropdown(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('dropdown-open');
   }
 </script>
 

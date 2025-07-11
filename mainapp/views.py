@@ -556,9 +556,11 @@ def logout_view(request):
 
 
 from django.shortcuts import render
+from .models import Internship
 
-def internship_page(request):
-    return render(request, 'internships.html')
+def internships_page(request):
+    internships = Internship.objects.all()  # ya filter conditions bhi ho sakti hain
+    return render(request, 'internships.html', {'internships': internships})
 
 from django.shortcuts import render
 
@@ -568,3 +570,55 @@ def job_page(request):
 def competitions_page(request):
     return render(request, 'competitions.html')
 
+def mentorship_page(request):
+    return render(request, 'mentorship.html')
+
+
+
+# mainapp/views.py
+from django.shortcuts import render, redirect
+from .forms import InternshipForm
+
+def add_internship(request):
+    if request.method == 'POST':
+        form = InternshipForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('internship_list')  # update this to your internship list view
+    else:
+        form = InternshipForm()
+    return render(request, 'admin_panel/add_internship.html', {'form': form})
+
+from django.shortcuts import render, get_object_or_404
+from .models import Internship
+from .forms import InternshipForm
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+
+
+def internship_list(request):
+    internships = Internship.objects.all()
+    return render(request, 'admin_panel/internship_list.html', {'internships': internships})
+
+
+def view_internship(request, internship_id):
+    internship = get_object_or_404(Internship, id=internship_id)
+    return render(request, 'admin_panel/view_internship.html', {'internship': internship})
+
+
+def edit_internship(request, internship_id):
+    internship = get_object_or_404(Internship, id=internship_id)
+    if request.method == 'POST':
+        form = InternshipForm(request.POST, instance=internship)
+        if form.is_valid():
+            form.save()
+            return redirect('internship_list')
+    else:
+        form = InternshipForm(instance=internship)
+    return render(request, 'admin_panel/edit_internship.html', {'form': form})
+
+
+def delete_internship(request, internship_id):
+    internship = get_object_or_404(Internship, id=internship_id)
+    internship.delete()
+    return redirect('internship_list')

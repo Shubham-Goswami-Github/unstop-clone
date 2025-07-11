@@ -8,6 +8,7 @@ from .views import edit_school_view
 from .views import delete_school_view
 from .views import view_colleges, add_college_view, edit_college_view, delete_college_view ,college_detail_view ,view_companies, add_company, edit_company, delete_company , company_detail_view , view_candidates_by_org, view_candidate, edit_candidate, delete_candidate,view_freshers
 from .views import view_freshers, view_fresher, edit_fresher, delete_fresher,login_view
+from .views import add_internship
 
 
 urlpatterns = [
@@ -59,10 +60,15 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
 
 
-    path("internships/", views.internship_page, name="internships"),
+    path('internships/', views.internships_page, name='internships'),
     path("jobs/", views.job_page, name="jobs"),
     path("competitions/", views.competitions_page, name="competitions"),
-
+    path("mentorship/", views.mentorship_page, name="mentorship"),
+    path('adminpaneldashboard/add-internship/', add_internship, name='add_internship'),
+    path('adminpaneldashboard/internships/', views.internship_list, name='internship_list'),
+    path('adminpaneldashboard/internship/<int:internship_id>/', views.view_internship, name='view_internship'),
+    path('adminpaneldashboard/internship/<int:internship_id>/edit/', views.edit_internship, name='edit_internship'),
+    path('adminpaneldashboard/internship/<int:internship_id>/delete/', views.delete_internship, name='delete_internship'),
 
 
 

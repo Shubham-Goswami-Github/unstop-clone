@@ -127,3 +127,37 @@ class Company(models.Model):
 
     def __str__(self):
         return self.name
+
+
+
+# mainapp/models.py
+from django.db import models
+
+class Internship(models.Model):
+    MODE_CHOICES = (
+        ('Online', 'Online'),
+        ('Offline', 'Offline'),
+        ('Hybrid', 'Hybrid'),
+    )
+
+    CATEGORY_CHOICES = (
+        ('Paid', 'Paid'),
+        ('Unpaid', 'Unpaid'),
+    )
+
+    title = models.CharField(max_length=200)
+    company_name = models.CharField(max_length=150)
+    domain = models.CharField(max_length=100)
+    mode = models.CharField(max_length=10, choices=MODE_CHOICES, default='Online')
+    category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
+    stipend_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    duration_weeks = models.IntegerField(null=True, blank=True)
+    location = models.CharField(max_length=120, null=True, blank=True)
+    application_link = models.URLField(max_length=255, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
