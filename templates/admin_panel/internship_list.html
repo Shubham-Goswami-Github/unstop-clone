@@ -58,7 +58,9 @@
 
 <div class="container-fluid px-3">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="header-title"><i class="fas fa-briefcase me-2 text-success"></i>Internship Listings</h3>
+    <h3 class="header-title">
+      <i class="fas fa-briefcase me-2 text-primary"></i>Internship Listings
+    </h3>
     <a href="{% url 'add_internship' %}" class="btn btn-warning btn-sm">
       <i class="fas fa-plus me-1"></i> Add Internship
     </a>
@@ -69,6 +71,8 @@
       <table class="table table-bordered table-hover align-middle mb-0">
         <thead>
           <tr>
+            <th style="width: 50px;">S.No.</th>
+            <th>ID</th>
             <th>Title</th>
             <th>Company</th>
             <th>Domain</th>
@@ -77,12 +81,14 @@
             <th>Stipend</th>
             <th>Duration</th>
             <th>Location</th>
-            <th class="text-center">Actions</th>
+            <th class="text-center" style="width: 130px;">Actions</th>
           </tr>
         </thead>
         <tbody>
           {% for internship in internships %}
           <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ internship.id }}</td>
             <td>{{ internship.title }}</td>
             <td>{{ internship.company_name }}</td>
             <td>{{ internship.domain }}</td>
@@ -106,7 +112,7 @@
           </tr>
           {% empty %}
           <tr>
-            <td colspan="9" class="text-center text-muted">No internships available.</td>
+            <td colspan="11" class="text-center text-muted">No internships available.</td>
           </tr>
           {% endfor %}
         </tbody>

@@ -70,6 +70,18 @@ urlpatterns = [
     path('adminpaneldashboard/internship/<int:internship_id>/edit/', views.edit_internship, name='edit_internship'),
     path('adminpaneldashboard/internship/<int:internship_id>/delete/', views.delete_internship, name='delete_internship'),
 
+    path('adminpaneldashboard/jobs/', views.job_list, name='job_list'),
+    path('adminpaneldashboard/add-job/', views.add_job, name='add_job'),
+    path('adminpaneldashboard/edit-job/<int:job_id>/', views.edit_job, name='edit_job'),
+    path('adminpaneldashboard/delete-job/<int:job_id>/', views.delete_job, name='delete_job'),
+    path('adminpaneldashboard/view-job/<int:job_id>/', views.view_job, name='view_job'),
+    path('jobs/', views.jobs_view, name='jobs'),
+     # Competition URLs
+    path('adminpaneldashboard/competitions/', views.competitions_list, name='competitions_list'),
+    path('adminpaneldashboard/add-competition/', views.add_competition, name='add_competition'),
+    path('adminpaneldashboard/competition/<int:pk>/', views.competition_detail, name='competition_detail'),
+    path('adminpaneldashboard/competition/<int:pk>/edit/', views.edit_competition, name='edit_competition'),
+    path('adminpaneldashboard/competition/<int:pk>/delete/', views.delete_competition, name='delete_competition'),
 
 
 

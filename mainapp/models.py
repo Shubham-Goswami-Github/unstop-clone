@@ -161,3 +161,90 @@ class Internship(models.Model):
 
     def __str__(self):
         return self.title
+
+from django.db import models
+
+class Job(models.Model):
+    EMPLOYMENT_TYPES = [
+    ('Full-time', 'Full-time'),
+    ('Part-time', 'Part-time'),
+    ('Contract', 'Contract'),
+    ('Internship', 'Internship'),
+]
+
+
+    EXPERIENCE_LEVELS = [
+        ('Fresher', 'Fresher'),
+        ('0‑2 Yrs', '0‑2 Yrs'),
+        ('2‑5 Yrs', '2‑5 Yrs'),
+        ('5+ Yrs', '5+ Yrs'),
+    ]
+
+    CATEGORY_CHOICES = [
+        ('Human Resources', 'Human Resources'),
+        ('Software Development', 'Software Development'),
+        ('Marketing', 'Marketing'),
+        ('Operations', 'Operations'),
+        ('Finance', 'Finance'),]
+
+    title = models.CharField(max_length=200)
+    company_name = models.CharField(max_length=150)
+    domain = models.CharField(max_length=100)
+    employment_type = models.CharField(max_length=20, choices=EMPLOYMENT_TYPES, default='Full‑time')
+    salary_min_lpa = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    salary_max_lpa = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    experience_level = models.CharField(max_length=20, choices=EXPERIENCE_LEVELS, default='Fresher')
+    location = models.CharField(max_length=120, null=True, blank=True)
+    remote_allowed = models.BooleanField(default=False)
+    apply_by = models.DateField(null=True, blank=True)
+    job_description = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
+
+    def __str__(self):
+        return self.title
+    
+
+
+    
+
+from django.db import models
+class Competition(models.Model):
+    CATEGORY_CHOICES = [
+        ('Free', 'Free'),
+        ('Paid', 'Paid'),
+    ]
+
+    COMPETITION_TYPE_CHOICES = [
+        ('Competitions', 'Competitions'),
+        ('Hackathons', 'Hackathons'),
+        ('Quizzes', 'Quizzes'),
+        ('Scholarships', 'Scholarships'),
+        ('Workshops', 'Workshops'),
+        ('Conferences', 'Conferences'),
+        ('Cultural Events', 'Cultural Events'),
+    ]
+
+    MODE_CHOICES = [
+        ('Online', 'Online'),
+        ('Offline', 'Offline'),
+        ('Hybrid', 'Hybrid'),
+    ]
+
+    title                 = models.CharField(max_length=200)
+    host_org              = models.CharField(max_length=150)
+    category              = models.CharField(max_length=4,  choices=CATEGORY_CHOICES, default='Free')
+    fee_amount            = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
+    competition_type      = models.CharField(max_length=20, choices=COMPETITION_TYPE_CHOICES)  # updated max_length & choices
+    mode                  = models.CharField(max_length=7,  choices=MODE_CHOICES, default='Online')
+    start_date            = models.DateField(null=True, blank=True)
+    end_date              = models.DateField(null=True, blank=True)
+    prize_pool            = models.CharField(max_length=120, null=True, blank=True)
+    team_size             = models.CharField(max_length=20, default='Individual')
+    registration_deadline = models.DateField(null=True, blank=True)
+    created_at            = models.DateTimeField(auto_now_add=True)
+    updated_at            = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title

@@ -2,72 +2,113 @@
 {% block content %}
 {% load static %}
 
-<!-- Bootstrap + Font Awesome -->
+<!-- Bootstrap & Font Awesome -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 <style>
-  .card-detail {
-    border-radius: 10px;
-    transition: all 0.3s ease;
+  body {
+    font-family: 'Poppins', sans-serif;
+    color: #eaf6ff;
   }
 
-  .card-detail:hover {
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  .card-detail {
+    background: rgba(0, 20, 35, 0.65);
+    backdrop-filter: blur(14px);
+    border-radius: 16px;
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.06);
+    overflow: hidden;
+    border: none;
+  }
+
+  .card-header {
+    background: rgba(0, 60, 90, 0.88);
+    color: #00ffff;
+    font-weight: 600;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.25);
+    border-bottom: none;
+    padding: 20px 30px;
+  }
+
+  .card-body {
+    padding: 30px;
   }
 
   .table th {
-    width: 200px;
-    color: #495057;
+    width: 220px;
+    color: #5ec3df;
+    font-weight: 500;
+    background: transparent !important;
+    text-shadow: 0 0 4px rgba(94, 195, 223, 0.3);
+    border: none;
+    vertical-align: middle;
   }
 
-  .btn-back, .btn-edit, .btn-delete {
-    transition: all 0.3s ease;
+  .table td {
+    color: #eaf6ff;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: none;
+    vertical-align: middle;
   }
 
-  .btn-back:hover {
-    transform: translateX(-3px);
+  .table-striped > tbody > tr:nth-of-type(odd) td {
+    background-color: rgba(255, 255, 255, 0.025);
   }
 
-  .btn-edit:hover {
-    transform: scale(1.05);
-  }
-
-  .btn-delete:hover {
-    transform: scale(1.05);
+  .badge {
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 14px;
   }
 
   .action-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 25px;
+    margin-top: 30px;
+  }
+
+  .btn-back,
+  .btn-edit,
+  .btn-delete {
+    transition: 0.3s ease;
+    border-radius: 8px;
+    font-weight: 500;
+  }
+
+  .btn-edit:hover,
+  .btn-delete:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(94, 195, 223, 0.25);
+  }
+
+  .btn-back:hover {
+    transform: translateX(-3px);
+    box-shadow: 0 0 10px rgba(94, 195, 223, 0.2);
   }
 
   @media (max-width: 768px) {
     .action-bar {
       flex-direction: column;
-      gap: 10px;
       align-items: flex-start;
+      gap: 12px;
     }
 
     .table th {
-      width: 150px;
+      width: 160px;
     }
   }
 </style>
 
 <div class="container mt-5">
-  <div class="card card-detail shadow-sm border-0">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-      <h4 class="mb-0">
-        <i class="fas fa-school me-2"></i>School Details
-      </h4>
+  <div class="card card-detail shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0"><i class="fas fa-school me-2"></i>School Details</h4>
       <img src="{% static 'images/unstop-logo.svg' %}" alt="Logo" height="28">
     </div>
 
     <div class="card-body">
-      <table class="table table-striped align-middle">
+      <table class="table table-striped align-middle mb-0">
         <tr>
           <th><i class="fas fa-building me-2 text-secondary"></i>Name:</th>
           <td>{{ school.name }}</td>
@@ -105,12 +146,9 @@
       </table>
 
       <div class="action-bar">
-        <!-- Back to List -->
         <a href="{% url 'schools_list' %}" class="btn btn-outline-secondary btn-sm btn-back">
           <i class="fas fa-arrow-left me-1"></i>Back to List
         </a>
-
-        <!-- Edit + Delete -->
         <div>
           <a href="{% url 'edit_school' school.id %}" class="btn btn-outline-success btn-sm me-2 btn-edit">
             <i class="fas fa-pen me-1"></i>Edit

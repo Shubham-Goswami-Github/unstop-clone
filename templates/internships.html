@@ -145,13 +145,17 @@
 </div>
 
 <div class="filter-section">
-  <div class="filter-buttons-group">
-    <button id="paidBtn" onclick="filterCategory('Paid')">Paid</button>
-    <button id="unpaidBtn" onclick="filterCategory('Unpaid')">Unpaid</button>
-    <button id="onlineBtn" onclick="filterMode('Online')">Online</button>
-    <button id="offlineBtn" onclick="filterMode('Offline')">Offline</button>
-    <button id="hybridBtn" onclick="filterMode('Hybrid')">Hybrid</button>
-  </div>
+<div class="filter-buttons-group">
+  <button id="paidBtn" onclick="filterCategory('Paid')">Paid</button>
+  <button id="unpaidBtn" onclick="filterCategory('Unpaid')">Unpaid</button>
+</div>
+
+<div class="filter-buttons-group" id="modeFilters" style="display: none;">
+  <button id="onlineBtn" onclick="filterMode('Online')">Online</button>
+  <button id="offlineBtn" onclick="filterMode('Offline')">Offline</button>
+  <button id="hybridBtn" onclick="filterMode('Hybrid')">Hybrid</button>
+</div>
+
 </div>
 
 <div class="cards-grid" id="internshipCards">
@@ -177,11 +181,15 @@
     if (btn) btn.classList.add('active');
   }
 
-  function filterCategory(category) {
-    selectedCategory = category;
-    updateButtonState(['paidBtn', 'unpaidBtn'], category.toLowerCase() + 'Btn');
-    applyFilters();
-  }
+function filterCategory(category) {
+  selectedCategory = category;
+  updateButtonState(['paidBtn', 'unpaidBtn'], category.toLowerCase() + 'Btn');
+  
+  // Show mode filters only after category is selected
+  document.getElementById('modeFilters').style.display = 'flex';
+  applyFilters();
+}
+
 
   function filterMode(mode) {
     selectedMode = mode;

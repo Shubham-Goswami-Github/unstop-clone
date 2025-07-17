@@ -1,0 +1,10 @@
+{% extends "admin_panel/admin_base.html" %}
+{% block content %}
+<h4>{% if comp %}Edit{% else %}Add{% endif %} Competition</h4>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-success">Save</button>
+  <a href="{% url 'competitions_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

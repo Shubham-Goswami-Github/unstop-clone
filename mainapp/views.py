@@ -622,3 +622,100 @@ def delete_internship(request, internship_id):
     internship = get_object_or_404(Internship, id=internship_id)
     internship.delete()
     return redirect('internship_list')
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Job
+from .forms import JobForm
+
+def job_list(request):
+    jobs = Job.objects.all().order_by('-created_at')
+    return render(request, 'admin_panel/job_list.html', {'jobs': jobs})
+
+def add_job(request):
+    if request.method == 'POST':
+        form = JobForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('job_list')
+    else:
+        form = JobForm()
+    return render(request, 'admin_panel/add_job.html', {'form': form})
+
+def edit_job(request, job_id):
+    job = get_object_or_404(Job, pk=job_id)
+    if request.method == 'POST':
+        form = JobForm(request.POST, instance=job)
+        if form.is_valid():
+            form.save()
+            return redirect('job_list')
+    else:
+        form = JobForm(instance=job)
+    return render(request, 'admin_panel/edit_job.html', {'form': form, 'job': job})
+
+def delete_job(request, job_id):
+    job = get_object_or_404(Job, pk=job_id)
+    job.delete()
+    return redirect('job_list')
+
+def view_job(request, job_id):
+    job = get_object_or_404(Job, pk=job_id)
+    return render(request, 'admin_panel/view_job.html', {'job': job})
+
+from django.shortcuts import render
+from .models import Job
+
+def jobs_view(request):
+    jobs = Job.objects.all()
+    print("JOBS COUNT:", jobs.count())  # <-- Yeh ek baar check kar
+    return render(request, 'jobs.html', {'jobs': jobs})
+
+
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import Competition
+from .forms import CompetitionForm
+
+def competitions_list(request):
+    comps = Competition.objects.order_by('-created_at')
+    print("COMPETITIONS:", comps)  # ye line rakho debugging ke liye
+    return render(request, 'admin_panel/competitions_list.html', {'competitions': comps})
+
+def competition_detail(request, pk):
+    comp = get_object_or_404(Competition, pk=pk)
+    return render(request, 'admin_panel/view_competition.html', {'comp': comp})
+
+def add_competition(request):
+    if request.method == 'POST':
+        form = CompetitionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Competition added!')
+            return redirect('competitions_list')
+    else:
+        form = CompetitionForm()
+    return render(request, 'admin_panel/add_competition.html', {'form': form})
+
+def edit_competition(request, pk):
+    comp = get_object_or_404(Competition, pk=pk)
+    if request.method == 'POST':
+        form = CompetitionForm(request.POST, instance=comp)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Competition updated!')
+            return redirect('competitions_list')
+    else:
+        form = CompetitionForm(instance=comp)
+    return render(request, 'admin_panel/edit_competition.html', {'form': form, 'comp': comp})
+
+def delete_competition(request, pk):
+    comp = get_object_or_404(Competition, pk=pk)
+    if request.method == 'POST':
+        comp.delete()
+        messages.success(request, 'Competition deleted successfully.')
+        return redirect('competitions_list')
+    return render(request, 'admin_panel/delete_competition.html', {'comp': comp})

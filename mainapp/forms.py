@@ -20,3 +20,25 @@ class InternshipForm(forms.ModelForm):
             'start_date': forms.DateInput(attrs={'type': 'date'}),
             'end_date': forms.DateInput(attrs={'type': 'date'}),
         }
+
+from django import forms
+from .models import Job
+
+class JobForm(forms.ModelForm):
+    class Meta:
+        model = Job
+        fields = '__all__'
+
+from django import forms
+from mainapp.models import Competition
+
+class CompetitionForm(forms.ModelForm):
+    class Meta:
+        model  = Competition
+        fields = '__all__'
+        widgets = {
+            # quick Bootstrap styling
+            'start_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'end_date':   forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'registration_deadline': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        }

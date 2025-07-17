@@ -7,37 +7,58 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 <style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    color: #eaf6ff;
+  }
+
   .form-container {
-    max-width: 600px;
+    max-width: 640px;
     margin: 50px auto;
   }
 
-  .form-control, .form-check-input {
+  .form-section {
+    background: rgba(0, 20, 35, 0.65);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.05);
+  }
+
+  .form-control,
+  .form-check-input {
     border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #eaf6ff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .form-control:focus {
-    box-shadow: 0 0 0 0.2rem rgba(13, 202, 240, 0.25);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 255, 255, 0.15);
   }
 
   .form-label {
     font-weight: 500;
-    color: #343a40;
-  }
-
-  .form-section {
-    background-color: #ffffff;
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    color: #5ec3df;
+    text-shadow: 0 0 3px rgba(0, 255, 255, 0.2);
   }
 
   .btn-submit {
-    transition: 0.3s ease;
+    background-color: #ffce3c;
+    color: #001a33;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: 0.3s ease-in-out;
   }
 
   .btn-submit:hover {
-    transform: scale(1.03);
+    background-color: #ffb400;
+    box-shadow: 0 0 16px rgba(255, 200, 0, 0.6);
+    transform: scale(1.05);
   }
 
   .form-header {
@@ -49,7 +70,18 @@
     margin: 0 auto 20px auto;
     height: 50px;
   }
+
+  .btn-outline-secondary {
+    border-radius: 8px;
+    color: #ccc;
+  }
+
+  .btn-outline-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #fff;
+  }
 </style>
+
 
 <div class="container form-container">
   <!-- Logo on Top -->

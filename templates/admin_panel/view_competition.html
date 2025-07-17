@@ -1,0 +1,18 @@
+{% extends "admin_panel/admin_base.html" %}
+{% block content %}
+<h4>{{ comp.title }}</h4>
+<ul class="list-group mb-3">
+  <li class="list-group-item"><strong>Host:</strong> {{ comp.host_org }}</li>
+  <li class="list-group-item"><strong>Category:</strong> {{ comp.category }}</li>
+  <li class="list-group-item"><strong>Fee:</strong> ₹{{ comp.fee_amount }}</li>
+  <li class="list-group-item"><strong>Type:</strong> {{ comp.competition_type }}</li>
+  <li class="list-group-item"><strong>Mode:</strong> {{ comp.mode }}</li>
+  <li class="list-group-item"><strong>Prize Pool:</strong> {{ comp.prize_pool }}</li>
+  <li class="list-group-item"><strong>Team Size:</strong> {{ comp.team_size }}</li>
+  <li class="list-group-item"><strong>Start Date:</strong> {{ comp.start_date }}</li>
+  <li class="list-group-item"><strong>End Date:</strong> {{ comp.end_date }}</li>
+  <li class="list-group-item"><strong>Registration Deadline:</strong> {{ comp.registration_deadline }}</li>
+</ul>
+<a href="{% url 'edit_competition' comp.pk %}" class="btn btn-warning">Edit</a>
+<a href="{% url 'competitions_list' %}" class="btn btn-secondary">Back</a>
+{% endblock %}
