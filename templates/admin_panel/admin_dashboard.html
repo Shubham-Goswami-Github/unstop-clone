@@ -151,6 +151,53 @@
         </div>
       </div>
 
+
+    <!-- Internships -->
+<div class="col-12 col-sm-6 col-lg-3">
+  <div class="card dashboard-card h-100 position-relative">
+    <a href="{% url 'internship_list' %}" class="stretched-link">
+      <span class="visually-hidden">Go to Internship List</span>
+    </a>
+    <div class="card-body">
+      <h6>Total Internships</h6>
+      <h4 class="txt-primary">
+        <i class="fas fa-briefcase"></i> {{ internship_count }}
+      </h4>
+    </div>
+  </div>
+</div>
+
+<!-- Jobs -->
+<div class="col-12 col-sm-6 col-lg-3">
+  <div class="card dashboard-card h-100 position-relative">
+    <a href="{% url 'job_list' %}" class="stretched-link">
+      <span class="visually-hidden">Go to Job List</span>
+    </a>
+    <div class="card-body">
+      <h6>Total Jobs</h6>
+      <h4 class="txt-success">
+        <i class="fas fa-clipboard-list"></i> {{ job_count }}
+      </h4>
+    </div>
+  </div>
+</div>
+
+<!-- Competitions -->
+<div class="col-12 col-sm-6 col-lg-3">
+  <div class="card dashboard-card h-100 position-relative">
+    <a href="{% url 'competitions_list' %}" class="stretched-link">
+      <span class="visually-hidden">Go to Competitions List</span>
+    </a>
+    <div class="card-body">
+      <h6>Total Competitions</h6>
+      <h4 class="txt-warning">
+        <i class="fas fa-trophy"></i> {{ competition_count }}
+      </h4>
+    </div>
+  </div>
+</div>
+
+
     </div><!-- /row -->
   </div><!-- /wrapper -->
 </div><!-- /container -->

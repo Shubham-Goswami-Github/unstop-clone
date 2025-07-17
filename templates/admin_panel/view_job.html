@@ -1,19 +1,17 @@
-{% extends "admin_panel/admin_base.html" %}
+{% extends 'admin_panel/base.html' %}
 {% block content %}
 <div class="container mt-4">
-  <h4>{{ job.title }}</h4>
-  <ul class="list-group mb-3">
-    <li class="list-group-item"><strong>Company:</strong> {{ job.company_name }}</li>
-    <li class="list-group-item"><strong>Domain:</strong> {{ job.domain }}</li>
-    <li class="list-group-item"><strong>Type:</strong> {{ job.employment_type }}</li>
-    <li class="list-group-item"><strong>Experience:</strong> {{ job.experience_level }}</li>
-    <li class="list-group-item"><strong>Salary:</strong> ₹{{ job.salary_min_lpa }} – ₹{{ job.salary_max_lpa }} LPA</li>
-    <li class="list-group-item"><strong>Remote:</strong> {{ job.remote_allowed }}</li>
-    <li class="list-group-item"><strong>Apply By:</strong> {{ job.apply_by }}</li>
-    <li class="list-group-item"><strong>Category:</strong> {{ job.category }}</li>
-    <li class="list-group-item"><strong>Description:</strong><br>{{ job.job_description|linebreaks }}</li>
-  </ul>
-  <a href="{% url 'edit_job' job.id %}" class="btn btn-success">Edit</a>
+  <h3>{{ job.title }}</h3>
+  <p><strong>Company:</strong> {{ job.company_name }}</p>
+  <p><strong>Domain:</strong> {{ job.domain }}</p>
+  <p><strong>Category:</strong> {{ job.category }}</p>
+  <p><strong>Experience Level:</strong> {{ job.experience_level }}</p>
+  <p><strong>Location:</strong> {{ job.location }}</p>
+  <p><strong>Remote:</strong> {{ job.remote_allowed }}</p>
+  <p><strong>Apply By:</strong> {{ job.apply_by }}</p>
+  <p><strong>Salary:</strong> ₹{{ job.salary_min_lpa }} LPA - ₹{{ job.salary_max_lpa }} LPA</p>
+  <p><strong>Description:</strong><br>{{ job.job_description }}</p>
+  <a href="{% url 'edit_job' job.id %}" class="btn btn-primary">Edit</a>
   <a href="{% url 'job_list' %}" class="btn btn-secondary">Back</a>
 </div>
 {% endblock %}

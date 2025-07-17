@@ -125,7 +125,7 @@ def submit_candidate_form(request):
 
 
 
-from .models import School, College, Company, CandidateProfile
+from mainapp.models import School, College, Company, CandidateProfile, Internship, Job, Competition
 
 def admin_panel_dashboard_view(request):
     # Total organizations count
@@ -142,7 +142,12 @@ def admin_panel_dashboard_view(request):
     experienced_candidates_count = CandidateProfile.objects.filter(user_type='professional').count()
     fresher_candidates_count = CandidateProfile.objects.filter(user_type='fresher').count()
 
-    # Schools with candidate count
+    # Internships, Jobs, Competitions
+    total_internships = Internship.objects.count()
+    total_jobs = Job.objects.count()
+    total_competitions = Competition.objects.count()
+
+    # Organizations with candidate count
     schools = School.objects.all()
     for school in schools:
         school.candidate_count = CandidateProfile.objects.filter(school_id=school.id).count()
@@ -170,14 +175,19 @@ def admin_panel_dashboard_view(request):
         'experienced_count': experienced_candidates_count,
         'fresher_count': fresher_candidates_count,
 
-        # Lists for detail
+        # Lists for detail view
         'schools': schools,
         'colleges': colleges,
         'companies': companies,
-        
+
+        # ✅ New counts added below
+        'internship_count': total_internships,
+        'job_count': total_jobs,
+        'competition_count': total_competitions,
     }
 
     return render(request, 'admin_panel/admin_dashboard.html', context)
+
 
 
 
@@ -209,7 +219,7 @@ def add_school_view(request):
             email=email,
             is_approved=is_approved
         )
-        return redirect('admin_panel/schools_list.html')  # make this view later
+        return redirect("schools_list")  # make this view later
 
     return render(request, 'admin_panel/add_school.html')
 
@@ -564,8 +574,10 @@ def internships_page(request):
 
 from django.shortcuts import render
 
-def job_page(request):
-    return render(request, 'jobs.html')
+from django.shortcuts import render
+from django.template.loader import get_template
+from .models import Job
+
 
 def competitions_page(request):
     return render(request, 'competitions.html')
@@ -661,18 +673,18 @@ def delete_job(request, job_id):
 
 def view_job(request, job_id):
     job = get_object_or_404(Job, pk=job_id)
-    return render(request, 'admin_panel/view_job.html', {'job': job})
+    return render(request, 'admin_panel/job_detail.html', {'job': job})
 
 from django.shortcuts import render
 from .models import Job
 
+
 def jobs_view(request):
     jobs = Job.objects.all()
-    print("JOBS COUNT:", jobs.count())  # <-- Yeh ek baar check kar
+    template = get_template('jobs.html')
+    print("Template path being used:", template.origin)
+    print("Debug:", jobs.count(), "jobs loaded")
     return render(request, 'jobs.html', {'jobs': jobs})
-
-
-
 
 
 from django.shortcuts import render, get_object_or_404, redirect

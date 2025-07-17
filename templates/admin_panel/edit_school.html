@@ -1,145 +1,165 @@
 {% extends "admin_panel/admin_base.html" %}
-{% block content %}
 {% load static %}
+{% block content %}
 
-<!-- Bootstrap & Font Awesome -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<!-- Google Fonts + Font Awesome -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
 <style>
   body {
+    background-color: #f8f9fa;
     font-family: 'Poppins', sans-serif;
-    color: #eaf6ff;
   }
 
-  .form-container {
-    max-width: 640px;
-    margin: 50px auto;
+  .registration-card {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   }
 
-  .form-section {
-    background: rgba(0, 20, 35, 0.65);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 0 25px rgba(0, 255, 255, 0.05);
+  .registration-image {
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
   }
 
-  .form-control,
-  .form-check-input {
-    border-radius: 8px;
-    background-color: rgba(255, 255, 255, 0.06);
-    color: #eaf6ff;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .form-control:focus {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 255, 255, 0.15);
+  h3 {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #003366;
   }
 
   .form-label {
     font-weight: 500;
-    color: #5ec3df;
-    text-shadow: 0 0 3px rgba(0, 255, 255, 0.2);
+    font-size: 0.95rem;
+    color: #333;
   }
 
-  .btn-submit {
-    background-color: #ffce3c;
-    color: #001a33;
-    font-weight: 600;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    transition: 0.3s ease-in-out;
+  .form-control {
+    font-size: 0.93rem;
+    padding: 10px;
+    border-radius: 6px;
   }
 
-  .btn-submit:hover {
-    background-color: #ffb400;
-    box-shadow: 0 0 16px rgba(255, 200, 0, 0.6);
-    transform: scale(1.05);
+  .form-check-label {
+    font-size: 0.9rem;
+    color: #333;
   }
 
-  .form-header {
-    margin-bottom: 25px;
+  .btn-dark-blue {
+    background-color: #003366;
+    color: white;
+    transition: 0.3s ease;
+    font-weight: 500;
+    padding: 8px 20px;
   }
 
-  .logo {
-    display: block;
-    margin: 0 auto 20px auto;
-    height: 50px;
+  .btn-dark-blue:hover {
+    background-color: #002147;
+    color: #fff;
   }
 
   .btn-outline-secondary {
-    border-radius: 8px;
-    color: #ccc;
+    font-weight: 500;
+    padding: 8px 20px;
   }
 
-  .btn-outline-secondary:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-    color: #fff;
+  .logo-small {
+    width: 120px;
+    margin-bottom: 1rem;
+  }
+
+  .back-btn {
+    font-size: 0.9rem;
+    color: #003366;
+    margin-bottom: 1rem;
+    display: inline-block;
+  }
+
+  .form-section {
+    padding: 2rem;
+  }
+
+  .icon-label i {
+    color: #003366;
+    margin-right: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .form-section {
+      padding: 1.2rem;
+    }
   }
 </style>
 
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      <div class="card registration-card">
+        <div class="row g-0">
+          <div class="col-md-5 d-none d-md-block">
+            <img src="{% static 'images/c1.webp' %}" alt="School image" class="registration-image">
+          </div>
+          <div class="col-md-7">
+            <div class="form-section">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="{% url 'schools_list' %}" class="btn btn-outline-dark">
+                  <i class="fas fa-arrow-left me-1"></i> Back
+                </a>
+                <img src="{% static 'images/unstop-logo.svg' %}" alt="Unstop Logo" class="logo-small">
+              </div>
 
-<div class="container form-container">
-  <!-- Logo on Top -->
-  <img src="{% static 'images/unstop-logo.svg' %}" alt="Unstop Logo" class="logo">
+              <h3 class="mb-4 text-uppercase">Edit School</h3>
 
-  <div class="form-section">
-    <div class="form-header d-flex align-items-center">
-      <h4 class="text-primary mb-0">
-        <i class="fas fa-pen-to-square me-2"></i>Edit School
-      </h4>
+              <form method="POST" novalidate>
+                {% csrf_token %}
+
+                <div class="mb-3">
+                  <label class="form-label icon-label"><i class="fas fa-school"></i>School Name *</label>
+                  <input type="text" name="name" class="form-control" value="{{ school.name }}" required>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label icon-label"><i class="fas fa-map-marker-alt"></i>Address</label>
+                  <input type="text" name="address" class="form-control" value="{{ school.address }}">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label icon-label"><i class="fas fa-city"></i>City</label>
+                  <input type="text" name="city" class="form-control" value="{{ school.city }}">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label icon-label"><i class="fas fa-phone-alt"></i>Contact Number</label>
+                  <input type="text" name="contact_number" class="form-control" value="{{ school.contact_number }}">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label icon-label"><i class="fas fa-envelope"></i>Email</label>
+                  <input type="email" name="email" class="form-control" value="{{ school.email }}">
+                </div>
+
+                <div class="form-check mb-4">
+                  <input class="form-check-input" type="checkbox" name="is_approved" id="isApproved"
+                    {% if school.is_approved %}checked{% endif %}>
+                  <label class="form-check-label" for="isApproved">
+                    <i class="fas fa-check-circle text-success me-1"></i>Approve this school
+                  </label>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                  <button type="reset" class="btn btn-outline-secondary me-2">Reset</button>
+                  <button type="submit" class="btn btn-dark-blue">Update</button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <form method="POST" novalidate>
-      {% csrf_token %}
-
-      <div class="mb-3">
-        <label class="form-label">School Name</label>
-        <input type="text" class="form-control" name="name" value="{{ school.name }}" required>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Address</label>
-        <input type="text" class="form-control" name="address" value="{{ school.address }}">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">City</label>
-        <input type="text" class="form-control" name="city" value="{{ school.city }}">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Contact Number</label>
-        <input type="text" class="form-control" name="contact_number" value="{{ school.contact_number }}">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input type="email" class="form-control" name="email" value="{{ school.email }}">
-      </div>
-
-      <div class="form-check mb-4">
-        <input class="form-check-input" type="checkbox" name="is_approved" id="isApproved"
-          {% if school.is_approved %}checked{% endif %}>
-        <label class="form-check-label" for="isApproved">
-          <i class="fas fa-check-circle me-1"></i>Approved
-        </label>
-      </div>
-
-      <div class="d-flex justify-content-between">
-        <button type="submit" class="btn btn-success btn-submit">
-          <i class="fas fa-save me-1"></i>Update
-        </button>
-        <a href="{% url 'schools_list' %}" class="btn btn-outline-secondary">
-          <i class="fas fa-arrow-left me-1"></i>Cancel
-        </a>
-      </div>
-    </form>
   </div>
-</div>
+</section>
 
 {% endblock %}

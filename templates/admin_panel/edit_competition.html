@@ -1,10 +1,165 @@
 {% extends "admin_panel/admin_base.html" %}
+{% load static %}
 {% block content %}
-<h4>{% if comp %}Edit{% else %}Add{% endif %} Competition</h4>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="btn btn-success">Save</button>
-  <a href="{% url 'competitions_list' %}" class="btn btn-secondary">Cancel</a>
-</form>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<style>
+  body {
+    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .registration-card {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
+  }
+
+  h3 {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #003366;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #333;
+    margin-bottom: 0.4rem;
+  }
+
+  .form-control {
+    font-size: 0.85rem;
+    padding: 8px 10px;
+    border-radius: 6px;
+  }
+
+  .btn-dark-blue {
+    background-color: #003366;
+    color: white;
+    font-weight: 500;
+    padding: 7px 18px;
+    font-size: 0.9rem;
+  }
+
+  .btn-dark-blue:hover {
+    background-color: #002147;
+  }
+</style>
+
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card registration-card">
+        <div class="row g-0">
+          <div class="col-md-5 d-none d-md-block">
+            <div class="d-flex flex-column h-100 justify-content-between p-2">
+              <div class="image-box bg-white p-2 rounded mb-2" style="height: 48%;">
+                <img src="{% static 'images/c1.webp' %}" class="w-100 h-100" style="object-fit: contain; border-radius: 10px;">
+              </div>
+              <div class="image-box bg-white p-2 rounded mt-2" style="height: 48%;">
+                <img src="{% static 'images/f1.webp' %}" class="w-100 h-100" style="object-fit: contain; border-radius: 10px;">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-7">
+            <div class="form-section p-4">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="{% url 'competitions_list' %}" class="btn btn-outline-dark">
+                  <i class="fas fa-arrow-left me-1"></i> Back
+                </a>
+                <img src="{% static 'images/unstop-logo.svg' %}" class="logo-small" width="100">
+              </div>
+              <h3 class="text-center">{% if comp %}Edit{% else %}Add{% endif %} Competition</h3>
+              <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                  <label class="form-label">Title *</label>
+                  <input type="text" name="title" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Host Organization *</label>
+                  <input type="text" name="host_org" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Category *</label>
+                  <select name="category" class="form-control">
+                    <option value="Free">Free</option>
+                    <option value="Paid">Paid</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Fee Amount</label>
+                  <input type="number" step="0.01" name="fee_amount" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Competition Type *</label>
+                  <select name="competition_type" class="form-control">
+                    <option>Competitions</option>
+                    <option>Hackathons</option>
+                    <option>Quizzes</option>
+                    <option>Scholarships</option>
+                    <option>Workshops</option>
+                    <option>Conferences</option>
+                    <option>Cultural Events</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Mode *</label>
+                  <select name="mode" class="form-control">
+                    <option>Online</option>
+                    <option>Offline</option>
+                    <option>Hybrid</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Start Date</label>
+                  <input type="date" name="start_date" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">End Date</label>
+                  <input type="date" name="end_date" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Prize Pool</label>
+                  <input type="text" name="prize_pool" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Team Size</label>
+                  <input type="text" name="team_size" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Registration Deadline</label>
+                  <input type="date" name="registration_deadline" class="form-control">
+                </div>
+
+                <div class="d-flex justify-content-end">
+                  <button type="reset" class="btn btn-outline-secondary me-2">Reset</button>
+                  <button type="submit" class="btn btn-dark-blue">Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 {% endblock %}

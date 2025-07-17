@@ -9,6 +9,7 @@ from .views import delete_school_view
 from .views import view_colleges, add_college_view, edit_college_view, delete_college_view ,college_detail_view ,view_companies, add_company, edit_company, delete_company , company_detail_view , view_candidates_by_org, view_candidate, edit_candidate, delete_candidate,view_freshers
 from .views import view_freshers, view_fresher, edit_fresher, delete_fresher,login_view
 from .views import add_internship
+from mainapp.views import jobs_view 
 
 
 urlpatterns = [
@@ -61,7 +62,7 @@ urlpatterns = [
 
 
     path('internships/', views.internships_page, name='internships'),
-    path("jobs/", views.job_page, name="jobs"),
+
     path("competitions/", views.competitions_page, name="competitions"),
     path("mentorship/", views.mentorship_page, name="mentorship"),
     path('adminpaneldashboard/add-internship/', add_internship, name='add_internship'),
@@ -75,7 +76,8 @@ urlpatterns = [
     path('adminpaneldashboard/edit-job/<int:job_id>/', views.edit_job, name='edit_job'),
     path('adminpaneldashboard/delete-job/<int:job_id>/', views.delete_job, name='delete_job'),
     path('adminpaneldashboard/view-job/<int:job_id>/', views.view_job, name='view_job'),
-    path('jobs/', views.jobs_view, name='jobs'),
+  
+    path('jobs/', jobs_view, name='jobs'),
      # Competition URLs
     path('adminpaneldashboard/competitions/', views.competitions_list, name='competitions_list'),
     path('adminpaneldashboard/add-competition/', views.add_competition, name='add_competition'),

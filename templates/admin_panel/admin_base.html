@@ -115,23 +115,28 @@
     </a>
 
     <!-- Add Info Dropdown -->
-    <div id="add-info-dropdown" class="{% if request.resolver_match.url_name in 'add_internship internship_list job_list' %}dropdown-open{% endif %}">
-      <a href="javascript:void(0);" onclick="toggleDropdown('add-info-dropdown')" class="{% if request.resolver_match.url_name in 'add_internship internship_list job_list' %}active{% endif %}">
-        <i class="fas fa-briefcase"></i>Opportunities
-      </a>
-      <div class="dropdown-menu-custom">
-        <a href="{% url 'internship_list' %}" class="{% if request.resolver_match.url_name == 'internship_list' %}active{% endif %}">
-          <i class="fas fa-briefcase"></i> View Internships
-        </a>
-        <a href="{% url 'job_list' %}" class="{% if request.resolver_match.url_name == 'job_list' %}active{% endif %}">
-          <i class="fas fa-briefcase"></i> Jobs
-        </a>
-       <a href="{% url 'competitions_list' %}"><i class="fas fa-trophy me-2"></i> Competitions</a>
+    <!-- Add Info Dropdown -->
+<!-- Add Info Dropdown -->
+<div id="add-info-dropdown" class="{% if request.resolver_match.url_name == 'add_internship' or request.resolver_match.url_name == 'internship_list' or request.resolver_match.url_name == 'job_list' or request.resolver_match.url_name == 'competitions_list' %}dropdown-open{% endif %}">
+  <a href="javascript:void(0);" onclick="toggleDropdown('add-info-dropdown')" class="{% if request.resolver_match.url_name == 'add_internship' or request.resolver_match.url_name == 'internship_list' or request.resolver_match.url_name == 'job_list' or request.resolver_match.url_name == 'competitions_list' %}active{% endif %}">
+    <i class="fas fa-bolt"></i> Opportunities
+  </a>
+  <div class="dropdown-menu-custom">
+    <a href="{% url 'internship_list' %}" class="{% if request.resolver_match.url_name == 'internship_list' %}active{% endif %}">
+      <i class="fas fa-user-clock"></i> Internships
+    </a>
+    <a href="{% url 'job_list' %}" class="{% if request.resolver_match.url_name == 'job_list' %}active{% endif %}">
+      <i class="fas fa-briefcase"></i> Jobs
+    </a>
+    <a href="{% url 'competitions_list' %}" class="{% if request.resolver_match.url_name == 'competitions_list' %}active{% endif %}">
+      <i class="fas fa-trophy"></i> Competitions
+    </a>
+    <a href="#"><i class="fas fa-user-tie"></i> Add Mentors</a>
+    <a href="#"><i class="fas fa-laptop-code"></i> Add Practice</a>
+  </div>
+</div>
 
-        <a href="#"><i class="fas fa-user-tie"></i> Add Mentors</a>
-        <a href="#"><i class="fas fa-laptop-code"></i> Add Practice</a>
-      </div>
-    </div>
+
 
     <!-- Organizations Dropdown -->
     <div id="org-dropdown" class="{% if request.resolver_match.url_name in 'schools_list colleges_list companies_list' %}dropdown-open{% endif %}">
