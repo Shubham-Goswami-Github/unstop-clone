@@ -1,0 +1,112 @@
+{% load static %}
+<div class="container py-4 px-3 position-relative">
+  <!-- Heading -->
+  <div class="mb-4 text-start">
+    <h2 class="fw-bold mb-1">
+      <span style="color: black;">Discover</span>
+      <span style="color: #2665ca;">Internships</span>
+    </h2>
+    <p class="text-muted fs-5">Find the internships that fit your career aspirations.</p>
+  </div>
+
+  <!-- Scroll Buttons -->
+  <button class="scroll-btn left-btn btn btn-light shadow-sm position-absolute top-50 translate-middle-y start-0 ms-2 d-none d-md-block" onclick="scrollInternships(-1)">
+    <i class="fas fa-chevron-left"></i>
+  </button>
+  <button class="scroll-btn right-btn btn btn-light shadow-sm position-absolute top-50 translate-middle-y end-0 me-2 d-none d-md-block" onclick="scrollInternships(1)">
+    <i class="fas fa-chevron-right"></i>
+  </button>
+
+  <!-- Internship Cards -->
+  <div id="internship-carousel" class="scrolling-wrapper d-flex gap-3 px-2">
+    {% for internship in internships %}
+    <div class="opportunity-card glass-card d-flex flex-column justify-content-between p-3 rounded-4">
+      <div>
+        <div class="mb-2 d-flex justify-content-between flex-wrap gap-1">
+          <span class="badge bg-dark-blue text-white text-capitalize">{{ internship.category }}</span>
+          <span class="badge bg-dark-blue text-white text-capitalize">{{ internship.mode }}</span>
+        </div>
+
+        <h5 class="fw-bold mb-1">{{ internship.title }}</h5>
+        <p class="text-muted mb-1"><i class="fas fa-building me-1 text-dark"></i> {{ internship.company_name }}</p>
+        <p class="mb-1"><strong>Domain:</strong> {{ internship.domain }}</p>
+        <p class="mb-1"><strong>Type:</strong> {{ internship.category }}</p>
+        <p class="mb-2"><strong>Stipend:</strong> ₹{{ internship.stipend_amount }}</p>
+      </div>
+
+      {% if internship.application_link %}
+      <a href="{{ internship.application_link }}" class="btn btn-dark-blue w-100 mt-2 align-self-end apply-btn" target="_blank">
+        <i class="fas fa-paper-plane me-1"></i> Apply
+      </a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+/* Same styles as Top Jobs */
+.scrolling-wrapper {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  margin-inline: 10px;
+}
+
+.opportunity-card {
+  flex: 0 0 20%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+@media (max-width: 992px) {
+  .opportunity-card {
+    flex: 0 0 30%;
+  }
+}
+@media (max-width: 768px) {
+  .opportunity-card {
+    flex: 0 0 90%;
+  }
+}
+
+.opportunity-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #000;
+  min-height: 320px;
+}
+
+.scroll-btn {
+  z-index: 2;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.bg-dark-blue {
+  background-color: #0c1e3a !important;
+}
+.btn-dark-blue {
+  background-color: #0c1e3a;
+  color: #fff;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.btn-dark-blue:hover {
+  background-color: #0a1730;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(12, 30, 58, 0.3);
+}
+</style>
+
+<script>
+function scrollInternships(direction) {
+  const container = document.getElementById('internship-carousel');
+  const scrollAmount = 300;
+  container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+}
+</script>

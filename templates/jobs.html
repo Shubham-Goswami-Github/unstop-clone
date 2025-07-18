@@ -114,4 +114,21 @@ function apply(){
 }
 window.addEventListener('load',apply);
 </script>
+
+<body>
+  <!-- content -->
+  
+  <div class="bottom-footer-wrapper">
+    {% include 'bottom_menu.html' %}
+  </div>
+
+  <style>
+    footer.bg-footer {
+      margin-left: calc(-1 * (100vw - 100%)/2);
+      margin-right: calc(-1 * (100vw - 100%)/2);
+      width: 100vw;
+    }
+  </style>
+</body>
+
 {% endblock %}

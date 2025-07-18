@@ -1,167 +1,128 @@
 {% extends "navbar.html" %}
 {% load static %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
 {% block content %}
+
 <style>
-  .hero-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 50px 60px;
-    background-color: #f8f9fa;
-    gap: 40px;
-    flex-wrap: wrap;
-  }
-  .hero-text { flex:1; max-width:500px; text-align:left; }
-  .hero-text h1 { font-size:3.5rem; font-weight:bold; line-height:1.2; }
-  .hero-text .unlock { color:white; background:#003366; padding:5px 15px; border-radius:5px; }
-  .hero-text .opportunities { color:#003366; margin-left:10px; }
-  .hero-image { flex:1; display:flex; justify-content:flex-end; }
-  .hero-image img { width:100%; max-width:400px; border-radius:10px; }
+.hero-section {
+  display: flex; justify-content: center; align-items: center;
+  padding: 50px 60px; background: #f8f9fa; gap: 40px; flex-wrap: wrap;
+}
+.hero-text { flex: 1; max-width: 500px; }
+.hero-text h1 { font-size: 3.5rem; font-weight: 700; }
+.hero-text .unlock { background: #003366; color: #fff; padding: 5px 15px; border-radius: 5px; }
+.hero-text .opportunities { color: #003366; margin-left: 10px; }
+.hero-image { flex: 1; display: flex; justify-content: flex-end; }
+.hero-image img { max-width: 400px; border-radius: 10px; width: 100%; }
 
-  .browse-cat { padding:40px 80px; background:#fff; text-align:center; }
-  .browse-cat h2 { margin-bottom:30px; font-weight:bold; }
-  .browse-cards { display:flex; justify-content:center; flex-wrap:wrap; gap:25px; }
-  .browse-card {
-    background:#f3f3f3; padding:20px; border-radius:8px;
-    width:200px; cursor:pointer; transition:background .3s;
-  }
-  .browse-card:hover { background:#e0e0e0; }
-  .browse-card i {
-    font-size:28px;
-    margin-bottom:10px;
-    color:#003366;
-  }
+.filter-section { padding: 30px 10px; background: #fff; }
+.filter-buttons-group {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 15px; margin-bottom: 10px;
+}
+.filter-buttons-group button {
+  background: #003366; color: #fff; border: none; padding: 10px 25px;
+  border-radius: 6px; font-weight: 500; cursor: pointer; transition: .3s;
+}
+.filter-buttons-group button.active {
+  background: #0056b3; transform: scale(1.08);
+}
 
-  .recommend-banner {
-    padding:20px; margin:30px 80px;
-    display:flex; justify-content:center;
-    align-items:center; gap:20px;
-  }
-  .recommend-banner .box {
-    flex:1; padding:10px 20px; font-weight:bold;
-    text-align:center; border-radius:5px; cursor:pointer;
-  }
-  .box.dark-blue { background:#003366; color:white; }
-  .box.white { background:white; color:#003366; border:2px solid #003366; }
-  .box.glow {
-    background:#fff; color:black;
-    border:2px solid black;
-    box-shadow:0 0 15px rgba(255,223,0,0.8);
-  }
+.cards-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px; padding: 40px 20px; max-width: 1200px; margin: auto;
+}
+.banner-card {
+  background: #fff; border-radius: 12px; padding: 25px 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.1);
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; transition: .3s; border: 1px solid transparent;
+}
+.banner-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+  border-color: #00336630;
+}
+.banner-card .icon {
+  font-size: 45px; margin-bottom: 15px; color: #003366; transition: .4s;
+}
+.banner-card:hover .icon { transform: scale(1.2) rotate(10deg); }
+.banner-card h5 { font-weight: 600; font-size: 1.2rem; margin-bottom: 5px; }
+.banner-card p { font-size: .9rem; color: #555; margin: 0; }
+.view-btn { margin-top: 15px; }
+.view-btn:hover { background: #003366; color: #fff; }
 
-  .trending-section { padding:40px 80px; background:#fff; }
-  .trending-section .hdngs {
-    display:flex; justify-content:space-between;
-    align-items:center; margin-bottom:20px;
-  }
-  .trending-section .hdngs h2 {
-    font-size:1.8rem;
-    font-weight:bold;
-  }
-  .trending-tabs {
-    display:flex; gap:20px; margin-bottom:20px;
-  }
-  .trending-tabs .tab {
-    cursor:pointer; padding:10px 15px;
-    border-radius:20px; background:#f3f3f3;
-    transition:background .3s;
-  }
-  .trending-tabs .tab.active { background:#003366; color:white; }
-
-  .trending-cards {
-    display:flex; gap:20px; overflow-x:auto; padding-bottom:10px;
-  }
-  .trending-card {
-    min-width:240px; background:#fafafa;
-    border-radius:8px; padding:15px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.1);
-    flex-shrink:0;
-  }
-  .trending-card img.logo {
-    width:72px; height:72px; object-fit:contain;
-    margin-bottom:10px;
-  }
-  .trending-card .info {
-    display:flex; justify-content:space-between;
-    font-size:0.9rem;
-    color: #555;
-    margin:10px 0;
-  }
-  .trending-card .title { font-weight:bold; margin-bottom:5px; }
-  .trending-card .link { text-align:right; color:#003366; }
-
-  @media(max-width:768px){
-    .hero-section { flex-direction:column; text-align:center; padding:30px 20px; }
-    .hero-image { justify-content:center; }
-    .browse-cat, .recommend-banner, .trending-section { padding:20px; margin:0; }
-  }
+@media(max-width:576px){
+  .filter-buttons-group { flex-direction: column; gap: 10px; }
+}
 </style>
 
-<!-- HERO -->
+<!-- ===== Hero ===== -->
 <div class="hero-section">
   <div class="hero-text">
-    <h1>
-      <span class="unlock">UNLOCK</span><span class="opportunities">OPPORTUNITIES</span>
-    </h1>
+    <h1><span class="unlock">UNLOCK</span><span class="opportunities">OPPORTUNITIES</span></h1>
   </div>
   <div class="hero-image">
-    <img src="{% static 'images/c1.webp' %}" alt="Competitions Hero">
+    <img src="{% static 'images/c1.webp' %}" alt="Hero">
   </div>
 </div>
 
-<!-- BROWSE -->
-<section class="browse-cat">
-  <h2>Browse by Category</h2>
-  <div class="browse-cards">
-    <div class="browse-card"><i class="fas fa-trophy"></i><div>Competitions</div></div>
-    <div class="browse-card"><i class="fas fa-laptop-code"></i><div>Hackathons</div></div>
-    <div class="browse-card"><i class="fas fa-question-circle"></i><div>Quizzes</div></div>
-  </div>
-</section>
-
-<!-- RECOMMEND -->
-<div class="recommend-banner">
-  <div class="box dark-blue">Recommended</div>
-  <div class="box white">Opportunities</div>
-  <div class="box glow">For You</div>
-</div>
-
-<!-- TRENDING -->
-<section class="trending-section">
-  <div class="hdngs">
-    <h2>Looking for the best of the best?</h2>
-    <span class="view"><a href="#">View all <i class="fas fa-arrow-right"></i></a></span>
-  </div>
-
-  <div class="trending-tabs">
-    <div class="tab active">Competitions</div>
-    <div class="tab">Hackathons</div>
-    <div class="tab">Quizzes</div>
-    <div class="tab">Scholarships</div>
-    <div class="tab">Workshops</div>
-    <div class="tab">Conferences</div>
-    <div class="tab">Cultural Events</div>
-  </div>
-
-  <div class="trending-cards">
-    {% for i in "1234567"|make_list %}
-      <div class="trending-card">
-        <img src="{% static 'images/logo-placeholder.png' %}" alt="Opportunity Logo" class="logo">
-        <div class="types">Online &middot; Free</div>
-        <div class="title">Sample Opportunity Title</div>
-        <div class="subtitle">Organization Name</div>
-        <div class="info">
-          <span><i class="fas fa-users"></i> 0 Applied</span>
-          <span><i class="fas fa-calendar-alt"></i> X days left</span>
-        </div>
-        <div class="link"><i class="fas fa-arrow-right"></i></div>
-      </div>
+<!-- ===== Filters ===== -->
+<div class="filter-section">
+  <div class="filter-buttons-group">
+    <button id="allBtn" onclick="setType('all')" class="active">Show All</button>
+    {% for key, label in competition_type_choices %}
+    <button id="{{ key|slugify }}Btn" onclick="setType('{{ key }}')">{{ label }}</button>
     {% endfor %}
   </div>
-</section>
+</div>
 
+<!-- ===== Competition Cards ===== -->
+<div class="cards-grid" id="compCards">
+  {% for comp in competitions %}
+  <div class="banner-card" data-type="{{ comp.competition_type }}">
+    <i class="fas fa-trophy icon"></i>
+    <h5>{{ comp.title|truncatechars:40 }}</h5>
+    <p><strong>{{ comp.host_org }}</strong></p>
+    <span class="badge bg-secondary">{{ comp.mode }} • {{ comp.category }}</span>
+    <p class="mt-2 small">
+      {{ comp.competition_type }}{% if comp.registration_deadline %} • Apply by {{ comp.registration_deadline }}{% endif %}
+    </p>
+    <a href="#" class="btn btn-sm btn-outline-primary view-btn">View Details</a>
+  </div>
+  {% empty %}
+    <p class="text-center text-muted">No competitions available.</p>
+  {% endfor %}
+</div>
+
+<!-- ===== JS ===== -->
+<script>
+let compType = null;
+
+function setType(t){
+  compType = (t === 'all') ? null : t;
+  document.querySelectorAll('.filter-buttons-group button').forEach(btn => btn.classList.remove('active'));
+  document.getElementById((t === 'all' ? 'all' : t.toLowerCase().replace(/\s/g, '-') ) + 'Btn')?.classList.add('active');
+
+  document.querySelectorAll('.banner-card').forEach(card => {
+    const show = !compType || card.dataset.type === compType;
+    card.style.display = show ? 'flex' : 'none';
+  });
+}
+window.addEventListener('load', setType.bind(null, 'all'));
+</script>
+<body>
+  <!-- content -->
+  
+  <div class="bottom-footer-wrapper">
+    {% include 'bottom_menu.html' %}
+  </div>
+
+  <style>
+    footer.bg-footer {
+      margin-left: calc(-1 * (100vw - 100%)/2);
+      margin-right: calc(-1 * (100vw - 100%)/2);
+      width: 100vw;
+    }
+  </style>
+</body>
 {% endblock %}

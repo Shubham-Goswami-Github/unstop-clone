@@ -5,8 +5,19 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import SignUpForm
 from django.contrib import messages
 
+
+from .models import Internship, Job, Competition
+
 def home_view(request):
-    return render(request, 'home.html')
+    internships = Internship.objects.all()
+    jobs = Job.objects.all()
+    competitions = Competition.objects.all()
+    return render(request, 'home.html', {
+        'internships': internships,
+        'jobs': jobs,
+        'competitions': competitions,
+    })
+
 
 
 def signup_view(request):
@@ -579,8 +590,24 @@ from django.template.loader import get_template
 from .models import Job
 
 
+# views.py
+from django.shortcuts import render
+from .models import Competition
+
 def competitions_page(request):
-    return render(request, 'competitions.html')
+    competitions = Competition.objects.all()
+    COMPETITION_TYPE_CHOICES = [
+        ('Hackathons', 'Hackathons'),
+        ('Quizzes', 'Quizzes'),
+        ('Scholarships', 'Scholarships'),
+        ('Workshops', 'Workshops'),
+        ('Conferences', 'Conferences'),
+        ('Cultural Events', 'Cultural Events'),
+    ]
+    return render(request, 'competitions.html', {
+        'competitions': competitions,
+        'competition_type_choices': COMPETITION_TYPE_CHOICES,
+    })
 
 def mentorship_page(request):
     return render(request, 'mentorship.html')
@@ -731,3 +758,4 @@ def delete_competition(request, pk):
         messages.success(request, 'Competition deleted successfully.')
         return redirect('competitions_list')
     return render(request, 'admin_panel/delete_competition.html', {'comp': comp})
+

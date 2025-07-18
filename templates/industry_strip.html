@@ -36,7 +36,7 @@
   .logo-marquee {
     display: flex;
     gap: 80px;
-    animation: scrollSlow 20s linear infinite;
+    animation: scrollSlow 25s linear infinite;
   }
 
   .logo-marquee img {
@@ -55,7 +55,7 @@
       transform: translateX(0);
     }
     100% {
-      transform: translateX(-100%);
+      transform: translateX(-50%);
     }
   }
 </style>
@@ -66,16 +66,25 @@
   </div>
   <div class="marquee-wrapper">
     <div class="logo-marquee">
-      {% for i in "1234" %}
-        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833eea57ee44_flipkart.png" alt="Flipkart">
-        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833ef03ab58b_loreal.png" alt="Loreal">
-        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc92ec17499_home_icon_walmart.png" alt="Walmart">
-        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc8d799faf3_home_icon_asian_paints2.png" alt="Asian Paints">
-        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc84534cce0_home_icon_aditya_birla_group.png" alt="Aditya Birla">
-        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/676e48b78b746_hp.png" alt="HP">
-        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc8e3873ff1_home_icon_wipro2.png" alt="Wipro">
-        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833ee5e70d03_amazone.png" alt="Amazon">
-      {% endfor %}
+      <!-- Logos once -->
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833eea57ee44_flipkart.png" alt="Flipkart">
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833ef03ab58b_loreal.png" alt="Loreal">
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc92ec17499_home_icon_walmart.png" alt="Walmart">
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc8d799faf3_home_icon_asian_paints2.png" alt="Asian Paints">
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc84534cce0_home_icon_aditya_birla_group.png" alt="Aditya Birla">
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/676e48b78b746_hp.png" alt="HP">
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc8e3873ff1_home_icon_wipro2.png" alt="Wipro">
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833ee5e70d03_amazone.png" alt="Amazon">
+
+      <!-- Logos duplicated once more for smooth scroll -->
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833eea57ee44_flipkart.png" alt="Flipkart">
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833ef03ab58b_loreal.png" alt="Loreal">
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc92ec17499_home_icon_walmart.png" alt="Walmart">
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc8d799faf3_home_icon_asian_paints2.png" alt="Asian Paints">
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc84534cce0_home_icon_aditya_birla_group.png" alt="Aditya Birla">
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/676e48b78b746_hp.png" alt="HP">
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc8e3873ff1_home_icon_wipro2.png" alt="Wipro">
+      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833ee5e70d03_amazone.png" alt="Amazon">
     </div>
   </div>
 </div>

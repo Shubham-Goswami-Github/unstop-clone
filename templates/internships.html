@@ -133,6 +133,7 @@
       gap: 10px;
     }
   }
+
 </style>
 
 <div class="hero-section">
@@ -213,4 +214,22 @@ function filterCategory(category) {
     grid.style.justifyContent = (visible === 1) ? 'center' : 'initial';
   }
 </script>
+
+<body>
+  <!-- content -->
+  
+  <div class="bottom-footer-wrapper">
+    {% include 'bottom_menu.html' %}
+  </div>
+
+  <style>
+    footer.bg-footer {
+      margin-left: calc(-1 * (100vw - 100%)/2);
+      margin-right: calc(-1 * (100vw - 100%)/2);
+      width: 100vw;
+    }
+  </style>
+</body>
+
+
 {% endblock %}
