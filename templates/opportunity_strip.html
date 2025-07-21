@@ -35,9 +35,11 @@
       </div>
 
       {% if internship.application_link %}
-      <a href="{{ internship.application_link }}" class="btn btn-dark-blue w-100 mt-2 align-self-end apply-btn" target="_blank">
-        <i class="fas fa-paper-plane me-1"></i> Apply
-      </a>
+    <a href="{% url 'user_internship_detail' internship.id %}" class="btn btn-dark-blue w-100 mt-2 align-self-end apply-btn">
+  <i class="fas fa-paper-plane me-1"></i> Apply
+</a>
+
+
       {% endif %}
     </div>
     {% endfor %}

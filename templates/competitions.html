@@ -87,7 +87,7 @@
     <p class="mt-2 small">
       {{ comp.competition_type }}{% if comp.registration_deadline %} • Apply by {{ comp.registration_deadline }}{% endif %}
     </p>
-    <a href="#" class="btn btn-sm btn-outline-primary view-btn">View Details</a>
+    <a href="{% url 'competition_detail_user' comp.pk %}" class="btn btn-sm btn-outline-primary view-btn">View Details</a>
   </div>
   {% empty %}
     <p class="text-center text-muted">No competitions available.</p>

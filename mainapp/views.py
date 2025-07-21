@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import SignUpForm
 from django.contrib import messages
 
+from django.contrib.auth.decorators import login_required
+
 
 from .models import Internship, Job, Competition
 
@@ -44,8 +46,9 @@ def login_view(request):
     return render(request, 'login.html')
 
 def logout_view(request):
-    logout(request)
-    return redirect('login')
+    request.session.flush()  # This clears all session data
+    return redirect('home')  # ya jahan bhi redirect karna ho
+
 
 def explore_sections_view(request):
     return render(request, 'unstop_tabs.html')
@@ -759,3 +762,163 @@ def delete_competition(request, pk):
         return redirect('competitions_list')
     return render(request, 'admin_panel/delete_competition.html', {'comp': comp})
 
+
+
+
+def user_internship_detail(request, id):
+    internship = get_object_or_404(Internship, pk=id)
+    return render(request, 'internship_detail.html', {'internship': internship})
+
+def user_job_detail(request, id):
+    job = get_object_or_404(Job, pk=id)
+    return render(request, 'job_detail.html', {'job': job})
+# views.py
+from django.shortcuts import render, get_object_or_404
+from .models import Competition
+
+def competition_detail_user(request, pk):
+    comp = get_object_or_404(Competition, pk=pk)
+    return render(request, 'competition_detail.html', {'comp': comp})
+
+
+
+from mainapp.models import CandidateProfile, Internship
+from django.shortcuts import render, redirect
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Internship, CandidateProfile
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Internship, CandidateProfile, AppliedInternship
+# views.py
+
+def internship_payment_view(request, internship_id):
+    if 'candidate_id' not in request.session:
+        return redirect('login')
+
+    internship = get_object_or_404(Internship, id=internship_id)
+    profile = get_object_or_404(CandidateProfile, id=request.session['candidate_id'])
+
+    success_message = None
+
+    if request.method == 'POST':
+        full_name = f"{profile.first_name} {profile.last_name}"
+        email = profile.email
+        phone = profile.phone
+
+        payment_status = 'Not Applicable' if internship.category == 'Unpaid' else 'Success'
+
+        # Save application
+        _, created = AppliedInternship.objects.get_or_create(
+            candidate=profile,
+            internship=internship,
+            defaults={
+                'payment_status': payment_status,
+                'name': full_name,
+                'email': email,
+                'phone': phone,
+                'internship_title': internship.title,
+                'internship_company_name': internship.company_name,
+                'mode': internship.mode,
+                'category': internship.category,
+                'stipend_amount': internship.stipend_amount
+            }
+        )
+
+        if created:
+            success_message = "Application Submitted Successfully!"
+        else:
+            success_message = "You have already applied for this internship."
+
+    return render(request, 'internship_payment.html', {
+        'internship': internship,
+        'profile': profile,
+        'success_message': success_message,
+    })
+
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import Job, CandidateProfile, AppliedForJob
+
+def apply_for_job_view(request, job_id):
+    if 'candidate_id' not in request.session:
+        return redirect('login')
+
+    job = get_object_or_404(Job, id=job_id)
+    profile = get_object_or_404(CandidateProfile, id=request.session['candidate_id'])
+
+    success_message = None
+    info_message = None
+    already_applied = AppliedForJob.objects.filter(candidate=profile, job=job).exists()
+
+    if already_applied:
+        info_message = "You have already applied for this job."
+    elif request.method == "POST":
+        AppliedForJob.objects.create(
+            candidate=profile,
+            job=job,
+            title=job.title,
+            company_name=job.company_name,
+            domain=job.domain,
+            employment_type=job.employment_type,
+            location=job.location,
+            name=f"{profile.first_name} {profile.last_name}",
+            email=profile.email,
+            phone=profile.phone
+        )
+        success_message = "Application submitted successfully!"
+        already_applied = True  # update for frontend to hide button if needed
+
+    return render(request, 'job_apply.html', {
+        'job': job,
+        'profile': profile,
+        'success_message': success_message,
+        'info_message': info_message,
+        'already_applied': already_applied
+    })
+
+from django.shortcuts import render, get_object_or_404, redirect
+from mainapp.models import CandidateProfile, Competition, CompetitionsApplied
+
+def competition_checkout(request, competition_id):
+    if 'candidate_id' not in request.session:
+        return redirect('login')
+
+    competition = get_object_or_404(Competition, id=competition_id)
+    profile = get_object_or_404(CandidateProfile, id=request.session['candidate_id'])
+
+    success_message = None
+    info_message = None
+    already_applied = CompetitionsApplied.objects.filter(candidate=profile, competition=competition).exists()
+
+    if already_applied:
+        info_message = "You have already registered for this competition."
+    elif request.method == "POST":
+        CompetitionsApplied.objects.create(
+            candidate=profile,
+            competition=competition,
+            title=competition.title,
+            host_org=competition.host_org,
+            category=competition.category,
+            fee_amount=competition.fee_amount,
+            competition_type=competition.competition_type,
+            mode=competition.mode,
+            start_date=competition.start_date,
+            end_date=competition.end_date,
+            team_size=competition.team_size,
+            prize_pool=competition.prize_pool,
+            name=f"{profile.first_name} {profile.last_name}",
+            phone=profile.phone,
+            email=profile.email
+        )
+        success_message = "Successfully registered for the competition!"
+        already_applied = True
+
+    return render(request, 'competition_checkout.html', {
+        'competition': competition,
+        'profile': profile,
+        'success_message': success_message,
+        'info_message': info_message,
+        'already_applied': already_applied
+    })

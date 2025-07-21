@@ -10,6 +10,8 @@ from .views import view_colleges, add_college_view, edit_college_view, delete_co
 from .views import view_freshers, view_fresher, edit_fresher, delete_fresher,login_view
 from .views import add_internship
 from mainapp.views import jobs_view 
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -21,6 +23,15 @@ urlpatterns = [
     path('slogan/', views.slogan_view, name='slogan'),
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
+
+
+    path('competition/<int:competition_id>/checkout/', views.competition_checkout, name='competition_checkout'),
+
+
+    path('jobs/<int:id>/', views.user_job_detail, name='user_job_detail'),
+    path('competitions/<int:pk>/', views.competition_detail_user, name='competition_detail_user'),
+    path('internship/<int:internship_id>/payment/', views.internship_payment_view, name='internship_payment'),
+    path('job/apply/<int:job_id>/', views.apply_for_job_view, name='apply_for_job'),
     path('submit-candidate-form/', views.submit_candidate_form, name='submit_candidate_form'),
     path('adminpaneldashboard/', admin_panel_dashboard_view, name='admin_panel_dashboard'),
     path('adminpaneldashboard/schools/', schools_list_view, name='schools_list'),
@@ -62,6 +73,7 @@ urlpatterns = [
 
 
     path('internships/', views.internships_page, name='internships'),
+    path('internship/<int:id>/', views.user_internship_detail, name='user_internship_detail'),
 
     path("competitions/", views.competitions_page, name="competitions"),
     path("mentorship/", views.mentorship_page, name="mentorship"),
@@ -89,3 +101,5 @@ urlpatterns = [
 
     
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

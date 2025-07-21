@@ -13,7 +13,6 @@ class SignUpForm(UserCreationForm):
 
 
 
-
 from django.db import models
 
 class CandidateProfile(models.Model):
@@ -36,6 +35,8 @@ class CandidateProfile(models.Model):
     stay_in_loop = models.BooleanField(default=False)
     user_type = models.CharField(max_length=20, choices=USER_TYPES)
 
+    profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)  # <-- Added
+
     # School Fields
     school_name = models.CharField(max_length=150, blank=True, null=True)
     current_class = models.IntegerField(blank=True, null=True)
@@ -57,7 +58,7 @@ class CandidateProfile(models.Model):
     job_end_year = models.CharField(max_length=10, blank=True, null=True)
     job_city = models.CharField(max_length=100, blank=True, null=True)
 
-    # Foreign Keys (if you are using)
+    # Foreign Keys
     school = models.ForeignKey('School', null=True, blank=True, on_delete=models.SET_NULL)
     college = models.ForeignKey('College', null=True, blank=True, on_delete=models.SET_NULL)
     company = models.ForeignKey('Company', null=True, blank=True, on_delete=models.SET_NULL)
@@ -66,7 +67,6 @@ class CandidateProfile(models.Model):
 
     def __str__(self):
         return f"{self.first_name} ({self.email})"
-
 
 
 class CareerPurpose(models.Model):
@@ -248,3 +248,147 @@ class Competition(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+# models.py
+
+class AppliedInternship(models.Model):
+    PAYMENT_CHOICES = [
+        ('Success', 'Success'),
+        ('Unsuccess', 'Unsuccess'),
+        ('Not Applicable', 'Not Applicable'),
+    ]
+
+    candidate = models.ForeignKey(
+        CandidateProfile,
+        on_delete=models.CASCADE,
+        related_name='applied_internships',
+        db_column='candidate_id'
+    )
+
+    internship = models.ForeignKey(
+        Internship,
+        on_delete=models.CASCADE,
+        related_name='applications',
+        db_column='internship_id'
+    )
+
+    applied_at = models.DateTimeField(auto_now_add=True)
+    payment_status = models.CharField(
+        max_length=20,
+        choices=PAYMENT_CHOICES,
+        default='Not Applicable'
+    )
+
+    # Candidate details
+    name = models.CharField(max_length=255, blank=True)
+    email = models.EmailField(blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+
+    # Internship extra details (copied for record keeping)
+    internship_title = models.CharField(max_length=200, blank=True)
+    internship_company_name = models.CharField(max_length=150, blank=True)
+    mode = models.CharField(max_length=10, blank=True)
+    category = models.CharField(max_length=10, blank=True)
+    stipend_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+    class Meta:
+        unique_together = ('candidate', 'internship')
+        db_table = 'mainapp_appliedinternship'
+
+    def __str__(self):
+        return f"{self.candidate.first_name} -> {self.internship.title}"
+
+
+
+# models.py
+
+from django.db import models
+from .models import CandidateProfile, Job  # Adjust the import path if needed
+
+class AppliedForJob(models.Model):
+    application_id = models.AutoField(primary_key=True)
+
+    candidate = models.ForeignKey(
+        CandidateProfile,
+        on_delete=models.CASCADE,
+        related_name='job_applications'
+    )
+
+    job = models.ForeignKey(
+        Job,
+        on_delete=models.CASCADE,
+        related_name='job_applicants'
+    )
+
+    applied_at = models.DateTimeField(auto_now_add=True)
+
+    # Job Snapshot Fields (Stored as redundancy in case original job changes)
+    title = models.CharField(max_length=255)
+    company_name = models.CharField(max_length=255)
+    domain = models.CharField(max_length=100)
+    employment_type = models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
+
+    # User Snapshot Fields
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+
+    class Meta:
+        unique_together = ('candidate', 'job')  # Prevent duplicate applications
+        db_table = 'mainapp_appliedforjob'
+
+    def __str__(self):
+        return f"{self.candidate.first_name} -> {self.job.title}"
+
+
+
+
+
+from django.db import models
+from .models import CandidateProfile, Competition  # adjust if paths differ
+
+class CompetitionsApplied(models.Model):
+    application_id = models.AutoField(primary_key=True)
+
+    # Foreign Keys
+    candidate = models.ForeignKey(
+        CandidateProfile,
+        on_delete=models.CASCADE,
+        related_name='competition_applications'
+    )
+
+    competition = models.ForeignKey(
+        Competition,
+        on_delete=models.CASCADE,
+        related_name='applicants'
+    )
+
+    applied_at = models.DateTimeField(auto_now_add=True)
+
+    # Competition Snapshot
+    title = models.CharField(max_length=255)
+    host_org = models.CharField(max_length=255)
+    category = models.CharField(max_length=100)
+    fee_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    competition_type = models.CharField(max_length=100)
+    mode = models.CharField(max_length=50)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    team_size = models.CharField(max_length=50)  # instead of IntegerField
+
+    prize_pool = models.CharField(max_length=100)
+
+    # Candidate Snapshot
+    name = models.CharField(max_length=255)
+    phone = models.CharField(max_length=20)
+    email = models.EmailField()
+
+    class Meta:
+        unique_together = ('candidate', 'competition')  # prevents duplicate entries
+        db_table = 'mainapp_competitions_applied'
+
+    def __str__(self):
+        return f"{self.candidate.first_name} -> {self.competition.title}"

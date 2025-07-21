@@ -35,9 +35,10 @@
       </div>
 
       <!-- Always Show Apply Button (fallback # if link missing) -->
-      <a href="{{ job.application_link|default:'#' }}" class="btn btn-dark-blue w-100 mt-2 apply-btn" target="_blank">
-        <i class="fas fa-paper-plane me-1"></i> Apply
-      </a>
+     <a href="{% url 'user_job_detail' job.id %}" class="btn btn-dark-blue w-100 mt-2 apply-btn">
+  <i class="fas fa-paper-plane me-1"></i> Apply
+</a>
+
     </div>
     {% endfor %}
   </div>
