@@ -13,8 +13,14 @@ from mainapp.views import jobs_view
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.contrib import admin
+from django.urls import path, include
+
 
 urlpatterns = [
+
+    path('admin/', admin.site.urls),  # Django admin
+   
     path('', views.home_view, name='home'),  # 👈 root URL
     path('signup/', views.signup_view, name='signup'),
     path('login/', views.login_view, name='login'),
@@ -23,7 +29,9 @@ urlpatterns = [
     path('slogan/', views.slogan_view, name='slogan'),
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
-
+    path('api/internships/', views.get_internships_json, name='get_internships_json'),
+    # urls.py
+    path('admin/internship-charts/', views.internship_charts_view, name='internship_charts'),
 
     path('competition/<int:competition_id>/checkout/', views.competition_checkout, name='competition_checkout'),
 

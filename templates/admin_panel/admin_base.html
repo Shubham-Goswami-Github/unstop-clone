@@ -11,99 +11,145 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
 
-  <style>
-    :root {
-      --sidebar-bg: #212529;
-      --text-light: #f8f9fa;
-      --text-muted: #adb5bd;
-    }
+<style>
+  :root {
+    --sidebar-bg: #1e1e2f;
+    --primary: #4e73df;
+    --text-light: #f8f9fc;
+    --text-muted: #b0b3c5;
+    --hover-bg: #2c2f48;
+  }
 
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f1f3f5;
-      color: var(--text-light);
-    }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f8f9fa;
+    color: var(--text-light);
+  }
 
+  .sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: var(--sidebar-bg);
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+  }
+
+  .sidebar .text-center img {
+    height: 40px;
+  }
+
+  .sidebar h5 {
+    color: var(--text-light);
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+
+  .sidebar a {
+    display: block;
+    padding: 12px 18px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    transition: all 0.3s ease;
+  }
+
+  .sidebar a i {
+    margin-right: 10px;
+    width: 18px;
+    text-align: center;
+  }
+
+  .sidebar a:hover,
+  .sidebar a.active {
+    background-color: var(--hover-bg);
+    color: var(--text-light);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+  }
+
+  .dropdown-menu-custom {
+    display: none;
+    padding-left: 10px;
+    margin-top: -4px;
+  }
+
+  .dropdown-open .dropdown-menu-custom {
+    display: block;
+  }
+
+  .dropdown-menu-custom a {
+    padding-left: 36px;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+  }
+
+  .dropdown-menu-custom a:hover {
+    color: var(--text-light);
+  }
+
+  .content {
+    margin-left: 250px;
+    padding: 32px 24px;
+    background-color: #f8f9fa;
+    color: #212529;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+  }
+
+  /* Mobile Styles */
+  @media (max-width: 768px) {
     .sidebar {
-      width: 250px;
       position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      background-color: var(--sidebar-bg);
-      padding: 24px 18px;
-      z-index: 1000;
-      overflow-y: auto;
+      width: 220px;
+      height: 100%;
+      z-index: 1050;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
     }
 
-    .sidebar .text-center img {
-      height: 40px;
-    }
-
-    .sidebar h5 {
-      color: var(--text-light);
-      font-size: 1rem;
-      margin-top: 10px;
-    }
-
-    .sidebar a {
-      display: block;
-      padding: 12px 18px;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-weight: 500;
-      border-radius: 6px;
-      margin-bottom: 6px;
-      transition: background 0.3s, color 0.3s;
-    }
-
-    .sidebar a i {
-      margin-right: 8px;
-    }
-
-    .sidebar a:hover,
-    .sidebar a.active {
-      background-color: #343a40;
-      color: var(--text-light);
-    }
-
-    .dropdown-menu-custom {
-      display: none;
-      padding-left: 10px;
-    }
-
-    .dropdown-open .dropdown-menu-custom {
-      display: block;
-    }
-
-    .dropdown-menu-custom a {
-      padding-left: 34px;
-      font-size: 0.92rem;
+    .sidebar.active {
+      transform: translateX(0);
     }
 
     .content {
-      margin-left: 250px;
-      padding: 32px 24px;
-      background-color: #f8f9fa;
-      color: #212529;
-      min-height: 100vh;
+      margin-left: 0;
+      padding-top: 70px;
     }
+  }
 
-    @media (max-width: 768px) {
-      .sidebar {
-        position: relative;
-        width: 100%;
-      }
-      .content {
-        margin-left: 0;
-        padding-top: 10px;
-      }
+  /* Toggle button (optional) */
+  .sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1100;
+    background: var(--primary);
+    border: none;
+    color: white;
+    padding: 10px 12px;
+    border-radius: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .sidebar-toggle {
+      display: block;
     }
-  </style>
+  }
+</style>
+
 </head>
 
 <body>
+
   <div class="sidebar">
     <div class="text-center mb-4">
       <img src="{% static 'images/unstop-logo.svg' %}" alt="Unstop Logo" class="mb-2">
@@ -178,5 +224,6 @@
       el.classList.toggle('dropdown-open');
     }
   </script>
+
 </body>
 </html>

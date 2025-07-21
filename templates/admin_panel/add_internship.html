@@ -17,10 +17,24 @@
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
   }
 
-  .registration-image {
-    object-fit: cover;
-    height: 100%;
-    width: 100%;
+  .logo-small {
+    width: 110px;
+  }
+
+  .form-section-wrapper {
+    max-height: 620px;
+    overflow-y: auto;
+    padding: 2rem 2.5rem;
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  .form-section-wrapper::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .form-section-wrapper::-webkit-scrollbar-thumb {
+    background-color: #00336688;
+    border-radius: 10px;
   }
 
   h3 {
@@ -43,15 +57,9 @@
     border-radius: 6px;
   }
 
-  .form-check-label {
-    font-size: 0.88rem;
-    color: #333;
-  }
-
   .btn-dark-blue {
     background-color: #003366;
     color: white;
-    transition: 0.3s ease;
     font-weight: 500;
     padding: 7px 18px;
     font-size: 0.9rem;
@@ -68,22 +76,38 @@
     font-size: 0.9rem;
   }
 
-  .logo-small {
-    width: 110px;
-  }
-
-  .form-section {
-    padding: 2rem 2.5rem;
-  }
-
   .icon-label i {
     color: #003366;
     margin-right: 6px;
   }
 
+  .left-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    height: 100%;
+    width: 100%;
+    padding: 1.5rem;
+  }
+
+  .registration-image {
+    max-width: 100%;
+    max-height: 90%;
+    object-fit: contain;
+    border-radius: 12px;
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   @media (max-width: 768px) {
-    .form-section {
+    .form-section-wrapper {
       padding: 1.2rem;
+      max-height: none;
     }
   }
 </style>
@@ -92,20 +116,15 @@
   <div class="row justify-content-center">
     <div class="col-lg-10">
       <div class="card registration-card">
-        <div class="row g-0" style="min-height: 620px;">
-      <div class="col-md-5 d-none d-md-block">
-  <div class="d-flex flex-column h-100 justify-content-between p-2">
-    <div class="image-box bg-white p-2 rounded mb-2" style="height: 48%;">
-      <img src="{% static 'images/c1.webp' %}" alt="Image 1" class="w-100 h-100" style="object-fit: contain; border-radius: 10px;">
-    </div>
-    <div class="image-box bg-white p-2 rounded mt-2" style="height: 48%;">
-      <img src="{% static 'images/f1.webp' %}" alt="Image 2" class="w-100 h-100" style="object-fit: contain; border-radius: 10px;">
-    </div>
-  </div>
-</div>
+        <div class="row g-0">
+          <div class="col-md-5 d-none d-md-flex" style="min-height: 620px;">
+            <div class="left-image-wrapper">
+              <img src="{% static 'images/F1.webp' %}" alt="Internship Banner" class="registration-image">
+            </div>
+          </div>
 
           <div class="col-md-7">
-            <div class="form-section">
+            <div class="form-section-wrapper">
               <div class="d-flex justify-content-between align-items-center mb-3">
                 <a href="{% url 'internship_list' %}" class="btn btn-outline-dark">
                   <i class="fas fa-arrow-left me-1"></i> Back
@@ -143,30 +162,30 @@
 
                 <div class="mb-3">
                   <label class="form-label icon-label"><i class="fas fa-tags"></i>Category</label>
-                  <select name="category" class="form-control">
+                  <select name="category" id="categorySelect" class="form-control">
                     <option value="Paid">Paid</option>
                     <option value="Unpaid">Unpaid</option>
                   </select>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-3" id="stipendField">
                   <label class="form-label icon-label"><i class="fas fa-coins"></i>Stipend Amount</label>
                   <input type="number" name="stipend_amount" class="form-control" step="0.01">
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label icon-label"><i class="fas fa-calendar-day"></i>Start Date</label>
-                  <input type="date" name="start_date" class="form-control">
+                  <input type="date" name="start_date" id="startDate" class="form-control">
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label icon-label"><i class="fas fa-calendar-check"></i>End Date</label>
-                  <input type="date" name="end_date" class="form-control">
+                  <input type="date" name="end_date" id="endDate" class="form-control">
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label icon-label"><i class="fas fa-hourglass-half"></i>Duration (weeks)</label>
-                  <input type="number" name="duration_weeks" class="form-control">
+                  <input type="number" name="duration_weeks" id="durationWeeks" class="form-control" readonly>
                 </div>
 
                 <div class="mb-3">
@@ -186,11 +205,48 @@
 
               </form>
             </div>
-          </div>
+          </div> <!-- col-md-7 -->
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  const categorySelect = document.getElementById("categorySelect");
+  const stipendField = document.getElementById("stipendField");
+  const stipendInput = stipendField.querySelector("input");
+
+  function toggleStipendVisibility() {
+    if (categorySelect.value === "Unpaid") {
+      stipendInput.value = "";
+      stipendField.style.display = "none";
+    } else {
+      stipendField.style.display = "block";
+    }
+  }
+
+  categorySelect.addEventListener("change", toggleStipendVisibility);
+  window.addEventListener("DOMContentLoaded", toggleStipendVisibility);
+
+  // Duration calculator
+  const startDateInput = document.getElementById('startDate');
+  const endDateInput = document.getElementById('endDate');
+  const durationWeeksInput = document.getElementById('durationWeeks');
+
+  function calculateDuration() {
+    const start = new Date(startDateInput.value);
+    const end = new Date(endDateInput.value);
+    if (start && end && end >= start) {
+      const weeks = Math.ceil((end - start) / (1000 * 60 * 60 * 24 * 7));
+      durationWeeksInput.value = weeks;
+    } else {
+      durationWeeksInput.value = '';
+    }
+  }
+
+  startDateInput.addEventListener('change', calculateDuration);
+  endDateInput.addEventListener('change', calculateDuration);
+</script>
 
 {% endblock %}
