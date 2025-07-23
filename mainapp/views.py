@@ -143,9 +143,33 @@ def submit_candidate_form(request):
 from mainapp.models import School, College, Company, CandidateProfile, Internship, Job, Competition
 from django.contrib.admin.views.decorators import staff_member_required
 
+from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Count
+from django.db.models.functions import TruncDate
+from django.shortcuts import render
+from .models import School, College, Company, CandidateProfile, Internship, Job, Competition
+from django.db.models.functions import TruncMonth
+from django.db.models import Count
+
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render
+from django.db.models.functions import TruncMonth
+from django.db.models import Count
+from django.utils.dateformat import DateFormat
+from .models import School, College, Company, CandidateProfile, Internship, Job, Competition
+from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Count
+from django.db.models.functions import TruncDay
+from django.shortcuts import render
+from mainapp.models import (
+    School, College, Company,
+    CandidateProfile, Internship, Job, Competition
+)
+
 @staff_member_required
 def admin_panel_dashboard_view(request):
-    # Total organizations count
+    # Total organization counts
     total_schools = School.objects.count()
     total_colleges = College.objects.count()
     total_companies = Company.objects.count()
@@ -153,27 +177,94 @@ def admin_panel_dashboard_view(request):
     # Total candidate count
     total_candidates = CandidateProfile.objects.count()
 
-    # Candidate type-wise count
+    # Candidate type-wise counts
     school_candidates_count = CandidateProfile.objects.filter(user_type='school').count()
     college_candidates_count = CandidateProfile.objects.filter(user_type='college').count()
     experienced_candidates_count = CandidateProfile.objects.filter(user_type='professional').count()
     fresher_candidates_count = CandidateProfile.objects.filter(user_type='fresher').count()
 
-    # Internships, Jobs, Competitions
+    # Total opportunities
     total_internships = Internship.objects.count()
     total_jobs = Job.objects.count()
     total_competitions = Competition.objects.count()
 
-    # ✅ Add actual internship queryset
+    # Recent internships list for table (limit 80)
     internships = list(
-    Internship.objects.all().order_by('-created_at')[:50].values(
-        'id', 'title', 'company_name', 'created_at', 'category', 'mode', 'domain'
+        Internship.objects.all().order_by('-created_at')[:80].values(
+            'id',
+            'title',
+            'company_name',
+            'created_at',
+            'category',
+            'mode',
+            'domain',
+            'stipend_amount',
+            'duration_weeks',
+            'location',
+        )
     )
-)
 
-  # Or any number
+    # Internship creation count per day (for line chart)
+    internships_daily_data = (
+        Internship.objects
+        .annotate(day=TruncDay('created_at'))
+        .values('day')
+        .annotate(count=Count('id'))
+        .order_by('day')
+    )
+    internships_by_day = [
+        {
+            'date': entry['day'].strftime('%Y-%m-%d'),
+            'count': entry['count']
+        }
+        for entry in internships_daily_data
+    ]
 
-    # Organizations with candidate count
+    # Jobs data list (full set)
+    jobs = list(
+        Job.objects.all().order_by('-created_at').values(
+            'id',
+            'title',
+            'company_name',
+            'created_at',
+            'category',
+            'employment_type',
+            'experience_level',
+            'domain',
+        )
+    )
+
+    # Job creation count per day (for line chart)
+    jobs_daily_data = (
+        Job.objects
+        .annotate(day=TruncDay('created_at'))
+        .values('day')
+        .annotate(count=Count('id'))
+        .order_by('day')
+    )
+    jobs_by_day = [
+        {
+            'date': entry['day'].strftime('%Y-%m-%d'),
+            'count': entry['count']
+        }
+        for entry in jobs_daily_data
+    ]
+     # ✅ Competitions
+    competitions = list(
+        Competition.objects.all().order_by('-created_at').values(
+            'id', 'title', 'host_org', 'category', 'mode',
+            'competition_type', 'created_at'
+        )
+    )
+
+    competitions_daily_data = (
+        Competition.objects.annotate(day=TruncDay('created_at'))
+        .values('day').annotate(count=Count('id')).order_by('day')
+    )
+    competitions_by_day = [{'date': entry['day'].strftime('%Y-%m-%d'), 'count': entry['count']} for entry in competitions_daily_data]
+
+
+    # Candidate count per organization
     schools = School.objects.all()
     for school in schools:
         school.candidate_count = CandidateProfile.objects.filter(school_id=school.id).count()
@@ -186,37 +277,38 @@ def admin_panel_dashboard_view(request):
     for company in companies:
         company.candidate_count = CandidateProfile.objects.filter(company_id=company.id).count()
 
+    # Final context passed to dashboard template
     context = {
-        # Total registered orgs
         'school_count': total_schools,
         'college_count': total_colleges,
         'company_count': total_companies,
 
-        # Total candidates overall
         'candidate_count': total_candidates,
-
-        # Candidates by user type
         'school_candidates_count': school_candidates_count,
         'college_candidates_count': college_candidates_count,
         'experienced_count': experienced_candidates_count,
         'fresher_count': fresher_candidates_count,
 
-        # Lists for detail view
-        'schools': schools,
-        'colleges': colleges,
-        'companies': companies,
-
-        # New counts
         'internship_count': total_internships,
         'job_count': total_jobs,
         'competition_count': total_competitions,
 
-        # ✅ Internship data for template
+        'schools': schools,
+        'colleges': colleges,
+        'companies': companies,
+
         'internships': internships,
+        'internships_by_day': internships_by_day,
+
+        'jobs': jobs,
+        'jobs_by_day': jobs_by_day,
+
+         # ✅ Send competitions to template
+        'competitions': competitions,
+        'competitions_by_day': competitions_by_day,
     }
 
     return render(request, 'admin_panel/admin_dashboard.html', context)
-
 
 
 

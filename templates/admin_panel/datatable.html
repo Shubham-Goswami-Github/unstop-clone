@@ -1,26 +1,30 @@
 {% load static %}
+<style>
+body {
+  background-color: rgb(240, 242, 248);
+}
+</style>
 
 <div class="card shadow mb-4">
-    <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center border-bottom">
-        <div><i class="fas fa-table me-2 text-dark"></i> Internship Listings</div>
-        <span class="badge bg-primary text-white">{{ internships|length }} Total</span>
+    <div class="card-header bg-white fw-semibold fs-5 border-bottom">
+        New Internship Entries....!
     </div>
     <div class="card-body p-0">
         <div class="table-responsive p-3">
-            <table id="customDataTable" class="table table-bordered table-hover align-middle mb-0">
+            <table id="customDataTable" class="table table-hover align-middle mb-0">
                 <thead class="text-center align-middle bg-white border-bottom">
                     <tr class="text-dark fw-semibold">
-                        <th><i class="fas fa-hashtag"></i></th>
+                        <th>S.No</th>
                         <th>ID</th>
-                        <th><i class="fas fa-briefcase me-1"></i> Title</th>
-                        <th><i class="fas fa-building me-1"></i> Company</th>
-                        <th><i class="fas fa-code me-1"></i> Domain</th>
-                        <th><i class="fas fa-laptop me-1"></i> Mode</th>
-                        <th><i class="fas fa-layer-group me-1"></i> Category</th>
-                        <th><i class="fas fa-money-bill-wave me-1"></i> Stipend</th>
-                        <th><i class="fas fa-clock me-1"></i> Duration</th>
-                        <th><i class="fas fa-map-marker-alt me-1"></i> Location</th>
-                        <th><i class="fas fa-cogs me-1"></i> Actions</th>
+                        <th>Title</th>
+                        <th>Company</th>
+                        <th>Domain</th>
+                        <th>Mode</th>
+                        <th>Category</th>
+                        <th>Stipend</th>
+                        <th>Duration</th>
+                        <th>Location</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,10 +42,7 @@
                         <td>{{ internship.location }}</td>
                         <td>
                             <a href="{% url 'edit_internship' internship.id %}" data-bs-toggle="tooltip" title="Edit Internship">
-                                <i class="fas fa-pen me-2" style="color: #333;"></i>
-                            </a>
-                            <a href="{% url 'delete_internship' internship.id %}" data-bs-toggle="tooltip" title="Delete Internship" onclick="return confirm('Are you sure you want to delete this internship?')">
-                                <i class="fas fa-trash" style="color: #333;"></i>
+                                <i class="fas fa-pen" style="color: #007bff;"></i>
                             </a>
                         </td>
                     </tr>
@@ -55,6 +56,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Simple DataTables CSS & JS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.css">
@@ -86,38 +88,136 @@
 </script>
 
 <style>
-    #customDataTable tbody tr:hover {
-        background-color: #f9f9f9;
-        transition: 0.2s ease-in-out;
+    
+  #customDataTable {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  #customDataTable th {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: 600;
+    padding: 0.75rem;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #eaeaea;
+  }
+
+  #customDataTable td {
+    padding: 0.65rem;
+    text-align: center;
+    vertical-align: middle;
+    color: #333;
+    background-color: transparent;
+  }
+
+  #customDataTable tbody tr {
+    transition: background-color 0.3s ease;
+  }
+
+  #customDataTable tbody tr:hover {
+    background-color: #f0f2f5;
+  }
+
+  /* Top panel */
+  .dataTable-top {
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .dataTable-top label {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0;
+  }
+
+  .dataTable-input,
+  .dataTable-selector {
+    padding: 0.45rem 2.2rem 0.45rem 2rem;
+    border-radius: 20px;
+    border: 1px solid #ced4da;
+    font-size: 14px;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-size: 16px;
+  }
+
+  /* 🔍 for search */
+  .dataTable-input {
+    background-image: url("https://cdn-icons-png.flaticon.com/512/54/54481.png");
+  }
+
+  /* ⬇️ for entries selector */
+  .dataTable-selector {
+    background-image: url("https://cdn-icons-png.flaticon.com/512/32/32195.png");
+  }
+
+  /* Pagination buttons */
+  .dataTable-pagination a {
+    color: #333;
+    border-radius: 20px;
+    padding: 5px 12px;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .dataTable-pagination a:hover {
+    background-color: #e2e6ea;
+  }
+
+  .dataTable-pagination a.current {
+    background-color: #007bff;
+    color: #fff !important;
+    border-color: #007bff;
+  }
+
+  .dataTable-info {
+    font-style: italic;
+    color: #555;
+    font-size: 13px;
+    padding: 0.5rem 1rem;
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 768px) {
+    .dataTable-top {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
     }
 
-    #customDataTable td,
-    #customDataTable th {
-        vertical-align: middle;
+    #customDataTable th, #customDataTable td {
+      font-size: 13px;
+      padding: 0.5rem;
     }
+  }
 
-    .dataTable-selector,
-    .dataTable-input {
-        padding: 0.375rem 0.75rem;
-        border-radius: 0.375rem;
-        border: 1px solid #ced4da;
-        margin-right: 1rem;
+  @media (max-width: 480px) {
+    .dataTable-input,
+    .dataTable-selector {
+      width: 100%;
+      font-size: 13px;
     }
 
     .dataTable-top {
-        padding: 0.75rem 0.75rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+      padding: 1rem 0.5rem;
     }
 
-    .dataTable-top label {
-        margin-bottom: 0;
+    .dataTable-pagination a {
+      padding: 5px 8px;
+      font-size: 12px;
     }
-
-    .dataTable-dropdown label,
-    .dataTable-search label {
-        font-weight: 500;
-        color: #444;
-    }
+  }
 </style>

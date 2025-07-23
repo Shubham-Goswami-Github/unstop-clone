@@ -4,13 +4,11 @@
 
 <!-- Bootstrap & Font Awesome -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
-
-<!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
 <style>
   body {
-    background-color: #ffffff;
+        background-color: rgb(240, 242, 248);
     color: #212529;
     font-family: 'Poppins', 'Segoe UI', sans-serif;
     min-height: 100vh;
@@ -22,8 +20,7 @@
   }
 
   .dashboard-wrapper {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
+    background-color: #fff;
     border-radius: 12px;
     padding: 2rem;
   }
@@ -36,16 +33,17 @@
 
   .dashboard-card {
     background-color: #ffffff;
-    border: 1px solid #dee2e6;
+    border: none;
     border-radius: 10px;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     position: relative;
     z-index: 1;
   }
 
   .dashboard-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   }
 
   .dashboard-card .card-body {
@@ -75,137 +73,122 @@
   .txt-danger  { color: #dc3545 !important; }
 
   @media (max-width: 575.98px) {
-    .dashboard-card .card-body { padding: 1.4rem 1.2rem; }
-    .dashboard-card h4         { font-size: 1.3rem; }
+    .dashboard-wrapper {
+      padding: 1.25rem;
+    }
+    .dashboard-card .card-body {
+      padding: 1.2rem 1rem;
+    }
+    .dashboard-card h4 {
+      font-size: 1.2rem;
+    }
+    .dash-title {
+      font-size: 1.3rem;
+    }
   }
 </style>
 
 <div class="container-fluid py-4">
   <div class="dashboard-wrapper mx-auto">
-
-    <!-- Title -->
     <h3 class="dash-title mb-4">
       <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
     </h3>
 
-    <!-- Cards Grid -->
     <div class="row g-4">
 
-      <!-- Schools -->
       <div class="col-12 col-sm-6 col-lg-3">
         <div class="card dashboard-card h-100 position-relative">
-          <a href="{% url 'schools_list' %}" class="stretched-link">
-            <span class="visually-hidden">Go to Schools List</span>
-          </a>
+          <a href="{% url 'schools_list' %}" class="stretched-link"><span class="visually-hidden">Go to Schools List</span></a>
           <div class="card-body">
             <h6>Total Schools</h6>
-            <h4 class="txt-primary">
-              <i class="fas fa-school"></i> {{ school_count }}
-            </h4>
+            <h4 class="txt-primary"><i class="fas fa-school"></i> {{ school_count }}</h4>
           </div>
         </div>
       </div>
 
-      <!-- Colleges -->
       <div class="col-12 col-sm-6 col-lg-3">
         <div class="card dashboard-card h-100 position-relative">
-          <a href="{% url 'colleges_list' %}" class="stretched-link">
-            <span class="visually-hidden">Go to Colleges List</span>
-          </a>
+          <a href="{% url 'colleges_list' %}" class="stretched-link"><span class="visually-hidden">Go to Colleges List</span></a>
           <div class="card-body">
             <h6>Total Colleges</h6>
-            <h4 class="txt-success">
-              <i class="fas fa-university"></i> {{ college_count }}
-            </h4>
+            <h4 class="txt-success"><i class="fas fa-university"></i> {{ college_count }}</h4>
           </div>
         </div>
       </div>
 
-      <!-- Companies -->
       <div class="col-12 col-sm-6 col-lg-3">
         <div class="card dashboard-card h-100 position-relative">
-          <a href="{% url 'companies_list' %}" class="stretched-link">
-            <span class="visually-hidden">Go to Companies List</span>
-          </a>
+          <a href="{% url 'companies_list' %}" class="stretched-link"><span class="visually-hidden">Go to Companies List</span></a>
           <div class="card-body">
             <h6>Total Companies</h6>
-            <h4 class="txt-warning">
-              <i class="fas fa-building"></i> {{ company_count }}
-            </h4>
+            <h4 class="txt-warning"><i class="fas fa-building"></i> {{ company_count }}</h4>
           </div>
         </div>
       </div>
 
-      <!-- Candidates -->
       <div class="col-12 col-sm-6 col-lg-3">
         <div class="card dashboard-card h-100 position-relative">
-          <a href="{% url 'candidates_summary' %}" class="stretched-link">
-            <span class="visually-hidden">Go to Candidates Summary</span>
-          </a>
+          <a href="{% url 'candidates_summary' %}" class="stretched-link"><span class="visually-hidden">Go to Candidates Summary</span></a>
           <div class="card-body">
             <h6>Registered Candidates</h6>
-            <h4 class="txt-danger">
-              <i class="fas fa-users"></i> {{ candidate_count }}
-            </h4>
+            <h4 class="txt-danger"><i class="fas fa-users"></i> {{ candidate_count }}</h4>
           </div>
         </div>
       </div>
 
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card dashboard-card h-100 position-relative">
+          <a href="{% url 'internship_list' %}" class="stretched-link"><span class="visually-hidden">Go to Internship List</span></a>
+          <div class="card-body">
+            <h6>Total Internships</h6>
+            <h4 class="txt-primary"><i class="fas fa-briefcase"></i> {{ internship_count }}</h4>
+          </div>
+        </div>
+      </div>
 
-    <!-- Internships -->
-<div class="col-12 col-sm-6 col-lg-3">
-  <div class="card dashboard-card h-100 position-relative">
-    <a href="{% url 'internship_list' %}" class="stretched-link">
-      <span class="visually-hidden">Go to Internship List</span>
-    </a>
-    <div class="card-body">
-      <h6>Total Internships</h6>
-      <h4 class="txt-primary">
-        <i class="fas fa-briefcase"></i> {{ internship_count }}
-      </h4>
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card dashboard-card h-100 position-relative">
+          <a href="{% url 'job_list' %}" class="stretched-link"><span class="visually-hidden">Go to Job List</span></a>
+          <div class="card-body">
+            <h6>Total Jobs</h6>
+            <h4 class="txt-success"><i class="fas fa-clipboard-list"></i> {{ job_count }}</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card dashboard-card h-100 position-relative">
+          <a href="{% url 'competitions_list' %}" class="stretched-link"><span class="visually-hidden">Go to Competitions List</span></a>
+          <div class="card-body">
+            <h6>Total Competitions</h6>
+            <h4 class="txt-warning"><i class="fas fa-trophy"></i> {{ competition_count }}</h4>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
-<!-- Jobs -->
-<div class="col-12 col-sm-6 col-lg-3">
-  <div class="card dashboard-card h-100 position-relative">
-    <a href="{% url 'job_list' %}" class="stretched-link">
-      <span class="visually-hidden">Go to Job List</span>
-    </a>
+<!-- Charts Section -->
+<div class="container-fluid mt-4">
+  <div class="card dashboard-card">
     <div class="card-body">
-      <h6>Total Jobs</h6>
-      <h4 class="txt-success">
-        <i class="fas fa-clipboard-list"></i> {{ job_count }}
-      </h4>
-    </div>
-  </div>
-</div>
-
-<!-- Competitions -->
-<div class="col-12 col-sm-6 col-lg-3">
-  <div class="card dashboard-card h-100 position-relative">
-    <a href="{% url 'competitions_list' %}" class="stretched-link">
-      <span class="visually-hidden">Go to Competitions List</span>
-    </a>
-    <div class="card-body">
-      <h6>Total Competitions</h6>
-      <h4 class="txt-warning">
-        <i class="fas fa-trophy"></i> {{ competition_count }}
-      </h4>
+      {% include 'admin_panel/charts_internship.html' %}
     </div>
   </div>
 </div>
 
 
-    </div><!-- /row -->
-  </div><!-- /wrapper -->
-</div><!-- /container -->
-{% include 'admin_panel/charts_internship.html' %}
 
-<!-- Add spacing between the charts and datatable -->
-<div class="my-5"></div>
+<div class="container-fluid mt-5">
 
-{% include 'admin_panel/datatable.html' %}
+   
+
+      
+      {% include 'admin_panel/datatable.html' %}
+   
+ 
+</div>
 
 {% endblock %}

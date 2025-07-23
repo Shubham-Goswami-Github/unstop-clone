@@ -1,264 +1,508 @@
-<!-- Load Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% load static %}
 <style>
-  .dashboard-graph-section {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px;
-    justify-content: center;
+  /* Wrapper Padding */
+  #internshipChartsWrapper {
+    padding: 10px;
   }
 
-  .graph-card {
-    flex: 1 1 300px;
-    max-width: 320px;
-    min-height: 280px;
-    background-color: white;
-    border-radius: 16px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    padding: 16px;
+  /* Full Width Card (Internship Daily Chart) */
+  #internshipChartsWrapper .full-width-card {
+    width: 100%;
+    min-height: 480px;
+    padding: 0;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 8px rgba(0,0,0,0.08);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
   }
 
-  .graph-card h5 {
-    font-size: 16px;
-    margin-bottom: 12px;
-    color: #003366;
-    text-align: center;
+  #internshipChartsWrapper .full-width-card canvas {
+    flex: 1;
+    padding: 10px 20px 20px;
   }
 
-  canvas {
+  /* Graph Section */
+  #internshipChartsWrapper .dashboard-graph-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  /* Graph Cards */
+  #internshipChartsWrapper .graph-card {
+    flex: 1 1 calc(50% - 8px);
+    min-height: 360px;
+    background-color: #fff;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #internshipChartsWrapper .graph-card canvas {
     width: 100% !important;
     height: auto !important;
-    max-height: 180px;
+    max-height: 300px;
   }
 
-  @media screen and (max-width: 768px) {
-    .graph-card {
+  /* Graph Titles */
+  #internshipChartsWrapper .graph-card h5 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e2a3a;
+    margin-bottom: 12px;
+  }
+
+  /* Smaller Screens */
+  @media (max-width: 768px) {
+    #internshipChartsWrapper .graph-card {
       flex: 1 1 100%;
-      max-width: 100%;
+      min-height: 300px;
+    }
+
+    #internshipChartsWrapper .full-width-card {
+      min-height: 400px;
+    }
+
+    #internshipChartsWrapper .full-width-card canvas {
+      padding: 10px;
     }
   }
+
+  /* Job Chart Center */
+  #jobCharts .card-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+  }
+
+  #jobCharts canvas {
+    max-width: 100%;
+    max-height: 260px;
+  }
+
+  @media (max-width: 768px) {
+    #jobCharts .card-body {
+      padding: 10px;
+    }
+  }
+  /* Competition Charts Styling */
+#competitionChartsWrapper {
+  padding: 10px;
+}
+
+#competitionChartsWrapper .full-width-card {
+  width: 100%;
+  min-height: 480px;
+  padding: 0;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+#competitionChartsWrapper .full-width-card canvas {
+  flex: 1;
+  padding: 10px 20px 20px;
+}
+
+#competitionChartsWrapper .dashboard-graph-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+#competitionChartsWrapper .graph-card {
+  flex: 1 1 calc(50% - 8px);
+  min-height: 360px;
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#competitionChartsWrapper .graph-card canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 300px;
+}
+
+#competitionChartsWrapper .graph-card h5 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e2a3a;
+  margin-bottom: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #competitionChartsWrapper .graph-card {
+    flex: 1 1 100%;
+    min-height: 300px;
+  }
+
+  #competitionChartsWrapper .full-width-card {
+    min-height: 400px;
+  }
+
+  #competitionChartsWrapper .full-width-card canvas {
+    padding: 10px;
+  }
+}
+
 </style>
 
-<div class="container-fluid mt-4">
-  <h5 class="mb-3 text-primary fw-semibold">Internship Analytics</h5>
+<!-- Inject Data -->
+{{ jobs|json_script:"jobData" }}
+{{ jobs_by_day|json_script:"jobsPerDayData" }}
+{{ internships|json_script:"internshipChartData" }}
+{{ internships_by_day|json_script:"internshipDailyData" }}
+{{ competitions|json_script:"competitionData" }}
+{{ competitions_by_day|json_script:"competitionDailyData" }}
 
-  <div class="row g-3">
-    <!-- Paid vs Unpaid -->
-    <div class="col-sm-6 col-lg-6">
-      <div class="card shadow-sm h-100">
-        <div class="card-body p-3">
-          <h6 class="text-center mb-2 small text-secondary">Paid vs Unpaid</h6>
-          <canvas id="categoryChart" height="180"></canvas>
-        </div>
+
+<!-- Chart Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1/dist/chartjs-adapter-luxon.umd.min.js"></script>
+
+<!-- Analytics Toggle -->
+<div class="mb-4 d-flex align-items-center justify-content-between flex-wrap">
+  <h5 class="dash-title mb-0"></h5>
+  <select id="analyticsToggle" class="form-select w-auto">
+    <option value="internship" selected>Internship Analytics</option>
+    <option value="job">Job Analytics</option>
+    <option value="competition">Competition Analytics</option>
+
+  </select>
+</div>
+
+<!-- Internship Section -->
+<div id="internshipChartsWrapper">
+  <div id="internshipCharts">
+    <div class="container-fluid">
+      <h5 class="mb-3 text-primary fw-semibold">Internship Analytics</h5>
+
+      <div class="graph-card full-width-card mb-4">
+      
+        <canvas id="internshipDailyChart"></canvas>
       </div>
-    </div>
 
-    <!-- Internship Mode -->
-    <div class="col-sm-6 col-lg-6">
-      <div class="card shadow-sm h-100">
-        <div class="card-body p-3">
-          <h6 class="text-center mb-2 small text-secondary">Internship Mode Distribution</h6>
-          <canvas id="modeChart" height="180"></canvas>
+      <div class="dashboard-graph-section">
+        <div class="graph-card">
+          <h5>Paid vs Unpaid</h5>
+          <canvas id="internshipCategoryChart"></canvas>
         </div>
-      </div>
-    </div>
-
-    <!-- Internships by Domain -->
-    <div class="col-sm-6 col-lg-6">
-      <div class="card shadow-sm h-100">
-        <div class="card-body p-3">
-          <h6 class="text-center mb-2 small text-secondary">Internships by Domain</h6>
-          <canvas id="domainPieChart" height="180"></canvas>
+        <div class="graph-card">
+          <h5>Internship Mode</h5>
+          <canvas id="internshipModeChart"></canvas>
         </div>
-      </div>
-    </div>
-
-    <!-- Domain Breakdown -->
-    <div class="col-sm-6 col-lg-6">
-      <div class="card shadow-sm h-100">
-        <div class="card-body p-3">
-          <h6 class="text-center mb-2 small text-secondary">Internship Domain Breakdown</h6>
-          <canvas id="domainBarChart" height="180"></canvas>
+        <div class="graph-card">
+          <h5>Internships by Domain</h5>
+          <canvas id="internshipDomainPieChart"></canvas>
+        </div>
+        <div class="graph-card">
+          <h5>Internship Domain Breakdown</h5>
+          <canvas id="internshipDomainBarChart"></canvas>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Pass internship data -->
-{{ internships|json_script:"internshipData" }}
+<!-- Job Section -->
+<div id="jobCharts" style="display: none;">
+  <div class="row">
+    <div class="col-md-8 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-white fw-bold">
+          <i class="fas fa-chart-line me-2 text-primary"></i>Jobs Created Per Day
+        </div>
+        <div class="card-body">
+          <canvas id="jobsPerDayChart" height="100"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-white fw-bold">
+          <i class="fas fa-chart-pie me-2 text-success"></i>Job Categories
+        </div>
+        <div class="card-body">
+          <canvas id="jobCategoryChart" height="250"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-white fw-bold">
+          <i class="fas fa-chart-bar me-2 text-warning"></i>Employment Type
+        </div>
+        <div class="card-body">
+          <canvas id="employmentTypeChart" height="250"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-white fw-bold">
+          <i class="fas fa-chart-bar me-2 text-danger"></i>Experience Level
+        </div>
+        <div class="card-body">
+          <canvas id="experienceLevelChart" height="250"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="competitionChartsWrapper" style="display: none;">
+  <div class="container-fluid">
+    <h5 class="mb-3 text-primary fw-semibold">Competition Analytics</h5>
+
+    <div class="graph-card full-width-card mb-4">
+      <canvas id="competitionDailyChart"></canvas>
+    </div>
+
+    <div class="dashboard-graph-section">
+      <div class="graph-card">
+        <h5>Free vs Paid</h5>
+        <canvas id="competitionCategoryChart"></canvas>
+      </div>
+      <div class="graph-card">
+        <h5>Competition Mode</h5>
+        <canvas id="competitionModeChart"></canvas>
+      </div>
+      <div class="graph-card">
+        <h5>Competition Type Distribution</h5>
+        <canvas id="competitionTypeChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toggle Logic -->
+
 <script>
-  const data = JSON.parse(document.getElementById('internshipData').textContent);
+document.addEventListener("DOMContentLoaded", function () {
+  const toggle = document.getElementById("analyticsToggle");
+  const sections = {
+    internship: document.getElementById("internshipChartsWrapper"),
+    job: document.getElementById("jobCharts"),
+    competition: document.getElementById("competitionChartsWrapper"),
+  };
 
-  const categoryCounts = { 'Paid': 0, 'Unpaid': 0 };
-  const modeCounts = { 'Online': 0, 'Offline': 0, 'Hybrid': 0 };
-  const domainCounts = {};
+  function updateVisibility() {
+    const sel = toggle.value;
+    for (let key in sections) {
+      sections[key].style.display = (key === sel) ? "block" : "none";
+    }
+  }
 
+  toggle.addEventListener("change", updateVisibility);
+  updateVisibility(); // on page load
+});
+</script>
+
+
+
+<!-- Chart Rendering Script (No change in logic) -->
+<script>
+  const jobData = JSON.parse(document.getElementById('jobData').textContent);
+  const jobPerDay = JSON.parse(document.getElementById('jobsPerDayData').textContent);
+  const categoryCounts = {}, employmentCounts = {}, experienceCounts = {};
+  jobData.forEach(job => {
+    categoryCounts[job.category || "Unknown"] = (categoryCounts[job.category || "Unknown"] || 0) + 1;
+    employmentCounts[job.employment_type || "N/A"] = (employmentCounts[job.employment_type || "N/A"] || 0) + 1;
+    experienceCounts[job.experience_level || "Not Specified"] = (experienceCounts[job.experience_level || "Not Specified"] || 0) + 1;
+  });
+
+  new Chart(document.getElementById('jobsPerDayChart'), {
+    type: 'line',
+    data: {
+      labels: jobPerDay.map(item => item.day),
+      datasets: [{ label: 'Jobs Posted', data: jobPerDay.map(item => item.count), borderColor: '#3498db', fill: true, tension: 0.3 }]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+  });
+
+  new Chart(document.getElementById('jobCategoryChart'), {
+    type: 'pie',
+    data: { labels: Object.keys(categoryCounts), datasets: [{ data: Object.values(categoryCounts), backgroundColor: ['#1abc9c','#3498db','#9b59b6','#f1c40f','#e74c3c'] }] }
+  });
+
+  new Chart(document.getElementById('employmentTypeChart'), {
+    type: 'bar',
+    data: { labels: Object.keys(employmentCounts), datasets: [{ label: 'Jobs', data: Object.values(employmentCounts), backgroundColor: '#ff9f43' }] },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+  });
+
+  new Chart(document.getElementById('experienceLevelChart'), {
+    type: 'bar',
+    data: { labels: Object.keys(experienceCounts), datasets: [{ label: 'Jobs', data: Object.values(experienceCounts), backgroundColor: '#e74c3c' }] },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+  });
+
+  const data = JSON.parse(document.getElementById('internshipChartData').textContent);
+  const perDayData = JSON.parse(document.getElementById('internshipDailyData').textContent);
+  const categoryCounts2 = { 'Paid': 0, 'Unpaid': 0 }, modeCounts = { 'Online': 0, 'Offline': 0, 'Hybrid': 0 }, domainCounts = {};
   data.forEach(item => {
-    categoryCounts[item.category] = (categoryCounts[item.category] || 0) + 1;
+    categoryCounts2[item.category] = (categoryCounts2[item.category] || 0) + 1;
     modeCounts[item.mode] = (modeCounts[item.mode] || 0) + 1;
     domainCounts[item.domain] = (domainCounts[item.domain] || 0) + 1;
   });
 
-  // Utility to generate soft colors
-  const generateColors = (count) => {
-    const colors = [];
-    for (let i = 0; i < count; i++) {
-      const hue = Math.floor(360 * Math.random());
-      colors.push(`hsl(${hue}, 70%, 60%)`);
-    }
-    return colors;
-  };
+  const generateColors = (count) => Array.from({length: count}, () => `hsl(${Math.floor(Math.random()*360)}, 70%, 60%)`);
 
-  // Category Chart - Pie
-  new Chart(document.getElementById('categoryChart'), {
+  new Chart(document.getElementById('internshipCategoryChart'), {
     type: 'pie',
+    data: { labels: Object.keys(categoryCounts2), datasets: [{ data: Object.values(categoryCounts2), backgroundColor: ['#0d6efd', '#ffc107'], borderColor: '#fff', borderWidth: 2 }] },
+    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+  });
+
+  new Chart(document.getElementById('internshipModeChart'), {
+    type: 'bar',
+    data: { labels: Object.keys(modeCounts), datasets: [{ data: Object.values(modeCounts), backgroundColor: ['#198754','#dc3545','#6f42c1'], borderRadius: 8 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+  });
+
+  new Chart(document.getElementById('internshipDomainPieChart'), {
+    type: 'doughnut',
+    data: { labels: Object.keys(domainCounts), datasets: [{ data: Object.values(domainCounts), backgroundColor: generateColors(Object.keys(domainCounts).length), borderColor: '#fff', borderWidth: 2 }] },
+    options: { responsive: true, cutout: '40%', plugins: { legend: { display: false } } }
+  });
+
+  new Chart(document.getElementById('internshipDomainBarChart'), {
+    type: 'bar',
+    data: { labels: Object.keys(domainCounts), datasets: [{ data: Object.values(domainCounts), backgroundColor: generateColors(Object.keys(domainCounts).length), borderRadius: 6 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+  });
+
+  new Chart(document.getElementById("internshipDailyChart"), {
+    type: 'line',
     data: {
-      labels: Object.keys(categoryCounts),
       datasets: [{
-        data: Object.values(categoryCounts),
-        backgroundColor: ['#0d6efd', '#ffc107'],
-        borderColor: '#fff',
-        borderWidth: 2,
-        hoverOffset: 12
+        label: 'Internships Added Per Day',
+        data: perDayData.map(entry => ({ x: entry.date, y: entry.count })),
+        borderColor: 'rgba(75, 192, 192, 1)',
+        tension: 0.3,
+        fill: false,
+        pointBackgroundColor: 'rgba(75, 192, 192, 1)'
       }]
     },
     options: {
       responsive: true,
-      animation: {
-        animateScale: true,
-        duration: 1200,
-        easing: 'easeOutBounce'
-      },
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            color: '#333',
-            font: {
-              size: 14,
-              family: 'Poppins'
-            }
-          }
+      scales: {
+        x: {
+          type: 'time',
+          time: { unit: 'day', tooltipFormat: 'MMM dd, yyyy', displayFormats: { day: 'MMM d' } },
+          title: { display: true, text: 'Date' }
+        },
+        y: {
+          title: { display: true, text: 'Internships' },
+          beginAtZero: true
         }
       }
     }
   });
 
-  // Mode Chart - Bar
-  new Chart(document.getElementById('modeChart'), {
-    type: 'bar',
+  const competitionData = JSON.parse(document.getElementById('competitionData').textContent);
+  const competitionDailyData = JSON.parse(document.getElementById('competitionDailyData').textContent);
+
+  const compCategoryCounts = {}, compModeCounts = {}, compTypeCounts = {};
+  competitionData.forEach(item => {
+    compCategoryCounts[item.category] = (compCategoryCounts[item.category] || 0) + 1;
+    compModeCounts[item.mode] = (compModeCounts[item.mode] || 0) + 1;
+    compTypeCounts[item.competition_type] = (compTypeCounts[item.competition_type] || 0) + 1;
+  });
+
+  new Chart(document.getElementById('competitionDailyChart'), {
+    type: 'line',
     data: {
-      labels: Object.keys(modeCounts),
       datasets: [{
-        label: 'Total',
-        data: Object.values(modeCounts),
-        backgroundColor: ['#198754', '#dc3545', '#6f42c1'],
-        borderRadius: 8,
-        borderSkipped: false
+        label: 'Competitions Created Per Day',
+        data: competitionDailyData.map(entry => ({ x: entry.date, y: entry.count })),
+        borderColor: '#fd7e14',
+        fill: false,
+        tension: 0.3
       }]
     },
     options: {
       responsive: true,
-      animation: {
-        duration: 1000,
-        easing: 'easeOutQuart'
-      },
-      plugins: {
-        legend: {
-          display: false
-        }
-      },
       scales: {
+        x: {
+          type: 'time',
+          time: { unit: 'day', tooltipFormat: 'MMM dd, yyyy' },
+          title: { display: true, text: 'Date' }
+        },
         y: {
           beginAtZero: true,
-          ticks: {
-            color: '#333'
-          }
-        },
-        x: {
-          ticks: {
-            color: '#333'
-          }
+          title: { display: true, text: 'Competitions' }
         }
       }
     }
   });
 
-  // Domain Pie Chart
-  new Chart(document.getElementById('domainPieChart'), {
-    type: 'doughnut',
+  new Chart(document.getElementById('competitionCategoryChart'), {
+    type: 'pie',
     data: {
-      labels: Object.keys(domainCounts),
+      labels: Object.keys(compCategoryCounts),
       datasets: [{
-        data: Object.values(domainCounts),
-        backgroundColor: generateColors(Object.keys(domainCounts).length),
-        borderWidth: 1,
-        hoverOffset: 10
+        data: Object.values(compCategoryCounts),
+        backgroundColor: ['#0d6efd', '#ffc107']
       }]
     },
-    options: {
-      responsive: true,
-      animation: {
-        animateRotate: true,
-        duration: 1300,
-        easing: 'easeOutCirc'
-      },
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            font: {
-              size: 13,
-              family: 'Poppins'
-            }
-          }
-        }
-      }
-    }
+    options: { responsive: true }
   });
 
-  // Domain Bar Chart
-  new Chart(document.getElementById('domainBarChart'), {
+  new Chart(document.getElementById('competitionModeChart'), {
     type: 'bar',
     data: {
-      labels: Object.keys(domainCounts),
+      labels: Object.keys(compModeCounts),
       datasets: [{
-        label: 'Internships',
-        data: Object.values(domainCounts),
-        backgroundColor: generateColors(Object.keys(domainCounts).length),
+        data: Object.values(compModeCounts),
+        backgroundColor: ['#20c997', '#dc3545', '#6f42c1'],
         borderRadius: 6
       }]
     },
     options: {
       responsive: true,
-      animation: {
-        duration: 1000,
-        easing: 'easeOutBack'
-      },
-      plugins: {
-        legend: {
-          display: false
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            color: '#333'
-          }
-        },
-        x: {
-          ticks: {
-            color: '#333'
-          }
-        }
-      }
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  new Chart(document.getElementById('competitionTypeChart'), {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(compTypeCounts),
+      datasets: [{
+        data: Object.values(compTypeCounts),
+        backgroundColor: generateColors(Object.keys(compTypeCounts).length),
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      cutout: '50%'
     }
   });
 </script>
-
