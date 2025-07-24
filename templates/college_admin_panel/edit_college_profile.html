@@ -1,0 +1,54 @@
+{% extends 'college_admin_panel/college_admin_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h4 class="mb-4 text-dark">Edit College Profile</h4>
+  <form method="POST" enctype="multipart/form-data" class="shadow p-4 bg-white rounded">
+    {% csrf_token %}
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">College Name</label>
+        <input type="text" name="name" class="form-control" value="{{ college.name }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" value="{{ college.email }}">
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Phone</label>
+        <input type="text" name="phone" class="form-control" value="{{ college.phone }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">City</label>
+        <input type="text" name="city" class="form-control" value="{{ college.city }}">
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">State</label>
+        <input type="text" name="state" class="form-control" value="{{ college.state }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Courses Accepted (comma separated)</label>
+        <input type="text" name="courses_accepted" class="form-control" value="{{ college.courses_accepted }}">
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Website</label>
+      <input type="text" name="website" class="form-control" value="{{ college.website }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">College Logo</label>
+      <input type="file" name="logo" class="form-control">
+      {% if college.logo %}
+        <img src="{{ college.logo.url }}" alt="Logo" class="mt-2" style="height: 60px;">
+      {% endif %}
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a href="{% url 'college_admin_dashboard' %}" class="btn btn-secondary ms-2">Cancel</a>
+  </form>
+</div>
+{% endblock %}

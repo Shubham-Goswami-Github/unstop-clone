@@ -45,8 +45,6 @@ class CompetitionForm(forms.ModelForm):
             'registration_deadline': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
         }
 
-
-# adminapp/forms.py
 from django import forms
 from .models import AdminModule
 
@@ -54,3 +52,6 @@ class AdminModuleForm(forms.ModelForm):
     class Meta:
         model = AdminModule
         fields = '__all__'
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4}),
+        }

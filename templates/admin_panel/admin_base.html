@@ -201,6 +201,25 @@
         margin-left: 0 !important;
       }
     }
+   .profile-sidebar {
+  position: fixed;
+  top: var(--nav-height);
+  right: -320px;
+  width: 300px;
+  height: calc(100vh - var(--nav-height));
+  background-color: #fff;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+  transition: right 0.3s ease;
+  z-index: 1051;
+  overflow-y: auto;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.profile-sidebar.open {
+  right: 0;
+}
+
   </style>
 </head>
 
@@ -229,7 +248,43 @@
       </div>
     </div>
 
-    <i class="fas fa-user-circle"></i>
+   <img src="{{ request.user.adminmodule.profile_photo.url }}" alt="Profile Photo" class="rounded-circle" style="height: 36px; width: 36px; object-fit: cover; cursor: pointer;" onclick="toggleProfileSidebar()">
+<!-- Profile Sidebar -->
+{% load static %}
+
+<!-- Profile Sidebar -->
+<div id="profileSidebar" class="profile-sidebar shadow" style="width: 280px; background-color: #f8f9fa;">
+  <!-- Header with dark blue background and no rounded corners -->
+  <div class="profile-header text-white d-flex justify-content-between align-items-center px-3 py-2"
+       style="background-color: #002B5B; border-top-left-radius: 0; border-top-right-radius: 0;">
+    <h5 class="mb-0">Your Profile</h5>
+    <button class="btn btn-sm btn-close btn-close-white" onclick="toggleProfileSidebar()"></button>
+  </div>
+
+  <!-- Profile Content -->
+  <div class="p-3">
+    <div class="text-center mb-3">
+      {% if request.user.adminmodule.profile_photo %}
+        <img src="{{ request.user.adminmodule.profile_photo.url }}" alt="Profile Photo"
+             class="rounded-circle shadow" style="height: 90px; width: 90px; object-fit: cover;">
+      {% else %}
+        <img src="{% static 'images/default-avatar.png' %}" alt="Default Photo"
+             class="rounded-circle shadow" style="height: 90px; width: 90px; object-fit: cover;">
+      {% endif %}
+    </div>
+
+    {% if request.user.adminmodule %}
+      <div class="mb-2 text-dark fw-semibold"><strong>Name:</strong> {{ request.user.adminmodule.name }}</div>
+      <div class="mb-2 text-dark fw-semibold"><strong>Email:</strong> {{ request.user.adminmodule.email }}</div>
+      <div class="mb-2 text-dark fw-semibold"><strong>Phone:</strong> {{ request.user.adminmodule.phone }}</div>
+      <div class="mb-2 text-dark fw-semibold"><strong>Designation:</strong> {{ request.user.adminmodule.designation }}</div>
+      <div class="mb-2 text-dark fw-semibold"><strong>About:</strong><br> {{ request.user.adminmodule.description }}</div>
+    {% else %}
+      <div class="text-muted text-center">No profile information available.</div>
+    {% endif %}
+  </div>
+</div>
+
   </div>
 </div>
 
@@ -259,8 +314,7 @@
           class="{% if request.resolver_match.url_name == 'competitions_list' %}active{% endif %}">
           <i class="fas fa-trophy"></i> Competitions
         </a>
-        <a href="#" onclick="autoHideSidebar()"><i class="fas fa-user-tie"></i> Add Mentors</a>
-        <a href="#" onclick="autoHideSidebar()"><i class="fas fa-laptop-code"></i> Add Practice</a>
+       
       </div>
     </div>
 
@@ -291,7 +345,7 @@
       <i class="fas fa-users"></i> Candidates
     </a>
 
-    <a href="{% url 'add_candidate' %}" onclick="autoHideSidebar()"><i class="fas fa-cogs"></i> Settings</a>
+
   </div>
 
 
@@ -345,6 +399,10 @@
       sidebar.classList.remove('active');
     }
   }
+function toggleProfileSidebar() {
+  document.getElementById('profileSidebar').classList.toggle('open');
+}
+
 </script>
 
 </body>

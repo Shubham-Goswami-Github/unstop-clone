@@ -1,0 +1,84 @@
+{% extends "company_admin_panel/company_admin_base.html" %}
+{% load static %}
+
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  body {
+    background-color: rgb(240, 242, 248);
+    color: #212529;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+  }
+
+  .dashboard-wrapper {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .dash-title {
+    font-size: 1.65rem;
+    font-weight: 600;
+    color: #0d6efd;
+  }
+
+  .dashboard-card {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .dashboard-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .dashboard-card .card-body {
+    padding: 1.6rem 1.4rem;
+  }
+
+  .dashboard-card h6 {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #6c757d;
+  }
+
+  .dashboard-card h4 {
+    font-size: 1.45rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .txt-primary { color: #0d6efd !important; }
+</style>
+
+<div class="container-fluid py-4">
+  <div class="dashboard-wrapper">
+    <h3 class="dash-title mb-4">
+      <i class="fas fa-tachometer-alt me-2"></i>Company Admin Dashboard
+    </h3>
+
+    <!-- Stats Cards -->
+    <div class="row g-4">
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card dashboard-card">
+          <a href="#" class="stretched-link"></a>
+          <div class="card-body">
+            <h6>Total Students Applied</h6>
+           <h6>Total Students Applied</h6>
+<h4 class="txt-primary"><i class="fas fa-users"></i> {{ total_applied }}</h4>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

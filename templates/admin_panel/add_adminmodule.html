@@ -1,0 +1,20 @@
+{% extends "admin_panel/admin_base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Add Admin Module</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success mt-2">Submit</button>
+                <a href="{% url 'admin_panel_dashboard' %}" class="btn btn-secondary mt-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

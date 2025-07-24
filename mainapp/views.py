@@ -445,6 +445,15 @@ from django.contrib import messages
 def view_companies(request):
     companies = Company.objects.all().order_by('-created_at')
     return render(request, 'admin_panel/view_companies.html', {'companies': companies})
+
+
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.contrib.auth.hashers import make_password
+from .models import Company  # import your model
+
 @staff_member_required
 def add_company(request):
     if request.method == 'POST':
@@ -453,7 +462,11 @@ def add_company(request):
         city = request.POST.get('city')
         contact_number = request.POST.get('contact_number')
         email = request.POST.get('email')
+        password = request.POST.get('password')
         is_approved = request.POST.get('is_approved') == 'on'
+
+        # hash password before saving
+        hashed_password = make_password(password)
 
         Company.objects.create(
             name=name,
@@ -461,12 +474,18 @@ def add_company(request):
             city=city,
             contact_number=contact_number,
             email=email,
+            password=hashed_password,
             is_approved=is_approved
         )
         messages.success(request, "Company added successfully.")
         return redirect('companies_list')
-    
+
     return render(request, 'admin_panel/add_company.html')
+
+
+
+
+
 @staff_member_required
 def edit_company(request, company_id):
     company = get_object_or_404(Company, pk=company_id)
@@ -593,9 +612,15 @@ from django.views.decorators.csrf import csrf_exempt
 def view_candidate(request, candidate_id):
     candidate = get_object_or_404(CandidateProfile, id=candidate_id)
     return render(request, 'admin_panel/view_candidate_detail.html', {'candidate': candidate})
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import CandidateProfile
+
 @staff_member_required
 def edit_candidate(request, candidate_id):
     candidate = get_object_or_404(CandidateProfile, id=candidate_id)
+
     if request.method == 'POST':
         candidate.first_name = request.POST.get('first_name')
         candidate.last_name = request.POST.get('last_name')
@@ -604,8 +629,19 @@ def edit_candidate(request, candidate_id):
         candidate.gender = request.POST.get('gender')
         candidate.save()
         messages.success(request, "Candidate updated successfully!")
-        return redirect('view_candidates_by_org', org_type=candidate.user_type, org_id=getattr(candidate, f"{candidate.user_type}_id"))
-    return render(request, 'admin_panel/edit_candidate.html', {'candidate': candidate})
+        return redirect(
+            'candidates_summary',
+          
+        )
+
+    # 👇 org_type send kro template me
+    org_type = candidate.user_type
+
+    return render(request, 'admin_panel/edit_candidate.html', {
+        'candidate': candidate,
+        'org_type': org_type,
+    })
+
 @staff_member_required
 @csrf_exempt
 def delete_candidate(request, candidate_id):
@@ -1103,7 +1139,6 @@ def add_candidate_view(request):
     return render(request, 'admin_panel/add_candidate.html')
 
 
-# adminapp/views.py
 from django.shortcuts import render, redirect
 from .forms import AdminModuleForm
 
@@ -1112,7 +1147,518 @@ def add_admin_module_view(request):
         form = AdminModuleForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('admin_module_success')  # You can update this
+            return redirect('admin_panel_dashboard')  # Update with your desired redirect
     else:
         form = AdminModuleForm()
-    return render(request, 'admin_panel/add_admin_module.html', {'form': form})
+    return render(request, 'admin_panel/add_adminmodule.html', {'form': form})
+
+
+
+
+
+# views.py
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render, redirect
+from .models import College, CandidateProfile
+
+@staff_member_required
+def college_admin_view(request):
+    college_id = request.session.get('college_id')
+    if not college_id:
+        return redirect('college_login')
+
+    college = College.objects.get(id=college_id)
+    student_count = CandidateProfile.objects.filter(user_type='college', college_id=college_id).count()
+
+    context = {
+        'college': college,
+        'student_count': student_count,
+    }
+
+    return render(request, 'college_admin_panel/college_admin_base.html', context)
+
+
+
+
+# views.py
+from django.shortcuts import render, redirect
+from mainapp.models import College
+from django.contrib.auth.hashers import make_password
+
+def register_college(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        city = request.POST.get('city')
+        address = request.POST.get('address')
+        contact_number = request.POST.get('contact_number')
+        email = request.POST.get('email')
+        domains_accepted = request.POST.get('domains_accepted')
+        courses_accepted = request.POST.get('courses_accepted')
+        is_approved = True if request.POST.get('is_approved') == 'on' else False
+        password = make_password(request.POST.get('password'))  # Hashing
+
+        College.objects.create(
+            name=name,
+            city=city,
+            address=address,
+            contact_number=contact_number,
+            email=email,
+            domains_accepted=domains_accepted,
+            courses_accepted=courses_accepted,
+            is_approved=is_approved,
+            password=password,
+        )
+        return redirect('home')  # ya koi success page
+
+    return render(request, 'register_college.html')
+
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import College
+from mainapp.models import CandidateProfile
+
+def college_login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        try:
+            college = College.objects.get(email=email, password=password)
+            if college.is_approved:
+                request.session['college_id'] = college.id
+                request.session['college_name'] = college.name
+                return redirect('college_admin_dashboard')
+            else:
+                messages.error(request, "Your college is not approved yet.")
+        except College.DoesNotExist:
+            messages.error(request, "Invalid email or password.")
+    
+    return render(request, 'college_admin_panel/college_login.html')
+
+
+def college_admin_dashboard(request):
+    college_id = request.session.get('college_id')
+    if not college_id:
+        return redirect('college_login')
+
+    college = College.objects.get(id=college_id)
+
+    student_count = CandidateProfile.objects.filter(user_type='college', college_id=college_id).count()
+
+    context = {
+        'college': college,
+        'student_count': student_count,
+    }
+
+    return render(request, 'college_admin_panel/college_admin_dashboard.html', context)
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import College
+from django.contrib import messages
+
+def edit_college_profile(request):
+    college_id = request.session.get('college_id')
+    if not college_id:
+        return redirect('college_login')
+
+    college = get_object_or_404(College, id=college_id)
+
+    if request.method == 'POST':
+        college.name = request.POST.get('name')
+        college.email = request.POST.get('email')
+        college.phone = request.POST.get('phone')
+        college.city = request.POST.get('city')
+        college.state = request.POST.get('state')
+        college.courses_accepted = request.POST.get('courses_accepted')
+        college.website = request.POST.get('website')
+        college.logo = request.FILES.get('logo') or college.logo
+        college.save()
+
+        messages.success(request, "College profile updated successfully.")
+        return redirect('college_admin_dashboard')
+
+    return render(request, 'college_admin_panel/edit_college_profile.html', {
+        'college': college
+    })
+
+
+def college_logout(request):
+    request.session.flush()
+    return redirect('college_login')
+
+
+from .models import CandidateProfile, CareerPurpose, College
+from django.contrib.auth.hashers import make_password
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+def add_new_student(request):
+    college_id = request.session.get('college_id')
+    if not college_id:
+        return redirect('college_login')
+
+    college = College.objects.get(id=college_id)
+    courses = [course.strip() for course in (college.courses_accepted or "").split(',') if course.strip()]
+
+    if request.method == 'POST':
+        # Extracting student fields
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        gender = request.POST.get('gender')
+        password = request.POST.get('password')
+        domain = request.POST.get('domain')
+        course_name = request.POST.get('course_name')
+        start_year = request.POST.get('start_year')
+        end_year = request.POST.get('end_year')
+        career_purpose = request.POST.get('career_purpose')
+        agreed_info = bool(request.POST.get('agreed_info'))
+        stay_in_loop = bool(request.POST.get('stay_in_loop'))
+        profile_photo = request.FILES.get('profile_photo')
+
+        # ✅ Hashing password
+        hashed_password = make_password(password)
+
+        # Saving student
+        student = CandidateProfile(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            phone=phone,
+            gender=gender,
+            password=hashed_password,  # ✅ Save hashed password
+            domain=domain,
+            course_name=course_name,
+            start_year=start_year,
+            end_year=end_year,
+            agreed_info=agreed_info,
+            stay_in_loop=stay_in_loop,
+            user_type='college',
+            college=college,
+            college_name=college.name,
+            college_city=college.city,
+            profile_photo=profile_photo if profile_photo else None,
+        )
+        student.save()
+
+        # ✅ Saving Career Purpose
+        if career_purpose:
+            CareerPurpose.objects.create(candidate=student, purpose=career_purpose)
+
+        messages.success(request, "Student added successfully.")
+        return redirect('college_admin_dashboard')
+
+    return render(request, 'college_admin_panel/add_new_student.html', {
+        'college': college,
+        'courses': courses,
+    })
+
+
+from .models import CandidateProfile
+
+def view_college_registered_students(request):
+    college_id = request.session.get('college_id')
+    if not college_id:
+        return redirect('college_login')
+
+    students = CandidateProfile.objects.filter(college_id=college_id)
+    return render(request, 'college_admin_panel/registered_students.html', {'students': students})
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from .models import CandidateProfile
+
+def delete_college_candidate(request, pk):
+    student = get_object_or_404(CandidateProfile, pk=pk)
+    student.delete()
+    messages.success(request, "Student deleted successfully.")
+    return redirect('registered_students')
+
+def view_college_candidate_detail(request, candidate_id):
+    candidate = get_object_or_404(CandidateProfile, id=candidate_id)
+    return render(request, 'college_admin_panel/view_candidate_detail_college.html', {'candidate': candidate})
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import CandidateProfile, CareerPurpose, College
+
+def edit_college_candidate(request, candidate_id):
+    college_id = request.session.get('college_id')
+    if not college_id:
+        return redirect('college_login')
+
+    candidate = get_object_or_404(CandidateProfile, id=candidate_id, college_id=college_id)
+    try:
+        career_obj = CareerPurpose.objects.get(candidate=candidate)
+        career_purpose = career_obj.purpose
+    except CareerPurpose.DoesNotExist:
+        career_purpose = ""
+
+    if request.method == 'POST':
+        # Update fields
+        candidate.first_name = request.POST.get('first_name')
+        candidate.last_name = request.POST.get('last_name')
+        candidate.email = request.POST.get('email')
+        candidate.phone = request.POST.get('phone')
+        candidate.gender = request.POST.get('gender')
+        candidate.domain = request.POST.get('domain')
+        candidate.course_name = request.POST.get('course_name')
+        candidate.start_year = request.POST.get('start_year')
+        candidate.end_year = request.POST.get('end_year')
+
+        if request.FILES.get('profile_photo'):
+            candidate.profile_photo = request.FILES.get('profile_photo')
+
+        candidate.save()
+
+        # Update CareerPurpose
+        new_purpose = request.POST.get('career_purpose')
+        if new_purpose:
+            if career_obj:
+                career_obj.purpose = new_purpose
+                career_obj.save()
+            else:
+                CareerPurpose.objects.create(candidate=candidate, purpose=new_purpose)
+
+        messages.success(request, "Candidate updated successfully.")
+        return redirect('registered_students')
+    return render(request, 'college_admin_panel/edit_college_candidate.html', {
+        'candidate': candidate,
+        'career_purpose': career_purpose,
+    })
+
+
+
+
+def add_competition_college(request):
+    if request.method == 'POST':
+        form = CompetitionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Competition added!')
+            return redirect('competitions_list_college')
+    else:
+        form = CompetitionForm()
+    return render(request, 'college_admin_panel/add_competition_college.html', {'form': form})
+
+
+    
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import Competition
+from .forms import CompetitionForm
+@staff_member_required
+def competitions_list_college(request):
+    comps = Competition.objects.order_by('-created_at')
+    print("COMPETITIONS:", comps)  # ye line rakho debugging ke liye
+    return render(request, 'college_admin_panel/competitions_list_college.html', {'competitions': comps})
+
+
+
+@staff_member_required
+def competition_detail_college(request, pk):
+    comp = get_object_or_404(Competition, pk=pk)
+    return render(request, 'college_admin_panel/view_competition_college.html', {'comp': comp})
+
+@staff_member_required
+def edit_competition_college(request, pk):
+    comp = get_object_or_404(Competition, pk=pk)
+    if request.method == 'POST':
+        form = CompetitionForm(request.POST, instance=comp)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Competition updated!')
+            return redirect('competitions_list_college')
+    else:
+        form = CompetitionForm(instance=comp)
+    return render(request, 'college_admin_panel/edit_competition_college.html', {'form': form, 'comp': comp})
+
+
+@staff_member_required
+def delete_competition_college(request, pk):
+    comp = get_object_or_404(Competition, pk=pk)
+    if request.method == 'POST':
+        comp.delete()
+        messages.success(request, 'Competition deleted successfully.')
+        return redirect('competitions_list')
+    return render(request, 'college_admin_panel/delete_competition_college.html', {'comp': comp})
+
+
+
+
+# mainapp/views.py
+from django.shortcuts import render, redirect
+from .forms import InternshipForm
+
+def add_internship_college(request):
+    if request.method == 'POST':
+        form = InternshipForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('internship_list')  # update this to your internship list view
+    else:
+        form = InternshipForm()
+    return render(request, 'college_admin_panel/add_internship_college.html', {'form': form})
+
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import Internship
+from .forms import InternshipForm
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+
+
+def internship_list_college(request):
+    internships = Internship.objects.all()
+    return render(request, 'college_admin_panel/internship_list_college.html', {'internships': internships})
+
+
+def view_internship_college(request, internship_id):
+    internship = get_object_or_404(Internship, id=internship_id)
+    return render(request, 'college_admin_panel/view_internship_college.html', {'internship': internship})
+
+
+def edit_internship_college(request, internship_id):
+    internship = get_object_or_404(Internship, id=internship_id)
+    if request.method == 'POST':
+        form = InternshipForm(request.POST, instance=internship)
+        if form.is_valid():
+            form.save()
+            return redirect('internship_list_college')
+    else:
+        form = InternshipForm(instance=internship)
+    return render(request, 'college_admin_panel/edit_internship_college.html', {'form': form})
+
+
+def delete_internship_college(request, internship_id):
+    internship = get_object_or_404(Internship, id=internship_id)
+    internship.delete()
+    return redirect('internship_list_college')
+
+
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import CandidateProfile, AppliedInternship, CompetitionsApplied
+
+def view_applied_internships_by_student(request, student_id):
+    student = get_object_or_404(CandidateProfile, id=student_id)
+    internships = AppliedInternship.objects.filter(candidate=student)
+    return render(request, 'college_admin_panel/student_internships_applied.html', {
+        'student': student,
+        'internships': internships
+    })
+
+def view_applied_competitions_by_student(request, student_id):
+    student = get_object_or_404(CandidateProfile, id=student_id)
+    competitions = CompetitionsApplied.objects.filter(candidate=student)
+    return render(request, 'college_admin_panel/student_competitions_applied.html', {
+        'student': student,
+        'competitions': competitions
+    })
+
+
+
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.contrib.auth.hashers import make_password
+from .models import Company  # import your model
+
+@staff_member_required
+def add_company_home(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        address = request.POST.get('address')
+        city = request.POST.get('city')
+        contact_number = request.POST.get('contact_number')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        is_approved = request.POST.get('is_approved') == 'on'
+
+        # hash password before saving
+        hashed_password = make_password(password)
+
+        Company.objects.create(
+            name=name,
+            address=address,
+            city=city,
+            contact_number=contact_number,
+            email=email,
+            password=hashed_password,
+            is_approved=is_approved
+        )
+        messages.success(request, "Company added successfully.")
+        return redirect('home')
+
+    return render(request, 'add_company_home.html')
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Company
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Company
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Company
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Company
+
+def company_login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        try:
+            company = Company.objects.get(email=email)
+
+            if company.check_password(password):
+                if company.is_approved:
+                    request.session['company_id'] = company.id
+                    request.session['company_name'] = company.name
+                    return redirect('company_admin_dashboard')
+                else:
+                    messages.error(request, "Company not approved.")
+            else:
+                messages.error(request, "Incorrect password.")
+        except Company.DoesNotExist:
+            messages.error(request, "Company not found.")
+
+    return render(request, 'company_admin_panel/company_login.html')
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Company, CandidateProfile  # ✅ Import candidate model
+
+def company_admin_dashboard(request):
+    company_id = request.session.get('company_id')
+
+    if not company_id:
+        messages.error(request, "Please login first.")
+        return redirect('company_login')
+
+    company = Company.objects.get(id=company_id)
+
+    # Count candidates registered under this company
+    total_registered = CandidateProfile.objects.filter(company=company).count()
+
+    context = {
+        'company': company,
+        'total_applied': total_registered  # this will be shown on the card
+    }
+
+    return render(request, 'company_admin_panel/company_admin_dashboard.html', context)
+
+def company_logout(request):
+    request.session.flush()
+    return redirect('company_login')

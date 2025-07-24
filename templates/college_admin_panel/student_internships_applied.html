@@ -1,0 +1,72 @@
+{% extends 'college_admin_panel/college_admin_base.html' %}
+{% load static %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<div class="container mt-4">
+  <h4 class="mb-4 text-primary">Internships Applied by {{ student.first_name }} {{ student.last_name }}</h4>
+
+  {% if internships %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Company</th>
+            <th>Domain</th>
+            <th>Mode</th>
+            <th>Stipend</th>
+            <th>Duration</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Applied On</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for applied in internships %}
+          {% with internship=applied.internship %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><i class="fas fa-briefcase text-secondary me-1"></i>{{ internship.title }}</td>
+            <td>{{ internship.company_name }}</td>
+            <td>{{ internship.domain }}</td>
+            <td>{{ internship.get_mode_display }}</td>
+            <td>
+              {% if internship.stipend_amount == 0 %}
+                Free
+              {% else %}
+                ₹{{ internship.stipend_amount }}
+              {% endif %}
+            </td>
+            <td>{{ internship.duration_weeks }} weeks</td>
+            <td>{{ internship.location }}</td>
+            <td>{{ applied.status|default:"Pending" }}</td>
+            <td>{{ applied.applied_at|date:"d M Y, h:i A" }}</td>
+            <td>
+              {% if internship.application_link %}
+              <a href="{{ internship.application_link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-external-link-alt"></i>
+              </a>
+              {% else %}
+              <span class="text-muted">N/A</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endwith %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info">No internship applications found for this student.</div>
+  {% endif %}
+
+  <a href="{% url 'registered_students' %}" class="btn btn-outline-dark mt-3">
+    <i class="fas fa-arrow-left me-1"></i> Back to Students
+  </a>
+</div>
+{% endblock %}

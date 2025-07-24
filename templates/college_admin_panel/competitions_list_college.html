@@ -1,0 +1,320 @@
+{% extends "college_admin_panel/college_admin_base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Bootstrap + Font Awesome -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<!-- Simple DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.css">
+
+<div class="card shadow mb-4 border-0">
+  <div class="card-header bg-white fw-semibold fs-5 border-bottom-0 d-flex justify-content-between align-items-center flex-wrap">
+    <div>
+      <i class="fas fa-trophy me-2 text-primary"></i> Competition Listings
+    </div>
+    <div class="d-flex gap-2 align-items-center flex-wrap">
+      <a href="{% url 'add_competition_college' %}" class="btn btn-sm btn-dark-blue">
+        <i class="fas fa-plus me-1"></i> Add Competition
+      </a>
+      <button class="btn btn-sm btn-outline-success" id="exportCSV">
+        <i class="fas fa-file-csv me-1"></i> Export CSV
+      </button>
+      <button class="btn btn-sm btn-outline-danger" id="exportPDF">
+        <i class="fas fa-file-pdf me-1"></i> Export PDF
+      </button>
+    </div>
+  </div>
+
+  <div class="card-body p-0">
+    <div class="table-responsive p-3">
+      <table id="customDataTable" class="table table-hover align-middle mb-0">
+        <thead class="text-center align-middle bg-white border-bottom">
+          <tr class="text-dark fw-semibold">
+            <th>S.No</th>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Host Org</th>
+            <th>Type</th>
+            <th>Mode</th>
+            <th>Category</th>
+            <th>Fee (₹)</th>
+            <th>Reg. Deadline</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for comp in competitions %}
+          <tr class="text-center">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ comp.id }}</td>
+            <td>{{ comp.title }}</td>
+            <td>{{ comp.host_org }}</td>
+            <td>{{ comp.competition_type }}</td>
+            <td>{{ comp.mode }}</td>
+            <td>{{ comp.category }}</td>
+            <td>{{ comp.fee_amount }}</td>
+            <td>{{ comp.registration_deadline|default:"—" }}</td>
+            <td>
+              <a href="{% url 'competition_detail_college' comp.id %}" data-bs-toggle="tooltip" title="View">
+                <i class="fas fa-eye text-primary me-2"></i>
+              </a>
+              <a href="{% url 'edit_competition_college' comp.id %}" data-bs-toggle="tooltip" title="Edit">
+                <i class="fas fa-pen text-success me-2"></i>
+              </a>
+              <a href="{% url 'delete_competition_college' comp.id %}" onclick="return confirm('Are you sure you want to delete this competition?');" data-bs-toggle="tooltip" title="Delete">
+                <i class="fas fa-trash text-danger"></i>
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="10" class="text-center text-muted">No competitions available.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- DataTable & JS Logic -->
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2" crossorigin="anonymous"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const table = document.querySelector("#customDataTable");
+
+    if (table) {
+      const dataTable = new simpleDatatables.DataTable(table, {
+        perPage: 50,
+        perPageSelect: [5, 10, 20, 50],
+        searchable: true,
+        fixedHeight: false,
+        labels: {
+          perPage: "",
+          noRows: "No entries to display",
+          info: "Showing {start} to {end} of {rows} entries",
+        }
+      });
+
+      dataTable.on("datatable.init", function () {
+        const wrapper = document.querySelector(".dataTable-top");
+        const inputBox = wrapper.querySelector(".dataTable-input");
+
+        const newWrapper = document.createElement("div");
+        newWrapper.classList.add("d-flex", "align-items-center", "gap-2", "w-100", "justify-content-end");
+
+        const filterSelect = document.createElement("select");
+        filterSelect.classList.add("form-select");
+        filterSelect.style.maxWidth = "200px";
+        filterSelect.innerHTML = `
+          <option value="2">Search by Title</option>
+          <option value="3">Search by Host Org</option>
+          <option value="4">Search by Type</option>
+        `;
+
+        inputBox.classList.add("form-control");
+        inputBox.placeholder = "Search...";
+
+        newWrapper.appendChild(inputBox);
+        newWrapper.appendChild(filterSelect);
+
+        wrapper.innerHTML = "";
+        wrapper.appendChild(newWrapper);
+
+        inputBox.addEventListener("input", function () {
+          const colIndex = parseInt(filterSelect.value);
+          const val = inputBox.value.trim().toLowerCase();
+
+          dataTable.columns().search(""); // reset all
+          if (val) {
+            dataTable.columns(colIndex).search(val);
+          }
+        });
+
+        filterSelect.addEventListener("change", () => {
+          inputBox.dispatchEvent(new Event("input"));
+        });
+      });
+    }
+  });
+</script>
+<!-- jsPDF and AutoTable CDNs (LOAD FIRST) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const table = document.querySelector("#customDataTable");
+
+    if (table) {
+      // ✅ CSV Export with BOM and ₹ cleaned
+      document.getElementById("exportCSV").addEventListener("click", function () {
+        const rows = Array.from(table.querySelectorAll("tr"));
+        const csv = rows.map(row => {
+          const cols = Array.from(row.querySelectorAll("th, td"));
+          return cols.map(col => {
+            let text = col.textContent.trim();
+            text = text.replace(/₹|¹/g, "Rs."); // Replace ₹ and other currency symbols
+            return `"${text}"`;
+          }).join(",");
+        }).join("\n");
+
+        const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute("download", "competitions.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+
+      // ✅ PDF Export
+      document.getElementById("exportPDF").addEventListener("click", function () {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        const headers = Array.from(table.querySelectorAll("thead th")).map(th => th.innerText.trim());
+        const dataRows = Array.from(table.querySelectorAll("tbody tr")).map(row => {
+          return Array.from(row.querySelectorAll("td")).map(td => {
+            let text = td.innerText.trim();
+            text = text.replace(/₹|¹/g, "Rs."); // Replace ₹ with Rs.
+            return text;
+          });
+        });
+
+        doc.autoTable({
+          head: [headers],
+          body: dataRows,
+          margin: { top: 10 },
+          styles: { fontSize: 8 }
+        });
+
+        doc.save("competitions.pdf");
+      });
+    }
+  });
+</script>
+
+<!-- Consistent Theme Styling -->
+<style>
+  body {
+    background-color: rgb(240, 242, 248);
+  }
+
+  .btn-dark-blue {
+    background-color: #003366;
+    color: white;
+    border: none;
+  }
+
+  .btn-dark-blue:hover {
+    background-color: #002244;
+  }
+
+  #customDataTable th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    vertical-align: middle;
+  }
+
+  #customDataTable td {
+    font-size: 14px;
+    color: #333;
+    vertical-align: middle;
+  }
+
+  #customDataTable tbody tr:hover {
+    background-color: #f1f3f8;
+  }
+
+  .dataTable-top {
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .dataTable-input,
+  .dataTable-selector {
+    border-radius: 20px;
+    border: 1px solid #ced4da;
+    font-size: 14px;
+    padding: 0.4rem 2.2rem 0.4rem 2rem;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-size: 16px;
+  }
+
+  .dataTable-input {
+    background-image: url("https://cdn-icons-png.flaticon.com/512/54/54481.png");
+  }
+
+  .dataTable-selector {
+    background-image: url("https://cdn-icons-png.flaticon.com/512/32/32195.png");
+  }
+
+  .dataTable-pagination a {
+    color: #333;
+    border-radius: 20px;
+    padding: 5px 12px;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .dataTable-pagination a:hover {
+    background-color: #e2e6ea;
+  }
+
+  .dataTable-pagination a.current {
+    background-color: #007bff;
+    color: #fff !important;
+    border-color: #007bff;
+  }
+
+  .dataTable-info {
+    font-style: italic;
+    font-size: 13px;
+    color: #555;
+    padding: 0.5rem 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .dataTable-top {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    #customDataTable th,
+    #customDataTable td {
+      font-size: 13px;
+      padding: 0.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .dataTable-input,
+    .dataTable-selector {
+      width: 100%;
+      font-size: 13px;
+    }
+
+    .dataTable-top {
+      padding: 1rem 0.5rem;
+    }
+
+    .dataTable-pagination a {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+  }
+</style>
+
+{% endblock %}

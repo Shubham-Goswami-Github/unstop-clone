@@ -1,42 +1,133 @@
-{% extends "admin_panel/admin_base.html" %}
+{% extends 'admin_panel/admin_base.html' %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h4>All Competitions</h4>
-  <a href="{% url 'add_competition' %}" class="btn btn-primary">
-    <i class="fas fa-plus me-1"></i> Add Competition
-  </a>
+{% load static %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<div class="container mt-4">
+  <div class="card shadow border-0">
+    <div class="card-header bg-dark-blue text-white">
+      <h5 class="mb-0"><i class="fas fa-pen me-2"></i>Edit Candidate</h5>
+    </div>
+    <div class="card-body">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="first_name" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ candidate.first_name }}" required>
+          </div>
+
+          <div class="col-md-6">
+            <label for="last_name" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ candidate.last_name }}" required>
+          </div>
+
+          <div class="col-md-6">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ candidate.email }}" required>
+          </div>
+
+          <div class="col-md-6">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="text" class="form-control" id="phone" name="phone" value="{{ candidate.phone }}" required>
+          </div>
+
+          <div class="col-md-6">
+            <label for="gender" class="form-label">Gender</label>
+            <select class="form-select" name="gender" id="gender" required>
+              <option value="">-- Select Gender --</option>
+              <option value="male" {% if candidate.gender == 'male' %}selected{% endif %}>Male</option>
+              <option value="female" {% if candidate.gender == 'female' %}selected{% endif %}>Female</option>
+              <option value="other" {% if candidate.gender == 'other' %}selected{% endif %}>Other</option>
+            </select>
+          </div>
+
+          <!-- Add more fields here depending on org_type like school, college, company -->
+          {% if org_type == 'school' %}
+            <div class="col-md-6">
+              <label class="form-label">School Name</label>
+              <input type="text" name="school_name" class="form-control" value="{{ candidate.school_name }}" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Class</label>
+              <input type="text" name="current_class" class="form-control" value="{{ candidate.current_class }}" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">City</label>
+              <input type="text" name="school_city" class="form-control" value="{{ candidate.school_city }}" required>
+            </div>
+          {% elif org_type == 'college' %}
+            <div class="col-md-6">
+              <label class="form-label">College Name</label>
+              <input type="text" name="college_name" class="form-control" value="{{ candidate.college_name }}" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Domain</label>
+              <input type="text" name="domain" class="form-control" value="{{ candidate.domain }}" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Course</label>
+              <input type="text" name="course_name" class="form-control" value="{{ candidate.course_name }}" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Start Year</label>
+              <input type="number" name="start_year" class="form-control" value="{{ candidate.start_year }}">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">End Year</label>
+              <input type="number" name="end_year" class="form-control" value="{{ candidate.end_year }}">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">City</label>
+              <input type="text" name="college_city" class="form-control" value="{{ candidate.college_city }}" required>
+            </div>
+          {% elif org_type == 'company' %}
+            <div class="col-md-6">
+              <label class="form-label">Company</label>
+              <input type="text" name="current_company" class="form-control" value="{{ candidate.current_company }}">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Experience (Yrs)</label>
+              <input type="number" name="experience_years" class="form-control" value="{{ candidate.experience_years }}">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Role</label>
+              <input type="text" name="current_job_role" class="form-control" value="{{ candidate.current_job_role }}">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Start Year</label>
+              <input type="number" name="job_start_year" class="form-control" value="{{ candidate.job_start_year }}">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">End Year</label>
+              <input type="number" name="job_end_year" class="form-control" value="{{ candidate.job_end_year }}">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">City</label>
+              <input type="text" name="job_city" class="form-control" value="{{ candidate.job_city }}">
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="mt-4">
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-save me-1"></i> Save Changes
+          </button>
+          <a href="{% url 'candidates_summary' %}" class="btn btn-secondary ms-2">
+            <i class="fas fa-times me-1"></i> Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
-<table class="table table-bordered table-hover">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Title</th>
-      <th>Host</th>
-      <th>Type</th>
-      <th>Mode</th>
-      <th>Deadline</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for comp in competitions %}
-    <tr>
-      <td>{{ forloop.counter }}</td>
-      <td>{{ comp.title }}</td>
-      <td>{{ comp.host_org }}</td>
-      <td>{{ comp.competition_type }}</td>
-      <td>{{ comp.mode }}</td>
-      <td>{{ comp.registration_deadline }}</td>
-      <td>
-        <a href="{% url 'competition_detail' comp.pk %}" class="btn btn-sm btn-info">View</a>
-        <a href="{% url 'edit_competition' comp.pk %}" class="btn btn-sm btn-warning">Edit</a>
-        <a href="{% url 'delete_competition' comp.pk %}" class="btn btn-sm btn-danger">Delete</a>
-      </td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="7" class="text-center">No competitions available.</td></tr>
-    {% endfor %}
-  </tbody>
-</table>
+<style>
+  .bg-dark-blue {
+    background-color: #003366;
+  }
+</style>
 {% endblock %}

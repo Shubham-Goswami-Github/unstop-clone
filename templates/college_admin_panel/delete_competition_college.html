@@ -1,0 +1,10 @@
+{% extends "admin_panel/admin_base.html" %}
+{% block content %}
+<h4>Delete Competition</h4>
+<p>Are you sure you want to delete <strong>{{ comp.title }}</strong>?</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Yes, Delete</button>
+  <a href="{% url 'competitions_list_college' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

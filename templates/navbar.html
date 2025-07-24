@@ -99,6 +99,72 @@ form.d-flex input[type="search"] {
   font-size: 0.9rem;
 }
 
+/* Host Popup Menu Styles */
+.host-popup {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  width: 200px;
+  z-index: 2000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.host-popup.show {
+  display: block;
+}
+
+.host-popup ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.host-popup ul li {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+  position: relative;
+}
+
+.host-popup ul li:hover {
+  background: #f1f1f1;
+}
+
+/* Nested Dropdown */
+.host-popup .nested-menu {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  display: none;
+  width: 180px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.host-popup ul li:hover .nested-menu {
+  display: block;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 </style>
 
@@ -177,9 +243,31 @@ form.d-flex input[type="search"] {
 {% else %}
   <div class="d-flex align-items-center gap-2 ms-3">
     <a href="/login/" class="btn btn-primary rounded-pill px-4">Login</a>
-    <a href="#" class="btn btn-outline-dark rounded-pill px-4 d-flex align-items-center">
-      <i class="bi bi-plus-lg me-2"></i> Host
-    </a>
+   <div class="position-relative">
+  <button class="btn btn-outline-dark rounded-pill px-4 d-flex align-items-center" id="hostBtn">
+    <i class="bi bi-plus-lg me-2"></i> Host
+  </button>
+
+  <div id="hostMenu" class="host-popup">
+    <ul>
+      <li>User</li>
+      <li>
+        College
+        <ul class="nested-menu">
+          <li><a href="{% url 'register_college' %}" class="text-decoration-none text-dark">Register as College</a></li>
+          <li><a href="{% url 'college_login' %}" class="text-decoration-none text-dark">Login as College</a></li>
+        </ul>
+      </li>
+      <li class="text-muted">Company
+         <ul class="nested-menu">
+          <li><a href="{% url 'add_company_home' %}" class="text-decoration-none text-dark">Register as Company</a></li>
+          <li><a href="{% url 'company_login' %}" class="text-decoration-none text-dark">Login as Company</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
     <a href="#" class="btn btn-for-business rounded-pill px-3">
       <i class="bi bi-briefcase me-2 fs-5"></i> For Business
     </a>
@@ -231,6 +319,23 @@ form.d-flex input[type="search"] {
     });
   }
 </script>
+<script>
+  const hostBtn = document.getElementById('hostBtn');
+  const hostMenu = document.getElementById('hostMenu');
+
+  hostBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hostMenu.classList.toggle('show');
+  });
+
+  // Close when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!hostMenu.contains(e.target) && e.target !== hostBtn) {
+      hostMenu.classList.remove('show');
+    }
+  });
+</script>
+
 <!-- YEH ADD KAR LAST ME -->
 <div class="container-fluid mt-4">
   {% block content %}{% endblock %}

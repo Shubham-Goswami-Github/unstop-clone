@@ -1,0 +1,235 @@
+{% extends "college_admin_panel/college_admin_base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<style>
+  body {
+    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .registration-card {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .registration-image {
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+  }
+
+  h3 {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #003366;
+  }
+
+  .form-label {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #333;
+  }
+
+  .form-control, .form-select {
+    font-size: 0.93rem;
+    padding: 10px;
+    border-radius: 6px;
+  }
+
+  .form-check-label {
+    font-size: 0.9rem;
+    color: #333;
+  }
+
+  .btn-dark-blue {
+    background-color: #003366;
+    color: white;
+    transition: 0.3s ease;
+    font-weight: 500;
+    padding: 8px 20px;
+  }
+
+  .btn-dark-blue:hover {
+    background-color: #002147;
+    color: #fff;
+  }
+
+  .btn-outline-secondary {
+    font-weight: 500;
+    padding: 8px 20px;
+  }
+
+  .logo-small {
+    width: 120px;
+    margin-bottom: 1rem;
+  }
+
+  .form-section {
+    padding: 2rem;
+  }
+
+  .icon-label i {
+    color: #003366;
+    margin-right: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .form-section {
+      padding: 1.2rem;
+    }
+  }
+</style>
+
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card registration-card">
+        <div class="row g-0">
+          <div class="col-md-5 d-none d-md-block">
+            <img src="{% static 'images/C1.webp' %}" alt="Student" class="registration-image">
+          </div>
+          <div class="col-md-7">
+            <div class="form-section">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="{% url 'college_admin_dashboard' %}" class="btn btn-outline-dark">
+                  <i class="fas fa-arrow-left me-1"></i> Back
+                </a>
+                <img src="{% static 'images/unstop-logo.svg' %}" alt="Unstop Logo" class="logo-small">
+              </div>
+
+              <h3 class="mb-4 text-uppercase">Add New Student</h3>
+
+              <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row g-3">
+
+                  <div class="col-md-6">
+                    <label class="form-label icon-label"><i class="fas fa-user"></i> First Name</label>
+                    <input type="text" name="first_name" class="form-control" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label icon-label"><i class="fas fa-user"></i> Last Name</label>
+                    <input type="text" name="last_name" class="form-control" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label icon-label"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label icon-label"><i class="fas fa-phone-alt"></i> Phone</label>
+                    <input type="text" name="phone" class="form-control" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label icon-label"><i class="fas fa-venus-mars"></i> Gender</label>
+                    <select name="gender" class="form-select" required>
+                      <option value="">Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label icon-label"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label icon-label"><i class="fas fa-layer-group"></i> Domain</label>
+                    <select name="domain" class="form-select" required>
+                      <option value="">Select Domain</option>
+                      <option value="Architecture">Architecture</option>
+                      <option value="Arts">Arts</option>
+                      <option value="Business">Business</option>
+                      <option value="Commerce">Commerce</option>
+                      <option value="Dental">Dental</option>
+                      <option value="Engineering">Engineering</option>
+                      <option value="Hospitality">Hospitality</option>
+                      <option value="Humanities">Humanities</option>
+                      <option value="Law">Law</option>
+                      <option value="Management">Management</option>
+                      <option value="Medicine">Medicine</option>
+                      <option value="Pharmacy">Pharmacy</option>
+                      <option value="Political Science">Political Science</option>
+                      <option value="Science">Science</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label icon-label"><i class="fas fa-book"></i> Course Name</label>
+                    <select name="course_name" class="form-select" required>
+                      <option value="">Select Course</option>
+                      {% for course in courses %}
+                        <option value="{{ course }}">{{ course }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label icon-label"><i class="fas fa-calendar-alt"></i> Start Year</label>
+                    <input type="text" name="start_year" class="form-control" placeholder="e.g. 2023" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label icon-label"><i class="fas fa-calendar-check"></i> End Year</label>
+                    <input type="text" name="end_year" class="form-control" placeholder="e.g. 2027" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label icon-label"><i class="fas fa-image"></i> Profile Photo</label>
+                    <input type="file" name="profile_photo" class="form-control">
+                  </div>
+
+                  <div class="col-md-12">
+                    <label class="form-label icon-label"><i class="fas fa-bullseye"></i> Career Purpose</label>
+                    <select class="form-select" name="career_purpose" required>
+                      <option value="">Select Purpose</option>
+                      <option value="job">To find a Job</option>
+                      <option value="compete">Compete & Upskill</option>
+                      <option value="host">To Host an Event</option>
+                      <option value="mentor">To be a Mentor</option>
+                    </select>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="agreed_info" id="agreed_info">
+                      <label class="form-check-label" for="agreed_info">Agree to Info Policy</label>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="stay_in_loop" id="stay_in_loop">
+                      <label class="form-check-label" for="stay_in_loop">Stay in Loop</label>
+                    </div>
+                  </div>
+
+                  <input type="hidden" name="user_type" value="college">
+
+                  <div class="d-flex justify-content-end mt-4">
+                    <button type="reset" class="btn btn-outline-secondary me-2">Reset</button>
+                    <button type="submit" class="btn btn-dark-blue">Add Student</button>
+                  </div>
+
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

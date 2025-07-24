@@ -99,36 +99,58 @@ class School(models.Model):
 
 from django.db import models
 
+from django.contrib.auth.hashers import make_password, check_password
+
 class College(models.Model):
     name = models.CharField(max_length=150)
     address = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     contact_number = models.CharField(max_length=20, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
+    password = models.CharField(max_length=128, null=True, blank=True)
+
     is_approved = models.BooleanField(default=False)
     domains_accepted = models.TextField(blank=True, null=True, help_text="Comma-separated subjects like: Computer Science, Mechanical")
     courses_accepted = models.TextField(blank=True, null=True, help_text="Comma-separated courses like: B.Tech, M.Tech")
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+        self.save()
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
+
     def __str__(self):
         return self.name
-    
+
 
 # mainapp/models.py
+
+from django.db import models
+from django.contrib.auth.hashers import make_password, check_password
 
 class Company(models.Model):
     name = models.CharField(max_length=150)
     address = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     contact_number = models.CharField(max_length=20, blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=128)
     is_approved = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        # Hash only if not already hashed
+        if self.password and not self.password.startswith('pbkdf2_'):
+            self.password = make_password(self.password)
+        super().save(*args, **kwargs)
 
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
 
 # mainapp/models.py
 from django.db import models
@@ -400,14 +422,16 @@ from django.db import models
 def upload_to_admin_photos(instance, filename):
     return f'templates/admin_panel/admin_photos/{filename}'
 
+from django.contrib.auth.models import User
+
 class AdminModule(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='adminmodule', null=True, blank=True)  # Add null=True, blank=True
     name = models.CharField(max_length=100)
     email = models.EmailField()
     phone = models.CharField(max_length=15)
     designation = models.CharField(max_length=100)
     description = models.TextField()
     profile_photo = models.ImageField(upload_to=upload_to_admin_photos, null=True, blank=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
