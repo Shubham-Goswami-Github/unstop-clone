@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'mainapp',  # 👈 Your app name
+  
 ]
 
 MIDDLEWARE = [

@@ -44,3 +44,13 @@ class CompetitionForm(forms.ModelForm):
             'end_date':   forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'registration_deadline': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
         }
+
+
+# adminapp/forms.py
+from django import forms
+from .models import AdminModule
+
+class AdminModuleForm(forms.ModelForm):
+    class Meta:
+        model = AdminModule
+        fields = '__all__'

@@ -1,43 +1,151 @@
 {% extends 'admin_panel/admin_base.html' %}
 {% block content %}
 {% load static %}
+
+<!-- Bootstrap, Font Awesome & DataTables CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.css">
+
+<div class="card shadow mb-4 border-0">
+  <div class="card-header bg-white fw-semibold fs-5 border-bottom-0">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <i class="fas fa-users me-2 text-warning"></i>
+        Candidates from {{ organization.name }}
+      </div>
+      <a href="{% url 'candidates_summary' %}" class="btn btn-outline-secondary btn-sm btn-back">
+        <i class="fas fa-arrow-left me-1"></i> Back to Candidates Summary
+      </a>
+    </div>
+  </div>
+
+  {% if candidates %}
+  <div class="card-body p-0">
+    <div class="table-responsive p-3">
+      <div style="overflow-x: auto;">
+        <table id="candidateDataTable" class="table table-hover align-middle mb-0">
+          <thead class="text-center align-middle bg-white border-bottom">
+            <tr class="text-dark fw-semibold">
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Gender</th>
+              <th>Phone</th>
+              {% if org_type == 'school' %}
+                <th>School</th>
+                <th>Class</th>
+                <th>City</th>
+              {% elif org_type == 'college' %}
+                <th>College</th>
+                <th>Domain</th>
+                <th>Course</th>
+                <th>Start Year</th>
+                <th>End Year</th>
+                <th>City</th>
+              {% elif org_type == 'company' %}
+                <th>Company</th>
+                <th>Experience (Yrs)</th>
+                <th>Role</th>
+                <th>Start Year</th>
+                <th>End Year</th>
+                <th>City</th>
+              {% endif %}
+              <th>Registered</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for candidate in candidates %}
+            <tr class="text-center">
+              <td>{{ forloop.counter }}</td>
+              <td>{{ candidate.first_name }} {{ candidate.last_name }}</td>
+              <td>{{ candidate.email }}</td>
+              <td>{{ candidate.gender|title }}</td>
+              <td>{{ candidate.phone }}</td>
+
+              {% if org_type == 'school' %}
+                <td>{{ candidate.school_name }}</td>
+                <td>{{ candidate.current_class }}</td>
+                <td>{{ candidate.school_city }}</td>
+              {% elif org_type == 'college' %}
+                <td>{{ candidate.college_name }}</td>
+                <td>{{ candidate.domain }}</td>
+                <td>{{ candidate.course_name }}</td>
+                <td>{{ candidate.start_year }}</td>
+                <td>{{ candidate.end_year }}</td>
+                <td>{{ candidate.college_city }}</td>
+              {% elif org_type == 'company' %}
+                <td>{{ candidate.current_company }}</td>
+                <td>{{ candidate.experience_years }}</td>
+                <td>{{ candidate.current_job_role }}</td>
+                <td>{{ candidate.job_start_year }}</td>
+                <td>{{ candidate.job_end_year }}</td>
+                <td>{{ candidate.job_city }}</td>
+              {% endif %}
+
+              <td>{{ candidate.created_at|date:"M d, Y H:i A" }}</td>
+              <td>
+                <a href="{% url 'view_candidate' candidate.id %}" data-bs-toggle="tooltip" title="View">
+                  <i class="fas fa-eye text-primary me-2"></i>
+                </a>
+                <a href="{% url 'edit_candidate' candidate.id %}" data-bs-toggle="tooltip" title="Edit">
+                  <i class="fas fa-pen text-success me-2"></i>
+                </a>
+                <a href="{% url 'delete_candidate' candidate.id %}" onclick="return confirm('Are you sure you want to delete this candidate?');" data-bs-toggle="tooltip" title="Delete">
+                  <i class="fas fa-trash text-danger"></i>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% else %}
+    <div class="card-body">
+      <p class="text-muted text-center mb-0">No candidates registered under this {{ org_type }}.</p>
+    </div>
+  {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2" crossorigin="anonymous"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const table = document.querySelector("#candidateDataTable");
+    if (table) {
+      const dataTable = new simpleDatatables.DataTable(table, {
+        perPage: 20,
+        perPageSelect: [5, 10, 20, 50],
+        searchable: true,
+        fixedHeight: false,
+        labels: {
+          perPage: "",
+          noRows: "No entries to display",
+          info: "Showing {start} to {end} of {rows} entries"
+        }
+      });
+
+      dataTable.on("datatable.init", function () {
+        const wrapper = document.querySelector(".dataTable-top");
+        const inputBox = wrapper.querySelector(".dataTable-input");
+
+        const newWrapper = document.createElement("div");
+        newWrapper.classList.add("d-flex", "align-items-center", "gap-2", "w-100", "justify-content-end");
+
+        inputBox.classList.add("form-control");
+        inputBox.placeholder = "Search by Name, Email, or College";
+
+        newWrapper.appendChild(inputBox);
+        wrapper.innerHTML = "";
+        wrapper.appendChild(newWrapper);
+      });
+    }
+  });
+</script>
 
 <style>
-  .table th, .table td {
-    vertical-align: middle !important;
-    text-align: center;
-  }
-
-  .table th {
-    background-color: #212529;
-    color: white;
-    white-space: nowrap;
-  }
-
-  .action-btns {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .action-btns i {
-    transition: 0.2s ease;
-    font-size: 1.1rem;
-    cursor: pointer;
-  }
-
-  .action-btns i:hover {
-    transform: scale(1.3);
-  }
-
-  .table-container {
-    border-radius: 10px;
-    overflow-x: auto;
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
-  }
-
   .btn-back {
     transition: all 0.3s ease;
   }
@@ -46,132 +154,101 @@
     transform: translateX(-4px);
   }
 
-  .header-row {
+  #candidateDataTable th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  #candidateDataTable td {
+    font-size: 14px;
+    color: #333;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  #candidateDataTable tbody tr:hover {
+    background-color: #f1f3f8;
+  }
+
+  .dataTable-top {
+    padding: 0.75rem 1rem;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
   }
 
-  .header-row img {
-    height: 32px;
+  .dataTable-input {
+    border-radius: 20px;
+    border: 1px solid #ced4da;
+    font-size: 14px;
+    padding: 0.4rem 2.2rem 0.4rem 2rem;
+    background-color: #fff;
+    background-image: url("https://cdn-icons-png.flaticon.com/512/54/54481.png");
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-size: 16px;
+  }
+
+  .dataTable-pagination a {
+    color: #333;
+    border-radius: 20px;
+    padding: 5px 12px;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .dataTable-pagination a:hover {
+    background-color: #e2e6ea;
+  }
+
+  .dataTable-pagination a.current {
+    background-color: #007bff;
+    color: #fff !important;
+    border-color: #007bff;
+  }
+
+  .dataTable-info {
+    font-style: italic;
+    font-size: 13px;
+    color: #555;
+    padding: 0.5rem 1rem;
   }
 
   @media (max-width: 768px) {
-    .table th, .table td {
+    .dataTable-top {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    #candidateDataTable th,
+    #candidateDataTable td {
       font-size: 13px;
-      padding: 8px;
+      padding: 0.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .dataTable-input {
+      width: 100%;
+      font-size: 13px;
     }
 
-    .action-btns {
-      flex-direction: column;
-      gap: 6px;
+    .dataTable-top {
+      padding: 1rem 0.5rem;
     }
 
-    .header-row {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
+    .dataTable-pagination a {
+      padding: 4px 8px;
+      font-size: 12px;
     }
   }
 </style>
 
-<div class="container mt-5">
-  <!-- Heading + Logo -->
-  <div class="header-row mb-3">
-    <h3 class="text-warning mb-0">
-      <i class="fas fa-users me-2"></i>
-      Candidates from {{ organization.name }}
-    </h3>
-    <img src="{% static 'images/unstop-logo.svg' %}" alt="Unstop Logo">
-  </div>
-
-  <!-- Back Button -->
-  <a href="{% url 'candidates_summary' %}" class="btn btn-outline-secondary btn-sm btn-back mb-4">
-    <i class="fas fa-arrow-left me-1"></i> Back to Candidates Summary
-  </a>
-
-  {% if candidates %}
-  <div class="table-container">
-    <table class="table table-bordered table-striped">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Gender</th>
-          <th>Phone</th>
-          {% if org_type == 'school' %}
-            <th>School</th>
-            <th>Class</th>
-            <th>City</th>
-          {% elif org_type == 'college' %}
-            <th>College</th>
-            <th>Domain</th>
-            <th>Course</th>
-            <th>Start Year</th>
-            <th>End Year</th>
-            <th>City</th>
-          {% elif org_type == 'company' %}
-            <th>Company</th>
-            <th>Experience (Yrs)</th>
-            <th>Role</th>
-            <th>Start Year</th>
-            <th>End Year</th>
-            <th>City</th>
-          {% endif %}
-          <th>Registered</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for candidate in candidates %}
-        <tr>
-          <td>{{ forloop.counter }}</td>
-          <td>{{ candidate.first_name }} {{ candidate.last_name }}</td>
-          <td>{{ candidate.email }}</td>
-          <td>{{ candidate.gender|title }}</td>
-          <td>{{ candidate.phone }}</td>
-
-          {% if org_type == 'school' %}
-            <td>{{ candidate.school_name }}</td>
-            <td>{{ candidate.current_class }}</td>
-            <td>{{ candidate.school_city }}</td>
-          {% elif org_type == 'college' %}
-            <td>{{ candidate.college_name }}</td>
-            <td>{{ candidate.domain }}</td>
-            <td>{{ candidate.course_name }}</td>
-            <td>{{ candidate.start_year }}</td>
-            <td>{{ candidate.end_year }}</td>
-            <td>{{ candidate.college_city }}</td>
-          {% elif org_type == 'company' %}
-            <td>{{ candidate.current_company }}</td>
-            <td>{{ candidate.experience_years }}</td>
-            <td>{{ candidate.current_job_role }}</td>
-            <td>{{ candidate.job_start_year }}</td>
-            <td>{{ candidate.job_end_year }}</td>
-            <td>{{ candidate.job_city }}</td>
-          {% endif %}
-
-          <td>{{ candidate.created_at|date:"M d, Y H:i A" }}</td>
-          <td class="action-btns">
-            <a href="{% url 'edit_candidate' candidate.id %}" class="text-primary" title="Edit">
-              <i class="fas fa-pen"></i>
-            </a>
-            <a href="{% url 'view_candidate' candidate.id %}" class="text-success" title="View">
-              <i class="fas fa-eye"></i>
-            </a>
-            <a href="{% url 'delete_candidate' candidate.id %}" class="text-danger" title="Delete"
-               onclick="return confirm('Are you sure you want to delete this candidate?');">
-              <i class="fas fa-trash"></i>
-            </a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  {% else %}
-    <p class="text-muted mt-3">No candidates registered under this {{ org_type }}.</p>
-  {% endif %}
-</div>
 {% endblock %}

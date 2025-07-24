@@ -8,12 +8,25 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.css">
 
 <div class="card shadow mb-4 border-0">
-  <div class="card-header bg-white fw-semibold fs-5 border-bottom-0">
-    <i class="fas fa-briefcase me-2 text-primary"></i> Job Listings
-    <a href="{% url 'add_job' %}" class="btn btn-sm float-end btn-dark-blue">
-      <i class="fas fa-plus me-1"></i> Add Job
-    </a>
+  <div class="card-header bg-white fw-semibold fs-5 border-bottom-0 d-flex justify-content-between align-items-center">
+    <div>
+      <i class="fas fa-briefcase me-2 text-primary"></i> Job Listings
+    </div>
+    <div class="d-flex gap-2 align-items-center">
+      <a href="{% url 'add_job' %}" class="btn btn-sm btn-dark-blue">
+        <i class="fas fa-plus me-1"></i> Add Job
+      </a>
+      <!-- Export Buttons -->
+      <button class="btn btn-sm btn-outline-success" id="exportCSV">
+        <i class="fas fa-file-csv me-1"></i> Export CSV
+      </button>
+      <button class="btn btn-sm btn-outline-danger" id="exportPDF">
+        <i class="fas fa-file-pdf me-1"></i> Export PDF
+      </button>
+    </div>
   </div>
+
+
 
   <div class="card-body p-0">
     <div class="table-responsive p-3">
@@ -65,15 +78,16 @@
   </div>
 </div>
 
-<!-- Simple DataTable Script -->
+<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const table = document.querySelector("#jobDataTable");
 
     if (table) {
       const dataTable = new simpleDatatables.DataTable(table, {
-        perPage: 50,
+        perPage: 20,
         perPageSelect: [5, 10, 20, 50],
         searchable: true,
         fixedHeight: false,
@@ -83,11 +97,71 @@
           info: "Showing {start} to {end} of {rows} entries",
         }
       });
+
+      // ✅ Create styled buttons
+      const header = document.getElementById("customJobButtons");
+
+      if (header && !document.getElementById("exportButtonsJob")) {
+        const btnWrapper = document.createElement("div");
+        btnWrapper.id = "exportButtonsJob";
+        btnWrapper.classList.add("d-flex", "gap-2", "ms-auto", "flex-wrap");
+
+        // ✅ CSV Button (Green)
+        const exportCSV = document.createElement("button");
+        exportCSV.id = "exportCSV";
+        exportCSV.className = "btn btn-sm text-white";
+        exportCSV.style.backgroundColor = "#28a745";  // Bootstrap green
+        exportCSV.innerHTML = '<i class="fas fa-file-csv me-1"></i>Export CSV';
+
+        // ✅ PDF Button (Red)
+        const exportPDF = document.createElement("button");
+        exportPDF.id = "exportPDF";
+        exportPDF.className = "btn btn-sm text-white";
+        exportPDF.style.backgroundColor = "#dc3545";  // Bootstrap red
+        exportPDF.innerHTML = '<i class="fas fa-file-pdf me-1"></i>Export PDF';
+
+        btnWrapper.appendChild(exportCSV);
+        btnWrapper.appendChild(exportPDF);
+
+        header.classList.add("d-flex", "align-items-center", "justify-content-between", "flex-wrap");
+        header.appendChild(btnWrapper);
+      }
+
+      // ✅ CSV Export Logic
+      document.addEventListener("click", function (e) {
+        if (e.target.closest("#exportCSV")) {
+          const rows = Array.from(document.querySelectorAll("#jobDataTable tr"));
+          const csv = rows.map(row => {
+            const cols = Array.from(row.querySelectorAll("th, td"));
+            return cols.map(col => `"${col.textContent.trim()}"`).join(",");
+          }).join("\n");
+
+          const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.setAttribute("download", "job-listings.csv");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      });
+
+      // ✅ PDF Export Logic
+      document.addEventListener("click", function (e) {
+        if (e.target.closest("#exportPDF")) {
+          import("https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js").then(() => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.autoTable({ html: '#jobDataTable' });
+            doc.save("job-listings.pdf");
+          });
+        }
+      });
     }
   });
 </script>
 
-<!-- Theme-Aligned CSS -->
+<!-- Styles -->
 <style>
   body {
     background-color: rgb(240, 242, 248);
@@ -104,14 +178,7 @@
     color: #fff;
   }
 
-  #jobDataTable th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    font-size: 14px;
-    color: #333;
-    vertical-align: middle;
-  }
-
+  #jobDataTable th,
   #jobDataTable td {
     font-size: 14px;
     color: #333;

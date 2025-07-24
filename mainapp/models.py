@@ -392,3 +392,23 @@ class CompetitionsApplied(models.Model):
 
     def __str__(self):
         return f"{self.candidate.first_name} -> {self.competition.title}"
+
+
+
+from django.db import models
+
+def upload_to_admin_photos(instance, filename):
+    return f'templates/admin_panel/admin_photos/{filename}'
+
+class AdminModule(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=15)
+    designation = models.CharField(max_length=100)
+    description = models.TextField()
+    profile_photo = models.ImageField(upload_to=upload_to_admin_photos, null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

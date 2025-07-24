@@ -11,13 +11,18 @@
 
 <!-- Table UI -->
 <div class="card shadow mb-4 border-0">
-  <div class="card-header bg-white fw-semibold fs-5 border-bottom-0">
+ <div class="card-header bg-white fw-semibold fs-5 border-bottom-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+  <span>
     <i class="fas fa-briefcase me-2 text-primary"></i> Internship Listings
-<a href="{% url 'add_internship' %}" class="btn btn-sm float-end btn-dark-blue">
-  <i class="fas fa-plus me-1"></i> Add Internship
-</a>
-
+  </span>
+  <div class="d-flex flex-wrap gap-2 ms-auto align-items-center" id="customActionButtons">
+    <a href="{% url 'add_internship' %}" class="btn btn-sm btn-dark-blue">
+      <i class="fas fa-plus me-1"></i> Add Internship
+    </a>
+    <!-- Export buttons will be injected here via JS -->
   </div>
+</div>
+
   
   <div class="card-body p-0">
     <div class="table-responsive p-3">
@@ -139,6 +144,81 @@
     }
   });
 </script>
+<!-- Export CSV & PDF Script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Add Export Buttons to Header
+ const header = document.getElementById("customActionButtons");
+
+    if (header && !document.getElementById("exportButtons")) {
+      const btnWrapper = document.createElement("div");
+      btnWrapper.id = "exportButtons";
+      btnWrapper.classList.add("d-flex", "gap-2", "ms-auto", "flex-wrap");
+
+      const exportCSV = document.createElement("button");
+      exportCSV.className = "btn btn-sm btn-outline-primary";
+      exportCSV.innerHTML = '<i class="fas fa-file-csv me-1"></i>Export CSV';
+      exportCSV.onclick = exportToCSV;
+
+      const exportPDF = document.createElement("button");
+      exportPDF.className = "btn btn-sm btn-outline-danger";
+      exportPDF.innerHTML = '<i class="fas fa-file-pdf me-1"></i>Export PDF';
+      exportPDF.onclick = exportToPDF;
+
+      btnWrapper.appendChild(exportCSV);
+      btnWrapper.appendChild(exportPDF);
+
+      header.classList.add("d-flex", "align-items-center", "justify-content-between", "flex-wrap");
+      header.appendChild(btnWrapper);
+    }
+
+    function exportToCSV() {
+      const table = document.querySelector("#customDataTable");
+      const rows = Array.from(table.querySelectorAll("tr"));
+      const csv = rows.map(row => {
+        const cols = Array.from(row.querySelectorAll("th, td"));
+        return cols.map(col => `"${col.textContent.trim()}"`).join(",");
+      }).join("\n");
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute("download", "internships.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function exportToPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const table = document.querySelector("#customDataTable");
+
+      const headers = Array.from(table.querySelectorAll("thead th")).map(th => th.innerText.trim());
+      const dataRows = Array.from(table.querySelectorAll("tbody tr")).map(row => {
+  return Array.from(row.querySelectorAll("td")).map(td => {
+    let text = td.innerText.trim();
+    // Replace ₹ symbol with Rs. for PDF compatibility
+    text = text.replace(/₹|¹/g, "Rs.");
+    return text;
+  });
+});
+
+
+      doc.autoTable({
+        head: [headers],
+        body: dataRows,
+        margin: { top: 10 },
+        styles: { fontSize: 8 }
+      });
+
+      doc.save("internships.pdf");
+    }
+  });
+</script>
+
 
 <!-- Theme-Aligned CSS -->
 <style>
@@ -157,6 +237,16 @@
     color: #fff;
   }
 
+@media (max-width: 576px) {
+  #customActionButtons {
+    width: 100%;
+    justify-content: flex-start !important;
+  }
+
+  #customActionButtons > * {
+    width: 100%;
+  }
+}
 
   #customDataTable th {
     background-color: #f8f9fa;

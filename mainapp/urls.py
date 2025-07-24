@@ -35,7 +35,7 @@ urlpatterns = [
 
     path('competition/<int:competition_id>/checkout/', views.competition_checkout, name='competition_checkout'),
 
-
+    path('add-admin-module/', views.add_admin_module_view, name='add_admin_module'),
     path('jobs/<int:id>/', views.user_job_detail, name='user_job_detail'),
     path('competitions/<int:pk>/', views.competition_detail_user, name='competition_detail_user'),
     path('internship/<int:internship_id>/payment/', views.internship_payment_view, name='internship_payment'),
@@ -73,7 +73,7 @@ urlpatterns = [
     path('adminpaneldashboard/view-candidate/<int:candidate_id>/', view_candidate, name='view_candidate'),
     path('adminpaneldashboard/edit-candidate/<int:candidate_id>/', edit_candidate, name='edit_candidate'),
     path('adminpaneldashboard/delete-candidate/<int:candidate_id>/', delete_candidate, name='delete_candidate'),
-
+    path('adminpaneldashboard/add-candidate/', views.add_candidate_view, name='add_candidate'),
         # ... other paths ...
     path('login/', login_view, name='login'),
     path('', views.home_view, name='home'),

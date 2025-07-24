@@ -1,116 +1,213 @@
 {% extends "admin_panel/admin_base.html" %}
-{% block content %}
 {% load static %}
+{% block content %}
 
 <!-- Bootstrap & Font Awesome -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<!-- Simple DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.css">
+
+<div class="card shadow mb-4 border-0">
+  <div class="card-header bg-white fw-semibold fs-5 border-bottom-0">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <i class="fas fa-user-graduate me-2 text-info"></i> Fresher Candidates
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body p-0">
+    <div class="table-responsive p-3">
+      <table id="fresherDataTable" class="table table-hover align-middle mb-0">
+        <thead class="text-center align-middle bg-white border-bottom">
+          <tr class="text-dark fw-semibold">
+            <th>S.No</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>College</th>
+            <th>Domain</th>
+            <th>Course</th>
+            <th>Registered</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for fresher in freshers %}
+          <tr class="text-center">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ fresher.first_name }} {{ fresher.last_name }}</td>
+            <td>{{ fresher.email }}</td>
+            <td>{{ fresher.phone }}</td>
+            <td>{{ fresher.college_name }}</td>
+            <td>{{ fresher.domain }}</td>
+            <td>{{ fresher.course_name }}</td>
+            <td>{{ fresher.created_at|date:"M d, Y H:i A" }}</td>
+            <td>
+              <a href="{% url 'view_fresher' fresher.id %}" data-bs-toggle="tooltip" title="View">
+                <i class="fas fa-eye text-primary me-2"></i>
+              </a>
+              <a href="{% url 'edit_fresher' fresher.id %}" data-bs-toggle="tooltip" title="Edit">
+                <i class="fas fa-pen text-success me-2"></i>
+              </a>
+              <a href="{% url 'delete_fresher' fresher.id %}" onclick="return confirm('Are you sure you want to delete this candidate?');" data-bs-toggle="tooltip" title="Delete">
+                <i class="fas fa-trash text-danger"></i>
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="9" class="text-center text-muted">No fresher candidates found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- DataTables Script -->
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2" crossorigin="anonymous"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const table = document.querySelector("#fresherDataTable");
+
+    if (table) {
+      const dataTable = new simpleDatatables.DataTable(table, {
+        perPage: 20,
+        perPageSelect: [5, 10, 20, 50],
+        searchable: true,
+        fixedHeight: false,
+        labels: {
+          perPage: "",
+          noRows: "No entries to display",
+          info: "Showing {start} to {end} of {rows} entries",
+        }
+      });
+
+      dataTable.on("datatable.init", function () {
+        const wrapper = document.querySelector(".dataTable-top");
+        const inputBox = wrapper.querySelector(".dataTable-input");
+
+        const newWrapper = document.createElement("div");
+        newWrapper.classList.add("d-flex", "align-items-center", "gap-2", "w-100", "justify-content-end");
+
+        inputBox.classList.add("form-control");
+        inputBox.placeholder = "Search by Name, Email, or College";
+
+        newWrapper.appendChild(inputBox);
+        wrapper.innerHTML = "";
+        wrapper.appendChild(newWrapper);
+      });
+    }
+  });
+</script>
 
 <style>
-  .table thead th {
-    vertical-align: middle;
-    text-align: center;
-  }
-
-  .table tbody td {
-    vertical-align: middle;
-    text-align: center;
-  }
-
-  .btn-add {
-    transition: 0.3s ease;
-  }
-
-  .btn-add:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
-  }
-
-  .action-icons i {
-    cursor: pointer;
-    transition: 0.2s;
-    font-size: 16px;
-  }
-
-  .action-icons i:hover {
-    transform: scale(1.2);
-  }
-
-  .badge {
-    font-size: 12px;
-    padding: 6px 10px;
-    border-radius: 20px;
-  }
-
-  .card-table {
+  .btn-dark-blue {
+    background-color: #003366;
+    color: white;
     border: none;
-    overflow-x: auto;
-    border-radius: 10px;
+  }
+
+  .btn-dark-blue:hover {
+    background-color: #002244;
+  }
+
+  #fresherDataTable th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    vertical-align: middle;
+  }
+
+  #fresherDataTable td {
+    font-size: 14px;
+    color: #333;
+    vertical-align: middle;
+  }
+
+  #fresherDataTable tbody tr:hover {
+    background-color: #f1f3f8;
+  }
+
+  .dataTable-top {
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .dataTable-input {
+    border-radius: 20px;
+    border: 1px solid #ced4da;
+    font-size: 14px;
+    padding: 0.4rem 2.2rem 0.4rem 2rem;
+    background-color: #fff;
+    background-image: url("https://cdn-icons-png.flaticon.com/512/54/54481.png");
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-size: 16px;
+  }
+
+  .dataTable-pagination a {
+    color: #333;
+    border-radius: 20px;
+    padding: 5px 12px;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .dataTable-pagination a:hover {
+    background-color: #e2e6ea;
+  }
+
+  .dataTable-pagination a.current {
+    background-color: #007bff;
+    color: #fff !important;
+    border-color: #007bff;
+  }
+
+  .dataTable-info {
+    font-style: italic;
+    font-size: 13px;
+    color: #555;
+    padding: 0.5rem 1rem;
   }
 
   @media (max-width: 768px) {
-    .table th, .table td {
+    .dataTable-top {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    #fresherDataTable th,
+    #fresherDataTable td {
       font-size: 13px;
-      padding: 8px;
+      padding: 0.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .dataTable-input {
+      width: 100%;
+      font-size: 13px;
+    }
+
+    .dataTable-top {
+      padding: 1rem 0.5rem;
+    }
+
+    .dataTable-pagination a {
+      padding: 4px 8px;
+      font-size: 12px;
     }
   }
 </style>
-
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h3 class="text-dark">
-    <i class="fas fa-user-graduate me-2 text-info"></i>Fresher Candidates
-  </h3>
-</div>
-
-<div class="card shadow-sm card-table">
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover align-middle mb-0">
-     <thead class="table-dark">
-  <tr>
-    <th>ID</th>
-    <th>Name</th>
-    <th>Email</th>
-    <th>Phone</th>
-    <th>College</th>
-    <th>Domain</th>
-    <th>Course</th>
-    <th>Registered</th>
-    <th style="width: 130px;">Actions</th>
-  </tr>
-</thead>
-
-      <tbody>
-        {% for fresher in freshers %}
-        <tr>
-          <td>{{ forloop.counter }}</td>
-          <td>{{ fresher.first_name }} {{ fresher.last_name }}</td>
-          <td>{{ fresher.email }}</td>
-          <td>{{ fresher.phone }}</td>
-          <td>{{ fresher.college_name }}</td>
-          <td>{{ fresher.domain }}</td>
-          <td>{{ fresher.course_name }}</td>
-          <td>{{ fresher.created_at|date:"M d, Y H:i A" }}</td>
-          <td class="action-icons">
-            <a href="{% url 'view_fresher' fresher.id %}" title="View">
-              <i class="fas fa-eye text-primary"></i>
-            </a>
-            <a href="{% url 'edit_fresher' fresher.id %}" title="Edit" class="ms-3">
-              <i class="fas fa-pen text-success"></i>
-            </a>
-            <a href="{% url 'delete_fresher' fresher.id %}" title="Delete" class="ms-3"
-               onclick="return confirm('Are you sure you want to delete this candidate?');">
-              <i class="fas fa-trash text-danger"></i>
-            </a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="9" class="text-center text-muted">No fresher candidates found.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
 
 {% endblock %}

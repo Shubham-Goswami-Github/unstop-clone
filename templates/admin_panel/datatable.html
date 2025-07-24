@@ -1,223 +1,266 @@
 {% load static %}
-<style>
-body {
-  background-color: rgb(240, 242, 248);
-}
-</style>
-
-<div class="card shadow mb-4">
-    <div class="card-header bg-white fw-semibold fs-5 border-bottom">
-        New Internship Entries....!
-    </div>
-    <div class="card-body p-0">
-        <div class="table-responsive p-3">
-            <table id="customDataTable" class="table table-hover align-middle mb-0">
-                <thead class="text-center align-middle bg-white border-bottom">
-                    <tr class="text-dark fw-semibold">
-                        <th>S.No</th>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Company</th>
-                        <th>Domain</th>
-                        <th>Mode</th>
-                        <th>Category</th>
-                        <th>Stipend</th>
-                        <th>Duration</th>
-                        <th>Location</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for internship in internships %}
-                    <tr class="text-center">
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ internship.id }}</td>
-                        <td>{{ internship.title }}</td>
-                        <td>{{ internship.company_name }}</td>
-                        <td>{{ internship.domain }}</td>
-                        <td>{{ internship.mode }}</td>
-                        <td>{{ internship.category }}</td>
-                        <td>₹{{ internship.stipend_amount }}</td>
-                        <td>{{ internship.duration_weeks }} weeks</td>
-                        <td>{{ internship.location }}</td>
-                        <td>
-                            <a href="{% url 'edit_internship' internship.id %}" data-bs-toggle="tooltip" title="Edit Internship">
-                                <i class="fas fa-pen" style="color: #007bff;"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="11" class="text-center text-muted">No internships available.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-
-<!-- Simple DataTables CSS & JS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.css">
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2" crossorigin="anonymous"></script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const table = document.querySelector("#customDataTable");
-    if (table) {
-      const dataTable = new simpleDatatables.DataTable(table, {
-        perPage: 5,
-        perPageSelect: [5, 8, 10, 20, 50],
-        searchable: true,
-        fixedHeight: false,
-        labels: {
-          perPage: "", // removed "{select} entries per page"
-          noRows: "No entries to display",
-          info: "Showing {start} to {end} of {rows} entries",
-        }
-      });
-    }
-
-    // Bootstrap tooltips
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
-  });
-</script>
 
 <style>
-    
-  #customDataTable {
-    font-family: 'Poppins', sans-serif;
-    font-size: 14px;
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 12px;
-    overflow: hidden;
+  body {
+    background-color: rgb(240, 242, 248);
   }
 
-  #customDataTable th {
-    background-color: #f8f9fa;
-    color: #333;
-    font-weight: 600;
-    padding: 0.75rem;
-    text-align: center;
-    vertical-align: middle;
-    border-bottom: 1px solid #eaeaea;
-  }
-
-  #customDataTable td {
-    padding: 0.65rem;
-    text-align: center;
-    vertical-align: middle;
-    color: #333;
-    background-color: transparent;
-  }
-
-  #customDataTable tbody tr {
-    transition: background-color 0.3s ease;
-  }
-
-  #customDataTable tbody tr:hover {
-    background-color: #f0f2f5;
-  }
-
-  /* Top panel */
-  .dataTable-top {
-    padding: 0.75rem 1rem;
+  .data-toggle-section {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
     justify-content: space-between;
     align-items: center;
+    margin: 1rem 0;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
 
-  .dataTable-top label {
-    font-weight: 500;
-    color: #333;
-    margin-bottom: 0;
-  }
-
-  .dataTable-input,
-  .dataTable-selector {
-    padding: 0.45rem 2.2rem 0.45rem 2rem;
-    border-radius: 20px;
+  .data-toggle-section select {
+    max-width: 250px;
+    padding: 0.45rem;
+    border-radius: 8px;
     border: 1px solid #ced4da;
-    font-size: 14px;
-    background-color: #fff;
-    background-repeat: no-repeat;
-    background-position: 10px center;
-    background-size: 16px;
   }
 
-  /* 🔍 for search */
-  .dataTable-input {
-    background-image: url("https://cdn-icons-png.flaticon.com/512/54/54481.png");
+  .table-section {
+    display: none;
   }
 
-  /* ⬇️ for entries selector */
-  .dataTable-selector {
-    background-image: url("https://cdn-icons-png.flaticon.com/512/32/32195.png");
-  }
-
-  /* Pagination buttons */
-  .dataTable-pagination a {
-    color: #333;
-    border-radius: 20px;
-    padding: 5px 12px;
-    border: 1px solid #ddd;
-    margin: 0 4px;
-    text-decoration: none;
-    transition: background-color 0.2s ease;
-  }
-
-  .dataTable-pagination a:hover {
-    background-color: #e2e6ea;
-  }
-
-  .dataTable-pagination a.current {
-    background-color: #007bff;
-    color: #fff !important;
-    border-color: #007bff;
-  }
-
-  .dataTable-info {
-    font-style: italic;
-    color: #555;
-    font-size: 13px;
-    padding: 0.5rem 1rem;
-  }
-
-  /* Responsive tweaks */
-  @media (max-width: 768px) {
-    .dataTable-top {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
-
-    #customDataTable th, #customDataTable td {
-      font-size: 13px;
-      padding: 0.5rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .dataTable-input,
-    .dataTable-selector {
-      width: 100%;
-      font-size: 13px;
-    }
-
-    .dataTable-top {
-      padding: 1rem 0.5rem;
-    }
-
-    .dataTable-pagination a {
-      padding: 5px 8px;
-      font-size: 12px;
-    }
+  .table-section.active {
+    display: block;
   }
 </style>
+<!-- ✅ CSS for positioning dropdown -->
+<style>
+  .table-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 576px) {
+    .table-header-flex {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  }
+  .blinking-text {
+  animation: blink 1s infinite;
+  color: #dc3545; /* Bootstrap red */
+  font-weight: 600;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+</style>
+
+<!-- ✅ Dropdown Top Right -->
+<div class="mb-3 d-flex justify-content-end">
+  <select id="tableToggle" class="form-select w-auto">
+    <option value="internships">Internships</option>
+    <option value="jobs">Jobs</option>
+    <option value="competitions">Competitions</option>
+  </select>
+</div>
+
+<!-- ✅ Internship Table -->
+<div class="card shadow mb-4 table-section active" id="internships">
+ <div class="card-header bg-white fw-semibold fs-5 border-bottom table-header-flex">
+  <span class="blinking-text text-danger">New Internship Entries...!</span>
+</div>
+  <div class="card-body p-0">
+    <div class="table-responsive p-3">
+      <table id="internshipTable" class="table table-hover align-middle mb-0">
+        <thead class="text-center bg-white border-bottom">
+          <tr class="text-dark fw-semibold">
+            <th>S.No</th>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Company</th>
+            <th>Domain</th>
+            <th>Mode</th>
+            <th>Category</th>
+            <th>Stipend</th>
+            <th>Duration</th>
+            <th>Location</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for internship in internships %}
+          <tr class="text-center">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ internship.id }}</td>
+            <td>{{ internship.title }}</td>
+            <td>{{ internship.company_name }}</td>
+            <td>{{ internship.domain }}</td>
+            <td>{{ internship.mode }}</td>
+            <td>{{ internship.category }}</td>
+            <td>₹{{ internship.stipend_amount }}</td>
+            <td>{{ internship.duration_weeks }} weeks</td>
+            <td>{{ internship.location }}</td>
+            <td>
+              <a href="{% url 'edit_internship' internship.id %}" data-bs-toggle="tooltip" title="Edit Internship">
+                <i class="fas fa-pen" style="color: #007bff;"></i>
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="11" class="text-center text-muted">No internships available.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Job Table -->
+<div class="card shadow mb-4 table-section" id="jobs">
+ <div class="card-header bg-white fw-semibold fs-5 border-bottom table-header-flex">
+  <span class="blinking-text text-danger">New Job Entries...!</span>
+</div>
+  <div class="card-body p-0">
+    <div class="table-responsive p-3">
+      <table id="jobTable" class="table table-hover align-middle mb-0">
+        <thead class="text-center bg-white border-bottom">
+          <tr class="text-dark fw-semibold">
+            <th>S.No</th>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Company</th>
+            <th>Domain</th>
+            <th>Employment</th>
+            <th>Experience</th>
+            <th>Category</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for job in jobs %}
+          <tr class="text-center">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ job.id }}</td>
+            <td>{{ job.title }}</td>
+            <td>{{ job.company_name }}</td>
+            <td>{{ job.domain }}</td>
+            <td>{{ job.employment_type }}</td>
+            <td>{{ job.experience_level }}</td>
+            <td>{{ job.category }}</td>
+            <td>{{ job.created_at|date:"Y-m-d" }}</td>
+            <td>
+              <a href="{% url 'edit_job' job.id %}" data-bs-toggle="tooltip" title="Edit Job">
+                <i class="fas fa-pen" style="color: #007bff;"></i>
+              </a>
+          </tr>
+          {% empty %}
+          <tr><td colspan="9" class="text-center text-muted">No job entries found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Competition Table -->
+<div class="card shadow mb-4 table-section" id="competitions">
+ <div class="card-header bg-white fw-semibold fs-5 border-bottom table-header-flex">
+  <span class="blinking-text text-danger">New Competition Entries...!</span>
+</div>
+
+  <div class="card-body p-0">
+    <div class="table-responsive p-3">
+      <table id="competitionTable" class="table table-hover align-middle mb-0">
+        <thead class="text-center bg-white border-bottom">
+          <tr class="text-dark fw-semibold">
+            <th>S.No</th>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Host Org</th>
+            <th>Type</th>
+            <th>Mode</th>
+            <th>Category</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for comp in competitions %}
+          <tr class="text-center">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ comp.id }}</td>
+            <td>{{ comp.title }}</td>
+            <td>{{ comp.host_org }}</td>
+            <td>{{ comp.competition_type }}</td>
+            <td>{{ comp.mode }}</td>
+            <td>{{ comp.category }}</td>
+            <td>{{ comp.created_at|date:"Y-m-d" }}</td>
+            <td>
+              <a href="{% url 'edit_competition' comp.id %}" data-bs-toggle="tooltip" title="Edit Competition">
+                <i class="fas fa-pen" style="color: #007bff;"></i>
+              </a>
+            
+          </tr>
+          {% empty %}
+          <tr><td colspan="8" class="text-center text-muted">No competition entries found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Simple DataTables CSS & JS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.css">
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2"></script>
+
+<!-- ✅ Table Init + Dropdown Logic -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const internshipTable = new simpleDatatables.DataTable("#internshipTable", {
+      perPage: 5,
+      searchable: true,
+      fixedHeight: false,
+      sortable: true,
+      columns: [
+        { select: 2, sort: "asc" }
+      ],
+      labels: {
+        perPage: "Show {select}",
+        noRows: "No entries to display",
+        info: "Showing {start} to {end} of {rows} entries"
+      },
+    });
+
+    const jobTable = new simpleDatatables.DataTable("#jobTable", {
+      perPage: 5,
+      searchable: true,
+      fixedHeight: false,
+      sortable: true
+    });
+
+    const competitionTable = new simpleDatatables.DataTable("#competitionTable", {
+      perPage: 5,
+      searchable: true,
+      fixedHeight: false,
+      sortable: true
+    });
+
+    // Dropdown logic
+    const tableToggle = document.getElementById("tableToggle");
+    const sections = document.querySelectorAll(".table-section");
+
+    tableToggle.addEventListener("change", function () {
+      sections.forEach(section => section.classList.remove("active"));
+      document.getElementById(this.value).classList.add("active");
+    });
+
+    // Enable Bootstrap tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+  });
+</script>

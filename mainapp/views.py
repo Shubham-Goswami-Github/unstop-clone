@@ -1096,3 +1096,23 @@ def get_internships_json(request):
         'id', 'title', 'company_name', 'created_at', 'category', 'domain'
     )
     return JsonResponse({'internships': list(internships)})
+
+from django.shortcuts import render
+
+def add_candidate_view(request):
+    return render(request, 'admin_panel/add_candidate.html')
+
+
+# adminapp/views.py
+from django.shortcuts import render, redirect
+from .forms import AdminModuleForm
+
+def add_admin_module_view(request):
+    if request.method == 'POST':
+        form = AdminModuleForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_module_success')  # You can update this
+    else:
+        form = AdminModuleForm()
+    return render(request, 'admin_panel/add_admin_module.html', {'form': form})
