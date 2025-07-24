@@ -95,7 +95,7 @@ def submit_candidate_form(request):
                 agreed_info = data.get('agreed_info', False),
                 stay_in_loop = data.get('stay_in_loop', False),
                 user_type = data.get('user_type', ''),
-
+                
                 # Name fields for easy lookup
                 school_name = data.get('school_name', ''),
                 college_name = data.get('college_name', ''),
@@ -619,27 +619,46 @@ from .models import CandidateProfile
 
 @staff_member_required
 def edit_candidate(request, candidate_id):
-    candidate = get_object_or_404(CandidateProfile, id=candidate_id)
+    candidate = get_object_or_404(CandidateProfile, pk=candidate_id)
+    org_type = candidate.user_type  # 'school' | 'college' | 'professional' | 'fresher'
 
     if request.method == 'POST':
         candidate.first_name = request.POST.get('first_name')
         candidate.last_name = request.POST.get('last_name')
         candidate.email = request.POST.get('email')
-        candidate.phone_number = request.POST.get('phone_number')
+        candidate.phone = request.POST.get('phone')
         candidate.gender = request.POST.get('gender')
-        candidate.save()
-        messages.success(request, "Candidate updated successfully!")
-        return redirect(
-            'candidates_summary',
-          
-        )
 
-    # 👇 org_type send kro template me
-    org_type = candidate.user_type
+        if request.FILES.get('profile_photo'):
+            candidate.profile_photo = request.FILES['profile_photo']
+
+        if org_type == 'school':
+            candidate.school_name = request.POST.get('school_name')
+            candidate.current_class = request.POST.get('current_class')
+            candidate.school_city = request.POST.get('school_city')
+
+        elif org_type == 'college':
+            candidate.college_name = request.POST.get('college_name')
+            candidate.domain = request.POST.get('domain')
+            candidate.course_name = request.POST.get('course_name')
+            candidate.start_year = request.POST.get('start_year')
+            candidate.end_year = request.POST.get('end_year')
+            candidate.college_city = request.POST.get('college_city')
+
+        elif org_type == 'professional' or org_type == 'fresher':
+            candidate.current_company = request.POST.get('current_company')
+            candidate.experience_years = request.POST.get('experience_years')
+            candidate.current_job_role = request.POST.get('current_job_role')
+            candidate.job_start_year = request.POST.get('job_start_year')
+            candidate.job_end_year = request.POST.get('job_end_year')
+            candidate.job_city = request.POST.get('job_city')
+
+        candidate.save()
+        return redirect('candidates_summary')
 
     return render(request, 'admin_panel/edit_candidate.html', {
         'candidate': candidate,
-        'org_type': org_type,
+        'org_type': org_type
     })
 
 @staff_member_required
@@ -1365,6 +1384,8 @@ def view_college_registered_students(request):
 
     students = CandidateProfile.objects.filter(college_id=college_id)
     return render(request, 'college_admin_panel/registered_students.html', {'students': students})
+
+
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from .models import CandidateProfile
@@ -1626,6 +1647,8 @@ def company_login_view(request):
                 if company.is_approved:
                     request.session['company_id'] = company.id
                     request.session['company_name'] = company.name
+                    request.session['company_city'] = company.city
+
                     return redirect('company_admin_dashboard')
                 else:
                     messages.error(request, "Company not approved.")
@@ -1662,3 +1685,404 @@ def company_admin_dashboard(request):
 def company_logout(request):
     request.session.flush()
     return redirect('company_login')
+    
+# views.py (for company admin panel)
+from django.shortcuts import render, redirect
+from mainapp.models import CandidateProfile
+
+# views.py
+from django.shortcuts import render, redirect
+from mainapp.models import CandidateProfile
+
+def view_company_registered_students(request):
+    company_id = request.session.get('company_id')
+    if not company_id:
+        return redirect('company_login')
+
+    # Filter candidates for this company
+    students = CandidateProfile.objects.filter(company_id=company_id)
+    return render(request, 'company_admin_panel/registered_students_2.html', {'students': students})
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import CandidateProfile
+from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+@staff_member_required
+def view_candidate_company(request, candidate_id):
+    candidate = get_object_or_404(CandidateProfile, id=candidate_id)
+    return render(request, 'company_admin_panel/view_candidate_company.html', {'candidate': candidate})
+
+
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import CandidateProfile
+
+@staff_member_required
+def edit_candidate_company(request, candidate_id):
+    candidate = get_object_or_404(CandidateProfile, pk=candidate_id)
+    org_type = candidate.user_type  # 'school' | 'college' | 'professional' | 'fresher'
+
+    if request.method == 'POST':
+        candidate.first_name = request.POST.get('first_name')
+        candidate.last_name = request.POST.get('last_name')
+        candidate.email = request.POST.get('email')
+        candidate.phone = request.POST.get('phone')
+        candidate.gender = request.POST.get('gender')
+
+        if request.FILES.get('profile_photo'):
+            candidate.profile_photo = request.FILES['profile_photo']
+
+        if org_type == 'school':
+            candidate.school_name = request.POST.get('school_name')
+            candidate.current_class = request.POST.get('current_class')
+            candidate.school_city = request.POST.get('school_city')
+
+        elif org_type == 'college':
+            candidate.college_name = request.POST.get('college_name')
+            candidate.domain = request.POST.get('domain')
+            candidate.course_name = request.POST.get('course_name')
+            candidate.start_year = request.POST.get('start_year')
+            candidate.end_year = request.POST.get('end_year')
+            candidate.college_city = request.POST.get('college_city')
+
+        elif org_type == 'professional' or org_type == 'fresher':
+            candidate.current_company = request.POST.get('current_company')
+            candidate.experience_years = request.POST.get('experience_years')
+            candidate.current_job_role = request.POST.get('current_job_role')
+            candidate.job_start_year = request.POST.get('job_start_year')
+            candidate.job_end_year = request.POST.get('job_end_year')
+            candidate.job_city = request.POST.get('job_city')
+
+        candidate.save()
+        return redirect('candidates_summary')
+
+    return render(request, 'company_admin_panel/edit_candidate_company.html', {
+        'candidate': candidate,
+        'org_type': org_type
+    })
+
+
+def add_new_company_candidate(request):
+    company_id = request.session.get('company_id')
+    if not company_id:
+        return redirect('company_login')
+
+    company = Company.objects.get(id=company_id)
+
+    if request.method == 'POST':
+        # Basic
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        gender = request.POST.get('gender')
+        password = make_password(request.POST.get('password'))
+        user_type = 'professional'
+
+        # Professional fields
+        current_job_role = request.POST.get('current_job_role')
+        experience_years = request.POST.get('experience_years')
+        job_start_year = request.POST.get('job_start_year')
+        job_end_year = request.POST.get('job_end_year')
+
+        agreed_info = bool(request.POST.get('agreed_info'))
+        stay_in_loop = bool(request.POST.get('stay_in_loop'))
+        profile_photo = request.FILES.get('profile_photo')
+
+        candidate = CandidateProfile.objects.create(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            phone=phone,
+            gender=gender,
+            password=password,
+            agreed_info=agreed_info,
+            stay_in_loop=stay_in_loop,
+            user_type=user_type,
+            company=company,
+            current_company=company.name,
+            job_city=company.city,
+            current_job_role=current_job_role,
+            experience_years=experience_years,
+            job_start_year=job_start_year,
+            job_end_year=job_end_year,
+            profile_photo=profile_photo
+        )
+
+        messages.success(request, "Candidate added successfully.")
+        return redirect('company_admin_dashboard')
+
+    return render(request, 'company_admin_panel/add_new_candidate.html', {'company': company})
+from django.shortcuts import render, redirect
+from .models import Job
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Job, Company  # Import your Company model
+
+@staff_member_required
+def add_job_company(request):
+    if request.method == 'POST':
+        company_id = request.session.get('company_id')
+        if not company_id:
+            return redirect('company_admin_dashboard')
+
+        company = get_object_or_404(Company, id=company_id)
+
+        Job.objects.create(
+            title=request.POST.get('title'),
+            company_name=company.name,
+            domain=request.POST.get('domain'),
+            employment_type=request.POST.get('employment_type'),
+            salary_min_lpa=request.POST.get('salary_min_lpa') or None,
+            salary_max_lpa=request.POST.get('salary_max_lpa') or None,
+            experience_level=request.POST.get('experience_level'),
+            location=company.city,  # ✅ FIXED LINE
+            remote_allowed=bool(request.POST.get('remote_allowed')),
+            apply_by=request.POST.get('apply_by') or None,
+            job_description=request.POST.get('job_description'),
+            category=request.POST.get('category')
+        )
+        return redirect('company_admin_dashboard')
+
+    return render(request, 'company_admin_panel/company_add_job.html')
+
+
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render, get_object_or_404
+from .models import Job, Company
+
+@staff_member_required
+def company_job_list(request):
+    company_id = request.session.get('company_id')
+    if not company_id:
+        return redirect('company_admin_dashboard')
+
+    company = get_object_or_404(Company, id=company_id)
+    jobs = Job.objects.filter(company_name=company.name).order_by('-id')  # latest first
+
+    return render(request, 'company_admin_panel/company_job_list.html', {'jobs': jobs})
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Internship, Company
+
+@staff_member_required
+def add_internship_company(request):
+    if request.method == 'POST':
+        company_id = request.session.get('company_id')
+        if not company_id:
+            return redirect('company_admin_dashboard')
+
+        company = get_object_or_404(Company, id=company_id)
+
+        Internship.objects.create(
+            title=request.POST.get('title'),
+            company_name=company.name,  # ✅ auto set
+            domain=request.POST.get('domain'),
+            mode=request.POST.get('mode'),
+            category=request.POST.get('category'),
+            stipend_amount=request.POST.get('stipend_amount') or None,
+            start_date=request.POST.get('start_date') or None,
+            end_date=request.POST.get('end_date') or None,
+            duration_weeks=request.POST.get('duration_weeks') or None,
+            location=company.city,  # ✅ auto set
+            application_link=request.POST.get('application_link')
+        )
+
+        return redirect('company_admin_dashboard')  # ✅ update this URL if needed
+
+    return render(request, 'company_admin_panel/add_company_internships.html')
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
+from mainapp.models import Internship, Company
+
+def company_internship_list(request):
+    company_id = request.session.get('company_id')
+    if not company_id:
+        return redirect('company_login')  # change if your login url is different
+
+    company = get_object_or_404(Company, id=company_id)
+
+    # ✅ Match using company.name instead of company.company_name
+    internships = Internship.objects.filter(company_name=company.name)
+
+    return render(request, 'company_admin_panel/company_internship_list.html', {
+        'internships': internships,
+        'today': timezone.now().date(),
+        'company': company
+    })
+
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import CandidateProfile
+from django.contrib.auth.hashers import check_password
+
+def user_panel_login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        try:
+            user = CandidateProfile.objects.get(email=email)
+
+            # If passwords are hashed, use this:
+            if check_password(password, user.password):
+                request.session['user_id'] = user.id
+                request.session['user_name'] = user.first_name
+                messages.success(request, "Login successful!")
+                return redirect('user_dashboard_panel')
+            else:
+                messages.error(request, "Invalid email or password.")
+        except CandidateProfile.DoesNotExist:
+            messages.error(request, "Invalid email or password.")
+
+    return render(request, 'user_dashboard_panel/login.html')
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import CandidateProfile, AppliedInternship, AppliedForJob, CompetitionsApplied
+
+def user_panel_dashboard_view(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('user_login_panel')
+
+    try:
+        user = CandidateProfile.objects.get(id=user_id)
+    except CandidateProfile.DoesNotExist:
+        messages.error(request, "User not found.")
+        return redirect('user_login_panel')
+
+    internship_count = AppliedInternship.objects.filter(candidate=user).count()
+    job_count = AppliedForJob.objects.filter(candidate=user).count()
+    competition_count = CompetitionsApplied.objects.filter(candidate=user).count()
+
+    context = {
+        'user': user,
+        'internship_count': internship_count,
+        'job_count': job_count,
+        'competition_count': competition_count,
+    }
+
+    return render(request, 'user_dashboard_panel/user_admin_dashboard.html', context)
+
+def user_panel_logout_view(request):
+    request.session.flush()
+    return redirect('user_login_panel')
+
+
+def user_applied_internships_view(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('user_login_panel')
+
+    try:
+        user = CandidateProfile.objects.get(id=user_id)
+    except CandidateProfile.DoesNotExist:
+        messages.error(request, "User not found.")
+        return redirect('user_login_panel')
+
+    internships = AppliedInternship.objects.filter(candidate=user).order_by('-applied_at')
+
+    return render(request, 'user_dashboard_panel/user_applied_internships.html', {
+        'internships': internships,
+        'user': user,
+    })
+
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import AppliedForJob, CompetitionsApplied, CandidateProfile
+
+
+def applied_jobs_list_view(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('user_login')
+
+    try:
+        candidate = CandidateProfile.objects.get(id=user_id)
+        applied_jobs = AppliedForJob.objects.filter(candidate=candidate).order_by('-applied_at')
+    except CandidateProfile.DoesNotExist:
+        applied_jobs = []
+
+    return render(request, 'user_dashboard_panel/applied_jobs_list.html', {
+        'applied_jobs': applied_jobs,
+    })
+
+
+def applied_competitions_list_view(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('user_login')
+
+    try:
+        candidate = CandidateProfile.objects.get(id=user_id)
+        applied_competitions = CompetitionsApplied.objects.filter(candidate=candidate).order_by('-applied_at')
+    except CandidateProfile.DoesNotExist:
+        applied_competitions = []
+
+    return render(request, 'user_dashboard_panel/applied_competitions_list.html', {
+        'applied_competitions': applied_competitions,
+    })
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import CandidateProfile
+
+def edit_candidate_user(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        messages.error(request, "Please log in first.")
+        return redirect('user_login_panel')
+
+    candidate = get_object_or_404(CandidateProfile, id=user_id)
+    org_type = candidate.user_type  # 'school' | 'college' | 'professional' | 'fresher'
+
+    if request.method == 'POST':
+        candidate.first_name = request.POST.get('first_name')
+        candidate.last_name = request.POST.get('last_name')
+        candidate.email = request.POST.get('email')
+        candidate.phone = request.POST.get('phone')
+        candidate.gender = request.POST.get('gender')
+
+        if request.FILES.get('profile_photo'):
+            candidate.profile_photo = request.FILES['profile_photo']
+
+        if org_type == 'school':
+            candidate.school_name = request.POST.get('school_name')
+            candidate.current_class = request.POST.get('current_class')
+            candidate.school_city = request.POST.get('school_city')
+
+        elif org_type == 'college':
+            candidate.college_name = request.POST.get('college_name')
+            candidate.domain = request.POST.get('domain')
+            candidate.course_name = request.POST.get('course_name')
+            candidate.start_year = request.POST.get('start_year')
+            candidate.end_year = request.POST.get('end_year')
+            candidate.college_city = request.POST.get('college_city')
+
+        elif org_type in ['professional', 'fresher']:
+            candidate.current_company = request.POST.get('current_company')
+            candidate.experience_years = request.POST.get('experience_years')
+            candidate.current_job_role = request.POST.get('current_job_role')
+            candidate.job_start_year = request.POST.get('job_start_year')
+            candidate.job_end_year = request.POST.get('job_end_year')
+            candidate.job_city = request.POST.get('job_city')
+
+        candidate.save()
+        messages.success(request, "Profile updated successfully!")
+        return redirect('user_dashboard_panel')
+
+    return render(request, 'user_dashboard_panel/update_information.html', {
+        'candidate': candidate,
+        'org_type': org_type
+    })

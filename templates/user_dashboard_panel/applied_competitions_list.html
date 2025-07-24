@@ -1,0 +1,36 @@
+{% extends 'user_dashboard_panel/user_dashboard_base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h3 class="mb-4">Competitions You've Applied For</h3>
+    {% if applied_competitions %}
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Title</th>
+                    <th>Host</th>
+                    <th>Category</th>
+                    <th>Mode</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Applied At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comp in applied_competitions %}
+                <tr>
+                    <td>{{ comp.title }}</td>
+                    <td>{{ comp.host_org }}</td>
+                    <td>{{ comp.category }}</td>
+                    <td>{{ comp.mode }}</td>
+                    <td>{{ comp.start_date }}</td>
+                    <td>{{ comp.end_date }}</td>
+                    <td>{{ comp.applied_at|date:"d M Y, h:i A" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">You haven't applied for any competitions yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

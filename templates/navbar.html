@@ -248,24 +248,33 @@ form.d-flex input[type="search"] {
     <i class="bi bi-plus-lg me-2"></i> Host
   </button>
 
-  <div id="hostMenu" class="host-popup">
-    <ul>
-      <li>User</li>
-      <li>
-        College
-        <ul class="nested-menu">
-          <li><a href="{% url 'register_college' %}" class="text-decoration-none text-dark">Register as College</a></li>
-          <li><a href="{% url 'college_login' %}" class="text-decoration-none text-dark">Login as College</a></li>
-        </ul>
-      </li>
-      <li class="text-muted">Company
-         <ul class="nested-menu">
-          <li><a href="{% url 'add_company_home' %}" class="text-decoration-none text-dark">Register as Company</a></li>
-          <li><a href="{% url 'company_login' %}" class="text-decoration-none text-dark">Login as Company</a></li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+ <div id="hostMenu" class="host-popup">
+  <ul>
+    <li>
+      User
+      <ul class="nested-menu">
+        <li>
+          <a href="{% url 'user_login_panel' %}" class="text-decoration-none text-dark">Login as User</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      College
+      <ul class="nested-menu">
+        <li><a href="{% url 'register_college' %}" class="text-decoration-none text-dark">Register as College</a></li>
+        <li><a href="{% url 'college_login' %}" class="text-decoration-none text-dark">Login as College</a></li>
+      </ul>
+    </li>
+    <li class="text-muted">
+      Company
+      <ul class="nested-menu">
+        <li><a href="{% url 'add_company_home' %}" class="text-decoration-none text-dark">Register as Company</a></li>
+        <li><a href="{% url 'company_login' %}" class="text-decoration-none text-dark">Login as Company</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
 </div>
 
     <a href="#" class="btn btn-for-business rounded-pill px-3">

@@ -1,0 +1,14 @@
+{% extends 'college_admin_panel/college_admin_base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h3 class="text-danger">Confirm Delete</h3>
+  <div class="card p-4 shadow">
+    <p>Are you sure you want to delete <strong>{{ candidate.name }}</strong>'s profile?</p>
+    <form method="POST">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Yes, Delete</button>
+      <a href="{% url 'college_admin_dashboard' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

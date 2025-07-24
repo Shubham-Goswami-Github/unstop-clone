@@ -34,6 +34,8 @@
       <table id="candidateDataTable" class="table table-hover align-middle mb-0">
         <thead class="text-center align-middle bg-white border-bottom">
           <tr class="text-dark fw-semibold">
+            <th>Photo</th>
+
             <th>ID</th>
             <th>Name</th>
             <th>Email</th>
@@ -53,6 +55,14 @@
         <tbody>
           {% for candidate in candidates %}
           <tr class="text-center">
+            <td>
+  {% if candidate.profile_photo %}
+    <img src="{{ candidate.profile_photo.url }}" alt="Photo" width="40" height="40" class="rounded-circle">
+  {% else %}
+    <span class="text-muted">N/A</span>
+  {% endif %}
+</td>
+
             <td>{{ forloop.counter }}</td>
             <td>{{ candidate.first_name }} {{ candidate.last_name }}</td>
             <td>{{ candidate.email }}</td>

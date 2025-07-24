@@ -123,9 +123,10 @@
         <a href="{% url 'edit_competition_college' comp.pk %}" class="btn btn-edit">
           <i class="fas fa-pen me-1"></i>Edit
         </a>
-        <a href="{% url 'competitions_list_college' %}" class="btn btn-back">
-          <i class="fas fa-arrow-left me-1"></i>Back
-        </a>
+        <a href="javascript:history.back()" class="btn btn-secondary ms-2">
+  <i class="fas fa-times me-1"></i> Cancel
+</a>
+
       </div>
     </div>
   </div>

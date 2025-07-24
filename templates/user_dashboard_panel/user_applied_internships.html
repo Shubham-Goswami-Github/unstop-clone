@@ -1,0 +1,39 @@
+{% extends 'user_dashboard_panel/user_dashboard_base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5">
+  <h3 class="mb-4">Your Applied Internships</h3>
+
+  {% if internships %}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      {% for app in internships %}
+        <div class="col">
+          <div class="card shadow-sm border rounded p-3">
+            <div class="card-body">
+              <h5 class="card-title text-primary">{{ app.internship_title }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{ app.internship_company_name }}</h6>
+              <p class="card-text mb-1"><strong>Mode:</strong> {{ app.mode|capfirst }}</p>
+              <p class="card-text mb-1"><strong>Category:</strong> {{ app.category|capfirst }}</p>
+              <p class="card-text mb-1"><strong>Stipend:</strong> ₹{{ app.stipend_amount }}</p>
+              <p class="card-text mb-1"><strong>Applied At:</strong> {{ app.applied_at|date:"d M Y, h:i A" }}</p>
+              <p class="card-text"><strong>Payment Status:</strong>
+                {% if app.payment_status == "Success" %}
+                  <span class="badge bg-success">Success</span>
+                {% elif app.payment_status == "Unsuccess" %}
+                  <span class="badge bg-danger">Unsuccess</span>
+                {% else %}
+                  <span class="badge bg-secondary">Not Applicable</span>
+                {% endif %}
+              </p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">You haven't applied to any internships yet.</div>
+  {% endif %}
+</div>
+
+{% endblock %}

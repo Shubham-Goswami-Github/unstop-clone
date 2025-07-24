@@ -1,0 +1,116 @@
+{% extends 'user_dashboard_panel/user_dashboard_base.html' %}
+{% load static %}
+
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  body {
+    background-color: rgb(240, 242, 248);
+    color: #212529;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+  }
+
+  .dashboard-wrapper {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .dash-title {
+    font-size: 1.65rem;
+    font-weight: 600;
+    color: #0d6efd;
+  }
+
+  .dashboard-card {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .dashboard-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .dashboard-card .card-body {
+    padding: 1.6rem 1.4rem;
+  }
+
+  .dashboard-card h6 {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #6c757d;
+  }
+
+  .dashboard-card h4 {
+    font-size: 1.45rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .txt-primary { color: #0d6efd !important; }
+
+  /* Animation */
+  .fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div class="container-fluid py-4 fade-in">
+  <div class="dashboard-wrapper">
+    <h3 class="dash-title mb-4"><i class="fas fa-user-circle me-2"></i>User Dashboard</h3>
+
+    <div class="alert alert-info mb-4">
+      Hello <strong>{{ user.first_name }}</strong> 👋, welcome to your dashboard.
+    </div>
+
+    <!-- Dashboard Cards -->
+    <div class="row g-4">
+      <!-- Applied Internships -->
+      <div class="col-12 col-md-6 col-lg-4">
+        <a href="{% url 'user_applied_internships' %}" class="dashboard-card">
+          <div class="card-body">
+            <h6>Applied Internships</h6>
+            <h4 class="txt-primary"><i class="fas fa-briefcase"></i> {{ internship_count }}</h4>
+          </div>
+        </a>
+      </div>
+
+      <!-- Applied Jobs -->
+      <div class="col-12 col-md-6 col-lg-4">
+        <a href="{% url 'applied_jobs_list' %}" class="dashboard-card">
+          <div class="card-body">
+            <h6>Applied Jobs</h6>
+            <h4 class="txt-primary"><i class="fas fa-suitcase"></i> {{ job_count }}</h4>
+          </div>
+        </a>
+      </div>
+
+      <!-- Applied Competitions -->
+      <div class="col-12 col-md-6 col-lg-4">
+        <a href="{% url 'applied_competitions_list' %}" class="dashboard-card">
+          <div class="card-body">
+            <h6>Applied Competitions</h6>
+            <h4 class="txt-primary"><i class="fas fa-trophy"></i> {{ competition_count }}</h4>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

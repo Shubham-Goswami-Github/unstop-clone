@@ -109,47 +109,64 @@ urlpatterns = [
 
 
 
+# urls.py
 
-    # urls.py
     path('college-admin/', views.college_admin_view, name='college_admin_base'),
-    path('college/login/', views.college_login_view, name='college_login'),
-    path('college/dashboard/', views.college_admin_dashboard, name='college_admin_dashboard'),
-    path('college/logout/', views.college_logout, name='college_logout'),
-    path('college-admin/add-competition/', views.add_competition_college, name='add_competition_college'),
+    path('college-admin/login/', views.college_login_view, name='college_login'),
+    path('college-admin/dashboard/', views.college_admin_dashboard, name='college_admin_dashboard'),
+    path('college-admin/logout/', views.college_logout, name='college_logout'),
+    path('college-admin/register/', views.register_college, name='register_college'),
 
-    path('college/register/', views.register_college, name='register_college'),
-    path('college/add-student/', views.add_new_student, name='add_student'),
-    path('registered-students/', views.view_college_registered_students, name='registered_students'),
+# Students
+    path('college-admin/add-student/', views.add_new_student, name='add_student'),
+    path('college-admin/registered-students/', views.view_college_registered_students, name='registered_students'),
+    path('college-admin/registered-students/<int:pk>/delete/', views.delete_college_candidate, name='delete_college_candidate'),
+    path('college-admin/registered-students/<int:candidate_id>/view/', views.view_college_candidate_detail, name='view_college_candidate_detail'),
+    path('college-admin/edit-candidate/<int:candidate_id>/', views.edit_college_candidate, name='edit_college_candidate'),
 
-   
-    path('registered-students/<int:pk>/delete/', views.delete_college_candidate, name='delete_college_candidate'),
-    path('registered-students/<int:candidate_id>/view/', views.view_college_candidate_detail, name='view_college_candidate_detail'),
-    path('edit-candidate/<int:candidate_id>/', views.edit_college_candidate, name='edit_college_candidate'),
-
-
+# Competitions
     path('college-admin/competitions/', views.competitions_list_college, name='competitions_list_college'),
     path('college-admin/add-competition/', views.add_competition_college, name='add_competition_college'),
     path('college-admin/competition/<int:pk>/', views.competition_detail_college, name='competition_detail_college'),
     path('college-admin/competition/<int:pk>/edit/', views.edit_competition_college, name='edit_competition_college'),
     path('college-admin/competition/<int:pk>/delete/', views.delete_competition_college, name='delete_competition_college'),
 
-
-
+# Internships
     path('college-admin/add-internship/', views.add_internship_college, name='add_internship_college'),
     path('college-admin/internships/', views.internship_list_college, name='internship_list_college'),
     path('college-admin/internship/<int:internship_id>/', views.view_internship_college, name='view_internship_college'),
     path('college-admin/internship/<int:internship_id>/edit/', views.edit_internship_college, name='edit_internship_college'),
     path('college-admin/internship/<int:internship_id>/delete/', views.delete_internship_college, name='delete_internship_college'),
-     
-    path('student/<int:student_id>/internships/', views.view_applied_internships_by_student, name='view_applied_internships_by_student'),
-    path('student/<int:student_id>/competitions/', views.view_applied_competitions_by_student, name='view_applied_competitions_by_student'),
 
-    path('edit-college-profile/', views.edit_college_profile, name='edit_college_profile'),
+# Student Applications
+    path('college-admin/student/<int:student_id>/internships/', views.view_applied_internships_by_student, name='view_applied_internships_by_student'),
+    path('college-admin/student/<int:student_id>/competitions/', views.view_applied_competitions_by_student, name='view_applied_competitions_by_student'),
 
-    path('add-company/', views.add_company_home, name='add_company_home'),
-    path('company-login/', views.company_login_view, name='company_login'),
-    path('company-dashboard/', views.company_admin_dashboard, name='company_admin_dashboard'),
-    path('company-logout/', views.company_logout, name='company_logout'),
+# College Profile
+    path('college-admin/edit-profile/', views.edit_college_profile, name='edit_college_profile'),
+
+
+    path('company-admin/add-company/', views.add_company_home, name='add_company_home'),
+    path('company-admin/company-login/', views.company_login_view, name='company_login'),
+    path('company-admin/company-dashboard/', views.company_admin_dashboard, name='company_admin_dashboard'),
+    path('company-admin/company-logout/', views.company_logout, name='company_logout'),
+    path('company-admin/registered-students-college/', views.view_company_registered_students, name='company_registered_students'),
+    path('company-admin/view-candidate/<int:candidate_id>/', views.view_candidate_company, name='view_candidate_company'),
+    path('company-admin/edit-candidate/<int:candidate_id>/', edit_candidate, name='edit_candidate'),
+    path('company-admin/add-candidate/', views.add_new_company_candidate, name='add_company_candidate'),
+    path('company-admin/add-job/', views.add_job_company, name='add_job_company'),
+    path('company-admin/company-job-list/', views.company_job_list, name='company_job_list'),
+    path('company-admin/company-add-internship/', views.add_internship_company, name='add_internship_company'),
+    path('company-admin/internships/', views.company_internship_list, name='company_internship_list'),
+
+    path('user-panel/user-login/', views.user_panel_login_view, name='user_login_panel'),
+    path('user-panel/user-dashboard/', views.user_panel_dashboard_view, name='user_dashboard_panel'),
+    path('user-panel/user-logout/', views.user_panel_logout_view, name='user_logout'),
+    path('user-panel/applied-internships/', views.user_applied_internships_view, name='user_applied_internships'),
+    path('user-panel/applied-jobs/', views.applied_jobs_list_view, name='applied_jobs_list'),
+    path('user-panel/applied-competitions/', views.applied_competitions_list_view, name='applied_competitions_list'),
+    path('user-panel/update-information/', views.edit_candidate_user, name='update_information'),
+
 
 ]
 if settings.DEBUG:
