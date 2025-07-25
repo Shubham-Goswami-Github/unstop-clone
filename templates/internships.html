@@ -5,12 +5,17 @@
 
 {% block content %}
 <style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f8f9fa;
+  }
+
   .hero-section {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 50px 60px;
-    background: #f8f9fa;
+    padding: 60px 40px;
+    background: linear-gradient(145deg, #eaf3fb, #f0f7ff);
     gap: 40px;
     flex-wrap: wrap;
     animation: fadeInUp 0.8s ease;
@@ -18,43 +23,55 @@
 
   .hero-text {
     flex: 1;
-    max-width: 500px;
+    max-width: 550px;
     text-align: left;
+    animation: slideInLeft 1s ease-in-out;
   }
 
   .hero-text h1 {
-    font-size: 3.5rem;
+    font-size: 3.2rem;
     font-weight: 700;
     line-height: 1.2;
+    margin-bottom: 10px;
   }
 
   .hero-text .unlock {
+    background: linear-gradient(to right, #003366, #0056b3);
     color: #fff;
-    background: #003366;
-    padding: 5px 15px;
+    padding: 6px 18px;
     border-radius: 5px;
+    font-weight: bold;
   }
 
   .hero-text .opportunities {
     color: #003366;
-    margin-left: 10px;
+    margin-left: 12px;
+  }
+
+  .hero-text p.subtext {
+    font-style: italic;
+    font-size: 1rem;
+    color: #444;
+    margin-top: 10px;
+    animation: blinkText 1.8s infinite;
   }
 
   .hero-image {
     flex: 1;
     display: flex;
     justify-content: flex-end;
-    animation: fadeInUp 0.8s ease;
+    padding-right: 30px;
+    animation: slideInRight 1s ease-in-out;
   }
 
   .hero-image img {
-    width: 100%;
-    max-width: 400px;
-    border-radius: 10px;
+    max-width: 420px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   }
 
   .filter-section {
-    padding: 30px 10px;
+    padding: 40px 20px 20px;
     background: #ffffff;
     animation: fadeInUp 0.8s ease;
   }
@@ -64,28 +81,36 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 15px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
 
   .filter-buttons-group button {
+    background-color: #ffffff;
+    color: #003366;
+    border: 2px solid #003366;
+    padding: 10px 25px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .filter-buttons-group button:hover {
     background-color: #003366;
     color: white;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
   }
 
   .filter-buttons-group button.active {
-    background-color: #0056b3;
-    transform: scale(1.08);
+    background-color: #003366;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   }
 
   .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
     padding: 40px 20px;
     max-width: 1200px;
@@ -93,76 +118,92 @@
     justify-content: center;
   }
 
-  .banner-card {
-    background: rgba(255, 255, 255, 0.85);
-    border-radius: 12px;
-    padding: 25px 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  .tab-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    text-align: center;
     transition: all 0.3s ease-in-out;
-    border: 1px solid transparent;
-    animation: fadeInUp 0.7s ease;
+    border: 1px solid #e3e3e3;
+    text-decoration: none;
   }
 
-  .banner-card:hover {
+  .tab-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    border-color: #00336630;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    border-color: #0056b3;
   }
 
-  .banner-card .icon {
-    font-size: 45px;
-    margin-bottom: 15px;
+  .tab-text {
+    max-width: 70%;
+    color: #333;
+  }
+
+  .tab-title {
+    font-weight: 700;
     color: #003366;
-    transition: transform 0.4s ease-in-out;
-  }
-
-  .banner-card:hover .icon {
-    transform: scale(1.2) rotate(10deg);
-  }
-
-  .banner-card h5 {
-    font-weight: 600;
+    margin-bottom: 8px;
     font-size: 1.2rem;
-    margin-bottom: 5px;
   }
 
-  .banner-card p {
-    font-size: 0.9rem;
+  .tab-desc {
+    font-size: 0.95rem;
+    line-height: 1.5;
     color: #555;
-    margin: 0;
   }
 
-  .apply-btn {
-    margin-top: 15px;
-    transition: all 0.3s;
+  .tab-desc span {
+    font-weight: 500;
+    color: #000;
   }
 
-  .apply-btn:hover {
-    background-color: #003366;
-    color: #fff;
-    transform: translateY(-2px);
+  .tab-img {
+    width: 85px;
+    height: 85px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
   }
 
-  /* Animation */
+  .tab-card:hover .tab-img {
+    transform: scale(1.08);
+  }
+
   @keyframes fadeInUp {
-    0% {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
   }
 
-  @media (max-width: 576px) {
-    .filter-buttons-group {
+  @keyframes slideInLeft {
+    0% { opacity: 0; transform: translateX(-40px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slideInRight {
+    0% { opacity: 0; transform: translateX(40px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes blinkText {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  @media (max-width: 768px) {
+    .hero-text h1 {
+      font-size: 2.4rem;
+    }
+    .tab-card {
       flex-direction: column;
-      gap: 10px;
+      align-items: flex-start;
+    }
+    .tab-text {
+      max-width: 100%;
+    }
+    .tab-img {
+      margin-top: 15px;
     }
   }
 </style>
@@ -170,6 +211,7 @@
 <div class="hero-section">
   <div class="hero-text">
     <h1><span class="unlock">UNLOCK</span><span class="opportunities">EXPOSURE</span></h1>
+    <p class="subtext">Discover curated internships tailored for your growth!</p>
   </div>
   <div class="hero-image">
     <img src="{% static 'images/I1.webp' %}" alt="Hero">
@@ -177,29 +219,36 @@
 </div>
 
 <div class="filter-section">
-<div class="filter-buttons-group">
-  <button id="paidBtn" onclick="filterCategory('Paid')">Paid</button>
-  <button id="unpaidBtn" onclick="filterCategory('Unpaid')">Unpaid</button>
-</div>
-
-<div class="filter-buttons-group" id="modeFilters" style="display: none;">
-  <button id="onlineBtn" onclick="filterMode('Online')">Online</button>
-  <button id="offlineBtn" onclick="filterMode('Offline')">Offline</button>
-  <button id="hybridBtn" onclick="filterMode('Hybrid')">Hybrid</button>
-</div>
-
+  <div class="filter-buttons-group">
+    <button id="paidBtn" onclick="filterCategory('Paid')">Paid</button>
+    <button id="unpaidBtn" onclick="filterCategory('Unpaid')">Unpaid</button>
+  </div>
+  <div class="filter-buttons-group" id="modeFilters" style="display: none;">
+    <button id="onlineBtn" onclick="filterMode('Online')">Online</button>
+    <button id="offlineBtn" onclick="filterMode('Offline')">Offline</button>
+    <button id="hybridBtn" onclick="filterMode('Hybrid')">Hybrid</button>
+  </div>
 </div>
 
 <div class="cards-grid" id="internshipCards">
   {% for internship in internships %}
-  <div class="banner-card" data-category="{{ internship.category }}" data-mode="{{ internship.mode }}">
-    <i class="fas fa-building icon"></i>
-    <h5>{{ internship.title|truncatechars:40 }}</h5>
-    <p><strong>{{ internship.company_name }}</strong></p>
-    <span class="badge bg-secondary">{{ internship.domain }}</span>
-    <p class="mt-2 small">{{ internship.mode }} • {{ internship.category }}{% if internship.stipend_amount %} • ₹{{ internship.stipend_amount }}{% endif %}</p>
-    <a href="{% url 'user_internship_detail' internship.id %}"class="btn btn-sm btn-outline-primary apply-btn">Apply Now</a>
-  </div>
+   <div class="tab-card" data-category="{{ internship.category }}" data-mode="{{ internship.mode }}" style="display: none;">
+
+      <div class="tab-text">
+        <div class="tab-title">{{ internship.title|truncatechars:40 }}</div>
+        <p class="tab-desc">
+          <strong>Company:</strong> <span>{{ internship.company_name }}</span><br>
+          <strong>Domain:</strong> <span>{{ internship.domain }}</span><br>
+          <strong>Type:</strong> <span>{{ internship.category }}</span><br>
+          <strong>Mode:</strong> <span>{{ internship.mode }}</span><br>
+          {% if internship.stipend_amount %}
+            <strong>Stipend:</strong> ₹<span>{{ internship.stipend_amount }}</span>
+          {% endif %}
+        </p>
+        <a href="{% url 'user_internship_detail' internship.id %}" class="btn btn-sm btn-outline-primary apply-btn">Apply Now</a>
+      </div>
+      <img src="{% static 'images/U1.webp' %}" alt="Internships" class="tab-img">
+    </div>
   {% endfor %}
 </div>
 
@@ -213,30 +262,31 @@
     if (btn) btn.classList.add('active');
   }
 
-function filterCategory(category) {
-  selectedCategory = category;
-  updateButtonState(['paidBtn', 'unpaidBtn'], category.toLowerCase() + 'Btn');
-  
-  // Show mode filters only after category is selected
-  document.getElementById('modeFilters').style.display = 'flex';
-  applyFilters();
-}
-
+  function filterCategory(category) {
+    selectedCategory = category.trim().toLowerCase();
+    updateButtonState(['paidBtn', 'unpaidBtn'], selectedCategory + 'Btn');
+    document.getElementById('modeFilters').style.display = 'flex';
+    applyFilters();
+  }
 
   function filterMode(mode) {
-    selectedMode = mode;
-    updateButtonState(['onlineBtn', 'offlineBtn', 'hybridBtn'], mode.toLowerCase() + 'Btn');
+    selectedMode = mode.trim().toLowerCase();
+    updateButtonState(['onlineBtn', 'offlineBtn', 'hybridBtn'], selectedMode + 'Btn');
     applyFilters();
   }
 
   function applyFilters() {
-    const cards = document.querySelectorAll('.banner-card');
+    const cards = document.querySelectorAll('.tab-card');
     let visible = 0;
+
     cards.forEach(card => {
-      const category = card.dataset.category;
-      const mode = card.dataset.mode;
-      const show = (!selectedCategory || category === selectedCategory) &&
-                   (!selectedMode || mode === selectedMode);
+      const cardCategory = (card.dataset.category || '').trim().toLowerCase();
+      const cardMode = (card.dataset.mode || '').trim().toLowerCase();
+
+      const matchCategory = !selectedCategory || cardCategory === selectedCategory;
+      const matchMode = !selectedMode || cardMode === selectedMode;
+
+      const show = matchCategory && matchMode;
       card.style.display = show ? 'flex' : 'none';
       if (show) visible++;
     });
@@ -246,21 +296,16 @@ function filterCategory(category) {
   }
 </script>
 
-<body>
-  <!-- content -->
-  
-  <div class="bottom-footer-wrapper">
-    {% include 'bottom_menu.html' %}
-  </div>
 
-  <style>
-    footer.bg-footer {
-      margin-left: calc(-1 * (100vw - 100%)/2);
-      margin-right: calc(-1 * (100vw - 100%)/2);
-      width: 100vw;
-    }
-  </style>
-</body>
+<div class="bottom-footer-wrapper">
+  {% include 'bottom_menu.html' %}
+</div>
 
-
+<style>
+  footer.bg-footer {
+    margin-left: calc(-1 * (100vw - 100%)/2);
+    margin-right: calc(-1 * (100vw - 100%)/2);
+    width: 100vw;
+  }
+</style>
 {% endblock %}

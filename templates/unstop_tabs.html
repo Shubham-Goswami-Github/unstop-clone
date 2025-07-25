@@ -1,31 +1,44 @@
 {% load static %}
+<!-- AOS CSS + JS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
 <style>
   .tab-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 cards in a row */
-    gap: 30px;
-    padding: 30px 20px;
-    justify-content: center;
-    max-width: 1000px;
-    margin: auto;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px 30px;
+    padding: 40px 25px;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
   .tab-card {
-    height: 160px;
-    padding: 15px 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+    min-height: 190px;
+    padding: 20px 25px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
     background-color: #ffffff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: transform 0.2s;
-    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    border: 2px solid transparent;
   }
 
   .tab-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: #1a73e8;
+  }
+
+  .tab-card img {
+    transition: transform 0.3s ease;
+  }
+
+  .tab-card:hover img {
+    transform: scale(1.08);
   }
 
   .tab-text {
@@ -33,16 +46,16 @@
   }
 
   .tab-title {
-    font-weight: bold;
-    font-size: 1.2rem;
+    font-weight: 600;
+    font-size: 1.3rem;
     color: #1a73e8;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
   }
 
   .tab-desc {
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: #333;
-    line-height: 1.2rem;
+    line-height: 1.4;
   }
 
   .tab-desc span {
@@ -51,78 +64,97 @@
   }
 
   .tab-img {
-    width: 100px;
-    height: 100px;
+    width: 110px;
+    height: 110px;
     object-fit: contain;
   }
 
   .tab-more-icon {
     display: flex;
     align-items: center;
-    gap: 5px;
-    font-weight: bold;
+    gap: 8px;
+    font-weight: 600;
     color: #1a73e8;
+    font-size: 1.1rem;
   }
 
   .tab-more-icon img {
-    height: 24px;
-    width: 24px;
+    height: 26px;
+    width: 26px;
   }
 
   @media (max-width: 768px) {
     .tab-grid {
-      grid-template-columns: 1fr; /* On mobile, show 1 card per row */
+      grid-template-columns: 1fr;
+    }
+
+    .tab-card {
+      flex-direction: row;
+    }
+
+    .tab-img {
+      width: 90px;
+      height: 90px;
     }
   }
 </style>
 
-<!-- 2 × 3 Tab Grid Layout -->
+<!-- Section -->
 <div class="tab-grid">
-  <div class="tab-card" style="background-color: #f0f8ff;">
+  <a href="#" class="tab-card" style="background-color: #f0f8ff;" data-aos="fade-right">
     <div class="tab-text">
       <div class="tab-title">Internships</div>
-      <p class="tab-desc">Gain <br><span>Practical<br>Experience</span></p>
+      <p class="tab-desc">Gain <br><span>Practical Experience</span></p>
     </div>
     <img src="{% static 'images/U1.webp' %}" alt="Internships" class="tab-img">
-  </div>
+  </a>
 
-  <div class="tab-card" style="background-color: #fff8e7;">
+  <a href="#" class="tab-card" style="background-color: #fff8e7;" data-aos="fade-left" data-aos-delay="100">
     <div class="tab-text">
       <div class="tab-title">Jobs</div>
       <p class="tab-desc">Explore <br><span>Diverse Careers</span></p>
     </div>
     <img src="{% static 'images/U2.webp' %}" alt="Jobs" class="tab-img">
-  </div>
+  </a>
 
-  <div class="tab-card" style="background-color: #e6f7f4;">
+  <a href="#" class="tab-card" style="background-color: #e6f7f4;" data-aos="fade-right" data-aos-delay="200">
     <div class="tab-text">
       <div class="tab-title">Competitions</div>
       <p class="tab-desc">Battle <br><span>For Excellence</span></p>
     </div>
     <img src="{% static 'images/U3.webp' %}" alt="Competitions" class="tab-img">
-  </div>
+  </a>
 
-  <div class="tab-card" style="background-color: #f5eefc;">
+  <a href="#" class="tab-card" style="background-color: #f5eefc;" data-aos="fade-left" data-aos-delay="300">
     <div class="tab-text">
       <div class="tab-title">Mentorships</div>
       <p class="tab-desc">Guidance <br><span>From Top Mentors</span></p>
     </div>
     <img src="{% static 'images/U4.webp' %}" alt="Mentorships" class="tab-img">
-  </div>
+  </a>
 
-  <div class="tab-card" style="background-color: #e8f5e9;">
+  <a href="#" class="tab-card" style="background-color: #e8f5e9;" data-aos="fade-right" data-aos-delay="400">
     <div class="tab-text">
       <div class="tab-title">Practice</div>
       <p class="tab-desc">Refine <br><span>Skills Daily</span></p>
     </div>
     <img src="{% static 'images/U5.webp' %}" alt="Practice" class="tab-img">
-  </div>
+  </a>
 
-  <div class="tab-card" style="background-color: #fff3e0;">
+  <a href="#" class="tab-card" style="background-color: #fff3e0;" data-aos="fade-left" data-aos-delay="500">
     <div class="tab-text tab-more-icon">
       <img src="https://cdn.unstop.com/assets/icons/menu_2.svg" alt="More">
       More
     </div>
     <img src="{% static 'images/U1.webp' %}" alt="More" class="tab-img">
-  </div>
+  </a>
 </div>
+
+<!-- AOS Init -->
+<script>
+  AOS.init({
+    duration: 900,
+    once: true,
+    easing: 'ease-in-out',
+  });
+</script>

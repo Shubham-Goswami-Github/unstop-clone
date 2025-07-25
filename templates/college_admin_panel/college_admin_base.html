@@ -128,7 +128,6 @@
       margin-left: 0 !important;
     }
 
-    /* Right Sidebar */
     .profile-sidebar {
       width: 300px;
       position: fixed;
@@ -162,10 +161,15 @@
     }
 
     @media (max-width: 768px) {
-      .top-navbar img { display: none; }
-      .sidebar { left: -250px; }
-      .sidebar.active { left: 0; }
-      .content { margin-left: 0 !important; }
+      .sidebar {
+        left: -250px;
+      }
+      .sidebar.active {
+        left: 0;
+      }
+      .content {
+        margin-left: 0 !important;
+      }
     }
   </style>
 </head>
@@ -189,41 +193,53 @@
 </div>
 
 <!-- Left Sidebar -->
-<div class="sidebar" id="sidebar">
+<div class="sidebar{% if request.resolver_match.url_name != 'college_admin_dashboard' %} active{% endif %}" id="sidebar">
   <a href="{% url 'college_admin_dashboard' %}" class="{% if request.resolver_match.url_name == 'college_admin_dashboard' %}active{% endif %}">
     <i class="fas fa-home"></i> Dashboard
   </a>
 
   <div class="section-label">Student Management</div>
-  <div id="students-dropdown">
+  <div id="students-dropdown" class="{% if request.resolver_match.url_name in 'registered_students add_student' %}dropdown-open{% endif %}">
     <a href="javascript:void(0);" onclick="toggleDropdown('students-dropdown')">
       <i class="fas fa-user-graduate"></i> Students
     </a>
     <div class="dropdown-menu-custom">
-      <a href="{% url 'registered_students' %}"><i class="fas fa-users"></i> Registered Students</a>
-      <a href="{% url 'add_student' %}"><i class="fas fa-user-plus"></i> Add Student</a>
+      <a href="{% url 'registered_students' %}" class="{% if request.resolver_match.url_name == 'registered_students' %}active{% endif %}">
+        <i class="fas fa-users"></i> Registered Students
+      </a>
+      <a href="{% url 'add_student' %}" class="{% if request.resolver_match.url_name == 'add_student' %}active{% endif %}">
+        <i class="fas fa-user-plus"></i> Add Student
+      </a>
     </div>
   </div>
 
   <div class="section-label">Competitions</div>
-  <div id="competitions-dropdown">
+  <div id="competitions-dropdown" class="{% if request.resolver_match.url_name in 'competitions_list_college add_competition_college' %}dropdown-open{% endif %}">
     <a href="javascript:void(0);" onclick="toggleDropdown('competitions-dropdown')">
       <i class="fas fa-trophy"></i> Competitions
     </a>
     <div class="dropdown-menu-custom">
-      <a href="{% url 'competitions_list_college' %}"><i class="fas fa-list"></i> Competitions List</a>
-      <a href="{% url 'add_competition_college' %}"><i class="fas fa-plus-circle"></i> Add Competitions</a>
+      <a href="{% url 'competitions_list_college' %}" class="{% if request.resolver_match.url_name == 'competitions_list_college' %}active{% endif %}">
+        <i class="fas fa-list"></i> Competitions List
+      </a>
+      <a href="{% url 'add_competition_college' %}" class="{% if request.resolver_match.url_name == 'add_competition_college' %}active{% endif %}">
+        <i class="fas fa-plus-circle"></i> Add Competitions
+      </a>
     </div>
   </div>
 
   <div class="section-label">Internships</div>
-  <div id="internships-dropdown">
+  <div id="internships-dropdown" class="{% if request.resolver_match.url_name in 'internship_list_college add_internship_college' %}dropdown-open{% endif %}">
     <a href="javascript:void(0);" onclick="toggleDropdown('internships-dropdown')">
       <i class="fas fa-briefcase"></i> Internships
     </a>
     <div class="dropdown-menu-custom">
-      <a href="{% url 'internship_list_college' %}"><i class="fas fa-list"></i> View Internships</a>
-      <a href="{% url 'add_internship_college' %}"><i class="fas fa-plus-circle"></i> Add Internships</a>
+      <a href="{% url 'internship_list_college' %}" class="{% if request.resolver_match.url_name == 'internship_list_college' %}active{% endif %}">
+        <i class="fas fa-list"></i> View Internships
+      </a>
+      <a href="{% url 'add_internship_college' %}" class="{% if request.resolver_match.url_name == 'add_internship_college' %}active{% endif %}">
+        <i class="fas fa-plus-circle"></i> Add Internships
+      </a>
     </div>
   </div>
 </div>
@@ -250,7 +266,7 @@
 <!-- JS -->
 <script>
   function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('hidden');
+    document.getElementById('sidebar').classList.toggle('active');
     document.getElementById('mainContent').classList.toggle('fullwidth');
   }
 

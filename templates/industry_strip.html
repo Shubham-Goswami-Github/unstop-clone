@@ -1,90 +1,104 @@
 {% load static %}
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 
 <style>
   .strip-container {
+    width: 100%;
+    padding: 30px 0; /* Reduced padding */
+    background: linear-gradient(to right, #f0f4f8, #ffffff);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    padding: 30px 40px;
-    background: #f5f5f5;
-    gap: 40px;
-    flex-wrap: nowrap;
     overflow: hidden;
   }
 
   .strip-heading {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: 700;
     color: #111111;
-    margin: 0;
-    white-space: nowrap;
-    line-height: 1.2;
+    margin-bottom: 20px;
+    text-align: center;
   }
 
   .strip-heading span {
-    display: block;
     color: #1a73e8;
-    font-weight: 700;
-    font-size: 1.4rem;
-    margin-top: 6px;
+    display: block;
+    font-size: 1.3rem;
+    margin-top: 4px;
   }
 
   .marquee-wrapper {
-    flex: 1;
+    width: 100%;
     overflow: hidden;
+    position: relative;
   }
 
   .logo-marquee {
     display: flex;
-    gap: 80px;
-    animation: scrollSlow 25s linear infinite;
+    gap: 70px;
+    padding: 10px 0;
+    animation: scrollSlow 40s linear infinite;
+    align-items: center;
   }
 
   .logo-marquee img {
-    height: 110px;
+    height: 100px; /* Increased logo size */
     width: auto;
     object-fit: contain;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s ease;
+    opacity: 1; /* Fully visible */
+    filter: none; /* No grayscale */
   }
 
   .logo-marquee img:hover {
-    transform: scale(1.1);
+    transform: scale(1.1); /* Slight zoom on hover */
   }
 
   @keyframes scrollSlow {
     0% {
-      transform: translateX(0);
+      transform: translateX(0%);
     }
     100% {
       transform: translateX(-50%);
     }
   }
+
+  @media (max-width: 768px) {
+    .strip-heading {
+      font-size: 1.4rem;
+    }
+
+    .strip-heading span {
+      font-size: 1rem;
+    }
+
+    .logo-marquee img {
+      height: 70px;
+    }
+  }
 </style>
 
-<div class="strip-container">
+<div class="strip-container" data-aos="fade-up" data-aos-duration="1200">
   <div class="strip-heading">
     Industry Veterans <span>Trust Us</span>
   </div>
   <div class="marquee-wrapper">
     <div class="logo-marquee">
-      <!-- Logos once -->
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833eea57ee44_flipkart.png" alt="Flipkart">
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833ef03ab58b_loreal.png" alt="Loreal">
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc92ec17499_home_icon_walmart.png" alt="Walmart">
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc8d799faf3_home_icon_asian_paints2.png" alt="Asian Paints">
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc84534cce0_home_icon_aditya_birla_group.png" alt="Aditya Birla">
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/676e48b78b746_hp.png" alt="HP">
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc8e3873ff1_home_icon_wipro2.png" alt="Wipro">
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833ee5e70d03_amazone.png" alt="Amazon">
-
-      <!-- Logos duplicated once more for smooth scroll -->
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833eea57ee44_flipkart.png" alt="Flipkart">
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833ef03ab58b_loreal.png" alt="Loreal">
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc92ec17499_home_icon_walmart.png" alt="Walmart">
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc8d799faf3_home_icon_asian_paints2.png" alt="Asian Paints">
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc84534cce0_home_icon_aditya_birla_group.png" alt="Aditya Birla">
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/676e48b78b746_hp.png" alt="HP">
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc8e3873ff1_home_icon_wipro2.png" alt="Wipro">
-      <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833ee5e70d03_amazone.png" alt="Amazon">
+      {% for i in "12345678"|make_list %}
+        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833eea57ee44_flipkart.png" alt="Flipkart">
+        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833ef03ab58b_loreal.png" alt="Loreal">
+        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc92ec17499_home_icon_walmart.png" alt="Walmart">
+        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc8d799faf3_home_icon_asian_paints2.png" alt="Asian Paints">
+        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc84534cce0_home_icon_aditya_birla_group.png" alt="Aditya Birla">
+        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/676e48b78b746_hp.png" alt="HP">
+        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65cc8e3873ff1_home_icon_wipro2.png" alt="Wipro">
+        <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/6833ee5e70d03_amazone.png" alt="Amazon">
+      {% endfor %}
     </div>
   </div>
 </div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init();
+</script>

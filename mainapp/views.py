@@ -701,7 +701,6 @@ def delete_fresher(request, pk):
 
 
 
-
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
@@ -713,7 +712,6 @@ def login_view(request):
         password = request.POST.get('password')
 
         try:
-            # Try email first, fallback to phone
             candidate = CandidateProfile.objects.get(email=identifier)
         except CandidateProfile.DoesNotExist:
             try:
@@ -728,12 +726,21 @@ def login_view(request):
             request.session['candidate_email'] = candidate.email
             request.session['candidate_phone'] = candidate.phone
 
-            return redirect('home')  # Redirect to home page
+            # ✅ Handle profile photo if it exists
+            if candidate.profile_photo:
+                request.session['candidate_photo'] = candidate.profile_photo.url
+            else:
+                request.session['candidate_photo'] = '/static/images/default-user.png'  # fallback default
+
+            return redirect('home')
         else:
             messages.error(request, "Invalid credentials. Please try again.")
 
     return render(request, "login_form.html")
 
+def logout_view(request):
+    request.session.flush()
+    return redirect('home')
 
 def logout_view(request):
     request.session.flush()
@@ -832,7 +839,7 @@ def delete_internship(request, internship_id):
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Job
 from .forms import JobForm
-@staff_member_required
+
 def job_list(request):
     jobs = Job.objects.all().order_by('-created_at')
     return render(request, 'admin_panel/job_list.html', {'jobs': jobs})
@@ -890,7 +897,7 @@ def view_job(request, job_id):
 from django.shortcuts import render
 from .models import Job
 
-@staff_member_required
+
 def jobs_view(request):
     jobs = Job.objects.all()
     template = get_template('jobs.html')
@@ -2086,3 +2093,57 @@ def edit_candidate_user(request):
         'candidate': candidate,
         'org_type': org_type
     })
+
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from .models import AppliedInternship  # Import your model
+
+def delete_applied_internship(request, pk):
+    if request.method == 'POST':
+        app = get_object_or_404(AppliedInternship, pk=pk)
+        app.delete()
+        messages.success(request, 'Application deleted successfully.')
+    else:
+        messages.error(request, 'Invalid request.')
+    return redirect('applied_internships_list')  # Update this name to your internships list view
+
+
+def delete_applied_job(request, pk):
+    job = get_object_or_404(AppliedForJob, pk=pk)
+    job.delete()
+    return redirect('applied_jobs_list')
+
+
+from .models import CompetitionsApplied
+
+def delete_applied_competition(request, user_id):
+    applied_obj = get_object_or_404(CompetitionsApplied, id=user_id)
+    applied_obj.delete()
+    messages.success(request, "Applied competition deleted successfully.")
+    return redirect('applied_competitions')  # your list view name
+
+from django.shortcuts import render, get_object_or_404
+from .models import CandidateProfile, AppliedForJob
+
+def view_applied_jobs_by_student(request, student_id):
+    student = get_object_or_404(CandidateProfile, id=student_id)
+    applied_jobs = AppliedForJob.objects.filter(candidate=student).order_by('-applied_at')
+
+    return render(request, 'college_admin_panel/view_applied_jobs_by_student.html', {
+        'student': student,
+        'applied_jobs': applied_jobs,
+    })
+# views.py
+from django.shortcuts import render
+from .models import CandidateProfile, Competition, Job, College, Company
+
+def our_numbers_view(request):
+    context = {
+        'user_count': CandidateProfile.objects.count(),
+        'competition_count': Competition.objects.count(),
+        'job_count': Job.objects.count(),
+        'college_count': College.objects.count(),
+        'company_count': Company.objects.count(),
+    }
+    return render(request, 'our_numbers.html', context)

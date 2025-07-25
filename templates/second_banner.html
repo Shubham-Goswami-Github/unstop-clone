@@ -1,33 +1,24 @@
 {% load static %}
 
-<!-- COURSE BANNER SECTION -->
-<div class="container py-4">
-  <a href="/courses" class="d-flex flex-wrap align-items-center justify-content-between bg-white shadow-sm rounded-4 text-decoration-none overflow-hidden banner-section" style="min-height: 240px; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+<!-- BANNER SECTION -->
+<div class="container py-4 animate-on-scroll">
+  <a href="/courses" class="d-flex flex-wrap align-items-center justify-content-between bg-white shadow-sm rounded-4 text-decoration-none overflow-hidden banner-section">
     
     <div class="left-section" style="flex: 1 1 45%;">
-      <img src="{% static 'images/BN8.webp' %}" alt="Skills Image" class="img-fluid rounded-start" style="width: 100%; height: 100%; object-fit: cover;">
+      <img src="{% static 'images/BN8.webp' %}" alt="Skills Image" class="img-fluid rounded-start w-100 h-100" style="object-fit: cover;">
     </div>
 
-    <div class="right-section p-4" style="flex: 1 1 50%;">
+    <div class="right-section p-4 animate-banner-text" style="flex: 1 1 50%;">
       <div class="mb-3">
-        <h2 style="font-weight: bold; color: #051d3a;">Learn &amp; <span style="color: #007BFF;">Level Up Your Skills</span></h2>
-        <p class="text-muted mb-0">Select from a wide range of courses to upskill and advance your career!</p>
+        <h2 class="fw-bold banner-heading" style="color: #051d3a;">Learn &amp; <span style="color: #007BFF;">Level Up Your Skills</span></h2>
+        <p class="text-muted banner-para">Select from a wide range of courses to upskill and advance your career!</p>
       </div>
-      <ul class="list-unstyled mb-3">
-        <li class="mb-2">
-          <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65672c6dc634f_subway_tick.svg" width="14" height="14" class="me-2">
-          50+ Courses
-        </li>
-        <li class="mb-2">
-          <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65672c6dc634f_subway_tick.svg" width="14" height="14" class="me-2">
-          Certificate
-        </li>
-        <li>
-          <img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65672c6dc634f_subway_tick.svg" width="14" height="14" class="me-2">
-          Projects &amp; Assignments
-        </li>
+      <ul class="list-unstyled mb-3 banner-list">
+        <li class="mb-2"><img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65672c6dc634f_subway_tick.svg" width="14" class="me-2">50+ Courses</li>
+        <li class="mb-2"><img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65672c6dc634f_subway_tick.svg" width="14" class="me-2">Certificate</li>
+        <li><img src="https://d8it4huxumps7.cloudfront.net/uploads/images/65672c6dc634f_subway_tick.svg" width="14" class="me-2">Projects & Assignments</li>
       </ul>
-      <button class="btn btn-dark px-4 py-2" style="border-radius: 6px; font-weight: 600;">Explore Courses</button>
+      <button class="btn btn-dark px-4 py-2 banner-btn">Explore Courses</button>
     </div>
 
   </a>
@@ -35,75 +26,132 @@
 
 <!-- OPPORTUNITY SECTION -->
 <div class="container py-5">
-  <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
-    <h2 class="fw-bold mb-2 mb-md-0" style="font-size: 2.2rem;">
-      <span style="color: black;">Pick</span> <span style="color: #051d3a;">The Right Opportunity!</span>
+  <div class="d-flex justify-content-between align-items-center flex-wrap mb-4" data-aos="fade-up" data-aos-delay="100">
+    <h2 class="fw-bold mb-2 mb-md-0 fs-2">
+      <span style="color: black;">Pick</span>
+      <span style="color: #051d3a;">The Right Opportunity!</span>
     </h2>
-    <a href="#" class="btn text-primary fw-semibold px-3" style="border: none; font-size: 1rem;">
+    <a href="#" class="btn text-primary fw-semibold">
       Explore All <i class="fas fa-arrow-up-right-from-square ms-1"></i>
     </a>
   </div>
 
-  <p class="text-secondary fst-italic mb-4" style="font-size: 1.05rem;">
+  <p class="text-secondary fst-italic mb-4 fs-5" data-aos="fade-up" data-aos-delay="200">
     Explore opportunities that best suits your skills and interests!
   </p>
 
   <div class="d-flex justify-content-center flex-wrap gap-3">
-    <div class="opportunity-card">
+    <div class="opportunity-card" data-aos="fade-up" data-aos-delay="300">
       <img src="{% static 'images/BN7.webp' %}" alt="Quizzes">
       <div class="card-title">Quizzes</div>
     </div>
-    <div class="opportunity-card">
+    <div class="opportunity-card" data-aos="fade-up" data-aos-delay="400">
       <img src="{% static 'images/BN4.webp' %}" alt="Hackathons">
       <div class="card-title">Hackathons</div>
     </div>
-    <div class="opportunity-card">
+    <div class="opportunity-card" data-aos="fade-up" data-aos-delay="500">
       <img src="{% static 'images/BN5.webp' %}" alt="Scholarships">
       <div class="card-title">Scholarships</div>
     </div>
-    <div class="opportunity-card">
+    <div class="opportunity-card" data-aos="fade-up" data-aos-delay="600">
       <img src="{% static 'images/BN6.webp' %}" alt="Conferences">
       <div class="card-title">Conferences</div>
     </div>
-    <div class="opportunity-card">
-      <img src="{% static 'images/BN3.webp' %}" alt="College Festivals">
-      <div class="card-title">College Festivals</div>
-    </div>
   </div>
 </div>
 
-<!-- DOWNLOAD & REFER SECTION -->
-<div class="container py-5">
-  <div class="row justify-content-center g-4">
-
-    <!-- Download App Card -->
-    <div class="col-md-6 col-lg-5">
-      <a href="https://play.google.com/store/apps/details?id=com.dare2compete.app" target="_blank" class="text-decoration-none">
-        <div class="p-4 bg-white rounded-4 shadow-sm h-100 d-flex flex-column align-items-start download-card">
-          <img src="{% static 'images/BN1.png' %}" alt="Download App" class="img-fluid rounded mb-3" style="width: 100%; object-fit: cover;">
-          <h4 class="fw-bold mb-2" style="color: #051d3a;">Download <span style="color: #0d6efd;">Unstop App</span></h4>
-          <p class="text-dark mb-0">Experience the platform on the go with our mobile app.</p>
-        </div>
-      </a>
-    </div>
-
-    <!-- Refer & Win Card -->
-    <div class="col-md-6 col-lg-5">
-      <a href="/refer-and-earn" class="text-decoration-none">
-        <div class="p-4 rounded-4 shadow-sm h-100 d-flex flex-column align-items-start download-card" style="background: linear-gradient(135deg, #eef4ff, #e0ebff);">
-          <img src="{% static 'images/BN2.webp' %}" alt="Refer & Win" class="img-fluid rounded mb-3" style="width: 100%; object-fit: cover;">
-          <h4 class="fw-bold mb-2" style="color: #051d3a;">Refer &amp; Win</h4>
-          <p class="text-dark">MacBook, iPhone, Apple Watch, AirPods, Cash Rewards & more!</p>
-          <button class="btn btn-outline-primary fw-semibold px-4 py-2 mt-auto" style="border-radius: 6px;">Get Started</button>
-        </div>
-      </a>
-    </div>
-
-  </div>
-</div>
-
-<!-- STYLES -->
 <style>
+  .opportunity-card {
+  width: 180px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+.opportunity-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+.opportunity-card .card-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #051d3a;
+  padding: 12px 0;
+}
+.opportunity-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+  .banner-section {
+    min-height: 240px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .banner-section:hover {
+    transform: scale(1.01);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .animate-banner-text {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .animate-banner-text.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .banner-heading, .banner-para, .banner-list li, .banner-btn {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.6s ease;
+  }
+
+  .animate-banner-text.visible .banner-heading {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.1s;
+  }
+
+  .animate-banner-text.visible .banner-para {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.2s;
+  }
+
+  .animate-banner-text.visible .banner-list li:nth-child(1) {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.3s;
+  }
+
+  .animate-banner-text.visible .banner-list li:nth-child(2) {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.4s;
+  }
+
+  .animate-banner-text.visible .banner-list li:nth-child(3) {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.5s;
+  }
+
+  .animate-banner-text.visible .banner-btn {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.6s;
+  }
+
   .opportunity-card {
     width: 210px;
     background: #fff;
@@ -113,10 +161,17 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     text-align: center;
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  .opportunity-card.visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .opportunity-card:hover {
-    transform: translateY(-6px);
+    transform: translateY(-6px) scale(1.02);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
   }
 
@@ -138,28 +193,13 @@
     color: #051d3a;
   }
 
-  .banner-section:hover {
-    transform: scale(1.01);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  }
-
-  .download-card {
-    transition: all 0.3s ease;
-    min-height: 380px;
-  }
-
-  .download-card:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
-  }
-
   @media (max-width: 768px) {
     .opportunity-card {
-      width: 46%;
+      width: 48%;
     }
 
-    .download-card {
-      min-height: auto;
+    .banner-section {
+      flex-direction: column;
     }
   }
 
@@ -167,14 +207,35 @@
     .opportunity-card {
       width: 100%;
     }
-
-    .banner-section {
-      flex-direction: column;
-      min-height: auto !important;
-    }
-
-    .download-card {
-      padding: 1.5rem;
-    }
   }
 </style>
+
+<!-- SCRIPT -->
+<script>
+  function animateOnScroll() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.animate-on-scroll, .animate-banner-text').forEach(el => {
+      observer.observe(el);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', animateOnScroll);
+  
+</script>
+<!-- AOS Animate On Scroll Library -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 1000,
+    once: true,
+  });
+</script>

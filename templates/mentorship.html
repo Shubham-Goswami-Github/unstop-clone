@@ -1,154 +1,215 @@
 {% extends "navbar.html" %}
 {% load static %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-<!-- Font Awesome CDN -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 {% block content %}
 <style>
   .hero-section {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 50px 60px;
-    background-color: #f8f9fa;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, #eaf3fb, #f0f7ff);
     gap: 40px;
     flex-wrap: wrap;
+    animation: fadeInUp 0.8s ease;
   }
-  .hero-text { flex: 1; max-width: 500px; text-align: left; }
-  .hero-text h1 { font-size: 3.5rem; font-weight: bold; line-height: 1.2; }
-  .hero-text .unlock { color: white; background: #003366; padding: 5px 15px; border-radius: 5px; }
-  .hero-text .guidance { color: #003366; margin-left: 10px; }
-  .hero-image { flex: 1; display: flex; justify-content: flex-end; }
-  .hero-image img { width: 100%; max-width: 400px; border-radius: 10px; }
+
+  .hero-text {
+    flex: 1;
+    max-width: 550px;
+    text-align: left;
+    animation: slideInLeft 1s ease-in-out;
+  }
+
+  .hero-text h1 {
+    font-size: 3.2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  .hero-text .unlock {
+    background: linear-gradient(to right, #003366, #0056b3);
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+
+  .hero-text .guidance {
+    color: #003366;
+    margin-left: 12px;
+  }
+
+  .hero-text p.subtext {
+    font-style: italic;
+    font-size: 1rem;
+    color: #444;
+    margin-top: 10px;
+    animation: blinkText 1.8s infinite;
+  }
+
+  .hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 30px;
+    animation: slideInRight 1s ease-in-out;
+  }
+
+  .hero-image img {
+    max-width: 420px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
 
   .domain-section {
-    padding: 40px 80px;
-    background: #fff;
+    padding: 50px 20px;
+    background: #ffffff;
   }
+
   .domain-section h2 {
     color: #003366;
     font-weight: bold;
     margin-bottom: 30px;
-  }
-  .domain-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-  }
-  .domain-card {
-    background: white;
-    border: 1px solid black;
-    padding: 15px 20px;
-    border-radius: 8px;
-    width: 220px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    transition: transform 0.2s;
   }
+
+  .domain-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    justify-items: center;
+  }
+
+  .domain-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid #e3e3e3;
+  }
+
   .domain-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
   }
+
   .domain-card i {
-    font-size: 24px;
-    margin-bottom: 10px;
+    font-size: 28px;
+    margin-bottom: 12px;
     color: #003366;
   }
+
   .domain-card span {
     font-weight: 600;
     font-size: 1rem;
+    display: block;
   }
 
   .mentors-section {
-    padding: 40px 80px;
-    background: #f9f9f9;
+    padding: 50px 20px;
+    background: #f7f9fc;
     text-align: center;
   }
+
   .mentors-section h2 {
     color: #003366;
     font-weight: bold;
     margin-bottom: 30px;
   }
+
   .company-logos {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 30px;
   }
+
   .company-logos img {
-    height: 40px;
+    height: 45px;
     object-fit: contain;
     filter: grayscale(100%);
-    transition: filter 0.3s;
+    transition: filter 0.3s, transform 0.3s;
+    background: white;
+    padding: 6px 12px;
+    border-radius: 8px;
   }
+
   .company-logos img:hover {
     filter: none;
+    transform: scale(1.05);
   }
 
-  @media(max-width:768px){
-    .hero-section { flex-direction: column; text-align: center; padding: 30px 20px; }
-    .hero-image { justify-content: center; }
-    .domain-section, .mentors-section { padding: 20px; }
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  .company-logos img {
-  height: 40px;
-  object-fit: contain;
-  filter: grayscale(100%);
-  transition: filter 0.3s;
-  background: white;
-  padding: 5px;
-  border-radius: 6px;
-}
 
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes blinkText {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  @media(max-width: 576px){
+    .hero-text h1 { font-size: 2.2rem; }
+    .hero-text, .hero-image { text-align: center; justify-content: center; padding: 0; }
+  }
 </style>
 
-<!-- HERO -->
+<!-- ========== HERO SECTION ========== -->
 <div class="hero-section">
   <div class="hero-text">
-    <h1>
-      <span class="unlock">UNLOCK</span><span class="guidance">GUIDANCE</span>
-    </h1>
+    <h1><span class="unlock">UNLOCK</span><span class="guidance">GUIDANCE</span></h1>
+    <p class="subtext">Get personalized help from experts & crack your dream role!</p>
   </div>
   <div class="hero-image">
-    <img src="{% static 'images/M1.webp' %}" alt="Mentorship Hero">
+    <img src="{% static 'images/M1.webp' %}" alt="Mentorship Banner">
   </div>
 </div>
 
-<!-- TRENDING DOMAINS -->
+<!-- ========== TRENDING DOMAINS ========== -->
 <section class="domain-section">
   <h2>Trending Domains</h2>
   <div class="domain-cards">
-    <div class="domain-card"><i class="fas fa-file-alt"></i><span> CV Review</span></div>
-    <div class="domain-card"><i class="fas fa-university"></i><span> MBA Preparations</span></div>
-    <div class="domain-card"><i class="fas fa-chart-line"></i><span> Case Competitions</span></div>
-    <div class="domain-card"><i class="fas fa-briefcase"></i><span> Placement Support</span></div>
-    <div class="domain-card"><i class="fas fa-comments"></i><span> Interview Preparations</span></div>
-    <div class="domain-card"><i class="fas fa-user-graduate"></i><span> Career Guidance</span></div>
-    <div class="domain-card"><i class="fas fa-star"></i><span> Personal Branding</span></div>
-    <div class="domain-card"><i class="fas fa-globe"></i><span> Study Abroad</span></div>
-    <div class="domain-card"><i class="fas fa-code"></i><span> Coding & Software</span></div>
+    <div class="domain-card"><i class="fas fa-file-alt"></i><span>CV Review</span></div>
+    <div class="domain-card"><i class="fas fa-university"></i><span>MBA Preparations</span></div>
+    <div class="domain-card"><i class="fas fa-chart-line"></i><span>Case Competitions</span></div>
+    <div class="domain-card"><i class="fas fa-briefcase"></i><span>Placement Support</span></div>
+    <div class="domain-card"><i class="fas fa-comments"></i><span>Interview Prep</span></div>
+    <div class="domain-card"><i class="fas fa-user-graduate"></i><span>Career Guidance</span></div>
+    <div class="domain-card"><i class="fas fa-star"></i><span>Personal Branding</span></div>
+    <div class="domain-card"><i class="fas fa-globe"></i><span>Study Abroad</span></div>
+    <div class="domain-card"><i class="fas fa-code"></i><span>Coding & Software</span></div>
   </div>
 </section>
 
-<!-- MENTORS BY TOP COMPANIES -->
+<!-- ========== COMPANY MENTORS ========== -->
 <section class="mentors-section">
-  <h2>Mentors by Top Companies</h2>
+  <h2>Mentors from Top Companies</h2>
   <div class="company-logos">
-    
-  <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Meta_Platforms_Inc._logo.svg" alt="Meta">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/f/f5/Flipkart_logo.png" alt="Flipkart">
-</div>
-
-
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Meta_Platforms_Inc._logo.svg" alt="Meta">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/f/f5/Flipkart_logo.png" alt="Flipkart">
+  </div>
 </section>
 
 {% endblock %}

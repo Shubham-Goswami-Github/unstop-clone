@@ -1,47 +1,121 @@
 {% load static %}
+
+<!-- AOS CDN (already included, but keep this at top if not already) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
 <style>
-  .career-banner {
-    color: white;
-    padding: 40px 20px;
-    text-align: center;
-    max-width: 900px;
-    margin: 30px auto;
+  .career-hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, #eaf3fb, #f0f7ff);
+    gap: 40px;
+    flex-wrap: wrap;
   }
 
-  .career-banner h1 {
-    font-size: 3rem;
+  .career-text {
+    flex: 1;
+    max-width: 550px;
+    text-align: left;
+  }
+
+  .career-text h1 {
+    font-size: 3.2rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .career-text .unlock {
+    background: linear-gradient(to right, #003366, #0056b3);
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 5px;
     font-weight: bold;
-    margin-bottom: 10px;
-    color: rgb(28, 26, 26);
   }
 
-  .career-banner .unlock {
-    color: #0d47a1;
-    font-weight: bold;
+  .career-text .career {
+    color: #003366;
+    margin-left: 12px;
   }
 
-  .career-banner .subtext {
+  .career-subtext {
+    font-style: italic;
     font-size: 1rem;
-    font-weight: 400;
-    color: #999999;
-    max-width: 700px;
-    margin: 0 auto;
+    color: #444;
+    margin-top: 12px;
   }
 
-  @media (max-width: 768px) {
-    .career-banner h1 {
-      font-size: 2rem;
-    }
+  .career-points {
+    margin-top: 20px;
+    padding-left: 0;
+    list-style: none;
+  }
 
-    .career-banner .subtext {
-      font-size: 0.9rem;
+  .career-points li {
+    font-style: italic;
+    color: #333;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 1s forwards;
+  }
+
+  .career-points li:nth-child(1) { animation-delay: 0.3s; }
+  .career-points li:nth-child(2) { animation-delay: 0.6s; }
+  .career-points li:nth-child(3) { animation-delay: 0.9s; }
+
+  .career-image {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 30px;
+  }
+
+  .career-image img {
+    max-width: 420px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  @keyframes fadeUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
+  }
+
+  @media(max-width: 576px){
+    .career-text h1 { font-size: 2.2rem; text-align: center; }
+    .career-text, .career-image { text-align: center; justify-content: center; padding: 0; }
+    .career-image { padding-top: 20px; }
   }
 </style>
 
-<div class="career-banner">
-  <h1><span class="unlock">Unlock</span> Your Career</h1>
-  <p class="subtext">
-    Explore opportunities from across the globe to grow, showcase skills, gain CV points & get hired by your dream company.
-  </p>
+<!-- ========== CAREER HERO SECTION ========== -->
+<div class="career-hero" data-aos="fade-up">
+  <div class="career-text" data-aos="fade-right">
+    <h1><span class="unlock">Unlock</span><span class="career">Your Career</span></h1>
+    <p class="career-subtext">
+      Explore opportunities from across the globe to grow, showcase skills, gain CV points & get hired by your dream company.
+    </p>
+    <ul class="career-points">
+      <li>✦ Internships tailored for students and freshers in every domain.</li>
+      <li>✦ Hands-on projects that boost your portfolio and confidence.</li>
+      <li>✦ Network with industry experts and like-minded peers.</li>
+    </ul>
+  </div>
+  <div class="career-image" data-aos="fade-left">
+    <img src="{% static 'images/M1.webp' %}" alt="Career Banner">
+  </div>
 </div>
+
+<script>
+  AOS.init({
+    duration: 1000,
+    once: true
+  });
+</script>

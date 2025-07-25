@@ -1,120 +1,183 @@
 {% load static %}
-<div class="container py-4 px-3 position-relative">
-  <!-- Heading -->
-  <div class="mb-4 text-start">
+
+<!-- AOS CSS (already included globally if above exists) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+<!-- JOB STRIP CONTAINER -->
+<div class="job-strip-wrapper">
+   <div class="mb-4 text-start">
     <h2 class="fw-bold mb-1">
       <span style="color: black;">Top</span>
       <span style="color: #0c1e3a;">Jobs</span>
     </h2>
     <p class="text-muted fs-5">Find jobs that fit your career aspirations.</p>
   </div>
+  <button class="job-scroll-btn left" onclick="scrollJobStrip('left')"><i class="fas fa-chevron-left"></i></button>
 
-  <!-- Scroll Buttons -->
-  <button class="scroll-btn left-btn btn btn-light shadow-sm position-absolute top-50 translate-middle-y start-0 ms-2 d-none d-md-block" onclick="scrollJobs(-1)">
-    <i class="fas fa-chevron-left"></i>
-  </button>
-  <button class="scroll-btn right-btn btn btn-light shadow-sm position-absolute top-50 translate-middle-y end-0 me-2 d-none d-md-block" onclick="scrollJobs(1)">
-    <i class="fas fa-chevron-right"></i>
-  </button>
-
-  <!-- Job Cards -->
-  <div id="job-carousel" class="scrolling-wrapper d-flex gap-3 px-2">
-    {% for job in items %}
-    <div class="opportunity-card glass-card d-flex flex-column justify-content-between p-3 rounded-4">
-      <div>
-        <div class="mb-2 d-flex justify-content-between flex-wrap gap-1">
-          <span class="badge bg-dark-blue text-white text-capitalize">{{ job.category }}</span>
-          <span class="badge bg-dark-blue text-white text-capitalize">{{ job.employment_type }}</span>
+  <div class="job-tab-strip" id="jobOpportunityStrip">
+    {% for job in jobs %}
+      <a href="{% url 'user_job_detail' job.id %}" class="job-tab-card" style="background-color: #fff9f0;" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:"1" }}00">
+        <div class="job-tab-text">
+          <div class="job-tab-title">{{ job.title }}</div>
+          <p class="job-tab-desc">
+            <strong>Company:</strong> <span>{{ job.company_name }}</span><br>
+            <strong>Domain:</strong> <span>{{ job.domain }}</span><br>
+            <strong>Type:</strong> <span>{{ job.employment_type }}</span><br>
+            <strong>Category:</strong> <span>{{ job.category }}</span><br>
+            {% if job.salary_min_lpa %}
+              <strong>Salary:</strong> ₹<span>{{ job.salary_min_lpa }} - {{ job.salary_max_lpa }} LPA</span>
+            {% endif %}
+          </p>
         </div>
-
-        <h5 class="fw-bold mb-1">{{ job.title }}</h5>
-        <p class="text-muted mb-1"><i class="fas fa-building me-1 text-dark"></i> {{ job.company_name }}</p>
-        <p class="mb-1"><strong>Domain:</strong> {{ job.domain }}</p>
-        <p class="mb-1"><strong>Location:</strong> {{ job.location }}</p>
-        <p class="mb-3"><strong>Salary:</strong> ₹{{ job.salary_min_lpa }} - ₹{{ job.salary_max_lpa }} LPA</p>
-      </div>
-
-      <!-- Always Show Apply Button (fallback # if link missing) -->
-     <a href="{% url 'user_job_detail' job.id %}" class="btn btn-dark-blue w-100 mt-2 apply-btn">
-  <i class="fas fa-paper-plane me-1"></i> Apply
-</a>
-
-    </div>
+        <img src="{% static 'images/J1.webp' %}" alt="Job" class="job-tab-img">
+      </a>
     {% endfor %}
   </div>
+
+  <button class="job-scroll-btn right" onclick="scrollJobStrip('right')"><i class="fas fa-chevron-right"></i></button>
 </div>
 
+<!-- JOB STRIP CSS -->
 <style>
-/* Scroll Wrapper */
-.scrolling-wrapper {
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  margin-inline: 10px;
-}
-
-/* Card */
-.opportunity-card {
-  flex: 0 0 20%;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-@media (max-width: 992px) {
-  .opportunity-card {
-    flex: 0 0 30%;
+  .job-strip-wrapper {
+    position: relative;
+    width: 100%;
+    padding: 40px 20px;
+    overflow: hidden;
   }
-}
-@media (max-width: 768px) {
-  .opportunity-card {
-    flex: 0 0 90%;
+
+  .job-tab-strip {
+    display: flex;
+    overflow-x: auto;
+      overflow-y: hidden; /* prevent vertical scroll */
+    scroll-behavior: smooth;
+    gap: 30px;
+    padding: 0 15px;
+      overscroll-behavior-x: contain; /* prevent vertical drag from affecting horizontal */
   }
-}
 
-/* Hover Effect */
-.opportunity-card:hover {
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-}
+  .job-tab-strip::-webkit-scrollbar {
+    display: none;
+  }
 
-/* Glassmorphism */
-.glass-card {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #000;
-  min-height: 320px;
-}
+  .job-scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    color: #d35400;
+    font-size: 26px;
+    padding: 10px 12px;
+    border-radius: 50%;
+    z-index: 10;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
 
-/* Scroll Arrows */
-.scroll-btn {
-  z-index: 2;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-}
+  .job-scroll-btn:hover {
+    color: #a04000;
+    transform: translateY(-50%) scale(1.2);
+  }
 
-/* Button Styles */
-.bg-dark-blue {
-  background-color: #0c1e3a !important;
-}
-.btn-dark-blue {
-  background-color: #0c1e3a;
-  color: #fff;
-  border: none;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-.btn-dark-blue:hover {
-  background-color: #0a1730;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(12, 30, 58, 0.3);
-}
+  .job-scroll-btn.left {
+    left: 10px;
+  }
+
+  .job-scroll-btn.right {
+    right: 10px;
+  }
+
+  .job-tab-card {
+    flex: 0 0 auto;
+    min-width: 350px;
+    max-width: 380px;
+    padding: 20px 25px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    border: 2px solid transparent;
+  }
+
+  .job-tab-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: #e67e22;
+  }
+
+  .job-tab-text {
+    text-align: left;
+  }
+
+  .job-tab-title {
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: #e67e22;
+    margin-bottom: 8px;
+  }
+
+  .job-tab-desc {
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.4;
+  }
+
+  .job-tab-desc span {
+    font-weight: 500;
+    color: #555;
+  }
+
+  .job-tab-img {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    margin-left: 15px;
+    transition: transform 0.3s ease;
+  }
+
+  .job-tab-card:hover .job-tab-img {
+    transform: scale(1.08);
+  }
+
+  @media (max-width: 768px) {
+    .job-tab-card {
+      flex-direction: row;
+      min-width: 90%;
+      max-width: 90%;
+    }
+
+    .job-tab-img {
+      width: 90px;
+      height: 90px;
+    }
+
+    .job-scroll-btn {
+      display: none;
+    }
+
+    .job-tab-strip {
+      padding: 0 10px;
+    }
+  }
 </style>
 
+<!-- JOB STRIP JS -->
 <script>
-function scrollJobs(direction) {
-  const container = document.getElementById('job-carousel');
-  const scrollAmount = 300;
-  container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-}
+  AOS.init({
+    duration: 900,
+    once: true,
+    easing: 'ease-in-out',
+  });
+
+  function scrollJobStrip(direction) {
+    const container = document.getElementById('jobOpportunityStrip');
+    const scrollAmount = container.offsetWidth * 0.7;
+    container.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+  }
 </script>

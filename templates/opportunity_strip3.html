@@ -1,8 +1,12 @@
 {% load static %}
 
-<div class="container py-4 px-3 position-relative">
-  <!-- Heading -->
-  <div class="mb-4 text-start">
+<!-- AOS CSS (already included globally if above exists) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+<!-- COMPETITION STRIP CONTAINER -->
+<div class="competition-strip-wrapper">
+    <div class="mb-4 text-start">
     <h2 class="fw-bold mb-1">
       <span style="color: black;">Top</span>
       <span style="color: #0c1e3a;">Competitions</span>
@@ -10,105 +14,175 @@
     <p class="text-muted fs-5">Explore challenges, hackathons, quizzes, and more!</p>
   </div>
 
-  <!-- Scroll Buttons -->
-  <button class="scroll-btn left-btn btn btn-light shadow-sm position-absolute top-50 translate-middle-y start-0 ms-2 d-none d-md-block" onclick="scrollCompetitions(-1)">
-    <i class="fas fa-chevron-left"></i>
-  </button>
-  <button class="scroll-btn right-btn btn btn-light shadow-sm position-absolute top-50 translate-middle-y end-0 me-2 d-none d-md-block" onclick="scrollCompetitions(1)">
-    <i class="fas fa-chevron-right"></i>
-  </button>
+  <button class="competition-scroll-btn left" onclick="scrollCompetitionStrip('left')"><i class="fas fa-chevron-left"></i></button>
 
-  <!-- Competition Cards -->
-  <div id="competition-carousel" class="scrolling-wrapper d-flex gap-3 px-2">
+  <div class="competition-tab-strip" id="competitionOpportunityStrip">
     {% for item in competitions %}
-    <div class="opportunity-card glass-card d-flex flex-column justify-content-between p-3 rounded-4">
-      <div>
-        <div class="mb-2 d-flex justify-content-between flex-wrap gap-1">
-          <span class="badge bg-dark-blue text-white text-capitalize">{{ item.competition_type }}</span>
-          <span class="badge bg-dark-blue text-white text-capitalize">{{ item.mode }}</span>
+      <a href="{% url 'competition_detail_user' item.pk %}" class="competition-tab-card" style="background-color: #f5faff;" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:"1" }}00">
+        <div class="competition-tab-text">
+          <div class="competition-tab-title">{{ item.title|truncatechars:40 }}</div>
+          <p class="competition-tab-desc">
+            <strong>Host:</strong> <span>{{ item.host_org }}</span><br>
+            <strong>Type:</strong> <span>{{ item.competition_type }}</span><br>
+            <strong>Mode:</strong> <span>{{ item.mode }}</span><br>
+            <strong>Category:</strong> <span>{{ item.category }}</span><br>
+            {% if item.fee_amount %}
+              <strong>Fee:</strong> ₹<span>{{ item.fee_amount }}</span><br>
+            {% endif %}
+            {% if item.prize_pool %}
+              <strong>Prize:</strong> <span>{{ item.prize_pool }}</span><br>
+            {% endif %}
+            <small class="text-muted">Deadline: {{ item.registration_deadline }}</small>
+          </p>
         </div>
-        <h5 class="fw-bold mb-1">{{ item.title|truncatechars:40 }}</h5>
-        <p class="text-muted mb-1"><i class="fas fa-building me-1 text-dark"></i> {{ item.host_org }}</p>
-        <p class="mb-1"><strong>Category:</strong> {{ item.category }}</p>
-        {% if item.fee_amount %}
-        <p class="mb-1"><strong>Fee:</strong> ₹{{ item.fee_amount }}</p>
-        {% endif %}
-        {% if item.prize_pool %}
-        <p class="mb-1"><strong>Prize:</strong> {{ item.prize_pool }}</p>
-        {% endif %}
-        <p class="mb-2 text-muted"><small>Deadline: {{ item.registration_deadline }}</small></p>
-      </div>
-       <!-- ✅ NEW -->
-<a href="{% url 'competition_detail_user' item.pk %}" class="btn btn-dark-blue w-100 mt-2 apply-btn">
-  <i class="fas fa-paper-plane me-1"></i> Participate
-</a>
-    </div>
+        <img src="{% static 'images/C1.webp' %}" alt="Competition" class="competition-tab-img">
+      </a>
     {% endfor %}
   </div>
+
+  <button class="competition-scroll-btn right" onclick="scrollCompetitionStrip('right')"><i class="fas fa-chevron-right"></i></button>
 </div>
 
+<!-- COMPETITION STRIP CSS -->
 <style>
-.scrolling-wrapper {
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-  margin-inline: 10px;
-}
-
-.opportunity-card {
-  flex: 0 0 20%;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-@media (max-width: 992px) {
-  .opportunity-card {
-    flex: 0 0 30%;
+  .competition-strip-wrapper {
+    position: relative;
+    width: 100%;
+    padding: 40px 20px;
+    overflow: hidden;
   }
-}
-@media (max-width: 768px) {
-  .opportunity-card {
-    flex: 0 0 90%;
+
+  .competition-tab-strip {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    overflow-y: hidden; /* prevent vertical scroll */
+    gap: 30px;
+    padding: 0 15px;
+      overscroll-behavior-x: contain; /* prevent vertical drag from affecting horizontal */
   }
-}
 
-.opportunity-card:hover {
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-}
+  .competition-tab-strip::-webkit-scrollbar {
+    display: none;
+  }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #000;
-  min-height: 320px;
-}
+  .competition-scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    color: #0c1e3a;
+    font-size: 26px;
+    padding: 10px 12px;
+    border-radius: 50%;
+    z-index: 10;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
 
-.scroll-btn {
-  z-index: 2;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-}
+  .competition-scroll-btn:hover {
+    color: #061224;
+    transform: translateY(-50%) scale(1.2);
+  }
 
-.bg-dark-blue {
-  background-color: #0c1e3a !important;
-}
-.btn-dark-blue {
-  background-color: #0c1e3a;
-  color: #fff;
-  border: none;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-.btn-dark-blue:hover {
-  background-color: #0a1730;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(12, 30, 58, 0.3);
-}
+  .competition-scroll-btn.left {
+    left: 10px;
+  }
+
+  .competition-scroll-btn.right {
+    right: 10px;
+  }
+
+  .competition-tab-card {
+    flex: 0 0 auto;
+    min-width: 350px;
+    max-width: 380px;
+    padding: 20px 25px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    background-color: #6be485;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    border: 2px solid transparent;
+  }
+
+  .competition-tab-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: #0c1e3a;
+  }
+
+  .competition-tab-text {
+    text-align: left;
+  }
+
+  .competition-tab-title {
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: #0c1e3a;
+    margin-bottom: 8px;
+  }
+
+  .competition-tab-desc {
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.4;
+  }
+
+  .competition-tab-desc span {
+    font-weight: 500;
+    color: #555;
+  }
+
+  .competition-tab-img {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    margin-left: 15px;
+    transition: transform 0.3s ease;
+  }
+
+  .competition-tab-card:hover .competition-tab-img {
+    transform: scale(1.08);
+  }
+
+  @media (max-width: 768px) {
+    .competition-tab-card {
+      flex-direction: row;
+      min-width: 90%;
+      max-width: 90%;
+    }
+
+    .competition-tab-img {
+      width: 90px;
+      height: 90px;
+    }
+
+    .competition-scroll-btn {
+      display: none;
+    }
+
+    .competition-tab-strip {
+      padding: 0 10px;
+    }
+  }
 </style>
 
+<!-- COMPETITION STRIP JS -->
 <script>
-function scrollCompetitions(direction) {
-  const container = document.getElementById('competition-carousel');
-  const scrollAmount = 300;
-  container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-}
+  AOS.init({
+    duration: 900,
+    once: true,
+    easing: 'ease-in-out',
+  });
+
+  function scrollCompetitionStrip(direction) {
+    const container = document.getElementById('competitionOpportunityStrip');
+    const scrollAmount = container.offsetWidth * 0.7;
+    container.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+  }
 </script>

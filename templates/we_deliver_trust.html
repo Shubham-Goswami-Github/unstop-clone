@@ -1,0 +1,121 @@
+{% load static %}
+<!-- AOS + Typed.js -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+
+<style>
+  .trust-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 40px;
+    width: 100%;
+    background: linear-gradient(135deg, #eaf3fb, #f0f7ff);
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .trust-text {
+    flex: 1;
+    max-width: 550px;
+    text-align: left;
+  }
+
+  .trust-text h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .trust-subtext {
+    font-style: italic;
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 16px;
+  }
+
+  .typed-trust {
+    font-size: 1.1rem;
+    line-height: 1.8rem;
+    color: #333;
+    font-style: italic;
+    white-space: pre-line;
+    min-height: 160px;
+    padding-right: 15px;
+  }
+
+  .trust-image {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 30px;
+  }
+
+  .trust-image img {
+    max-width: 420px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  @media(max-width: 768px){
+    .trust-text h2 {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .trust-text, .trust-image {
+      justify-content: center;
+      text-align: center;
+      padding: 0;
+    }
+
+    .typed-trust {
+      font-size: 1rem;
+      padding: 0;
+    }
+
+    .trust-image {
+      padding-top: 20px;
+    }
+  }
+</style>
+
+<!-- ========== TRUST SECTION ========== -->
+<div class="trust-section" data-aos="fade-up">
+  <div class="trust-text" data-aos="fade-right">
+    <h2 class="fw-bold mb-1">
+      <span style="color: black;">We Unstop</span>
+      <span style="color: #2665ca;">Deliver Trust of Future Security</span>
+    </h2>
+    <p class="trust-subtext">
+      Empowering the next generation with the confidence to take bold steps toward tomorrow.
+    </p>
+    <div class="typed-trust" id="typed-trust"></div>
+  </div>
+  <div class="trust-image" data-aos="fade-left">
+    <img src="{% static 'images/PR1.webp' %}" alt="Trust Banner">
+  </div>
+</div>
+
+<script>
+  AOS.init({
+    duration: 1000,
+    once: true
+  });
+
+  const typedTrust = new Typed("#typed-trust", {
+    strings: [
+      `In a world full of opportunities and uncertainties, we stand as a beacon of trust. At Unstop, our mission is to provide platforms that foster skill, innovation, and futuristic thinking.\n\nFrom internships and competitions to mentorship and career support, we enable students and professionals to explore with confidence, backed by secure, verified, and impactful experiences.`,
+
+      `The future is not just about technology—it’s about people, vision, and trust. With every opportunity we deliver, we’re building a more secure tomorrow—where talent meets transformation, and dreams become sustainable realities.`
+    ],
+    typeSpeed: 30,
+    backSpeed: 10,
+    smartBackspace: false,
+    fadeOut: true,
+    loop: true,
+    showCursor: false
+  });
+</script>

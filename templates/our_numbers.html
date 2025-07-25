@@ -1,13 +1,15 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- AOS Animation Library -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
-<section class="our-numbers-section py-5" style="background-color: #f5f7fa;">
+<section class="our-numbers-section py-5" style="background: linear-gradient(to right, #f0f4f8, #ffffff);">
   <div class="container">
-    <h2 class="text-center mb-4 fw-bold" style="color: #051d3a;">Our Numbers</h2>
+    <h2 class="text-center mb-5 fw-bold" style="color: #051d3a;" data-aos="fade-down">Our Numbers</h2>
 
     <div class="row justify-content-center g-4">
       <!-- Users -->
-      <div class="col-md-2 col-6">
-        <div class="number-box text-center shadow-sm p-3 rounded" style="background-color: #e8f0fe;">
+      <div class="col-md-2 col-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="number-box text-center p-4 rounded-4 shadow-sm" style="background-color: #e8f0fe; transition: all 0.3s;">
           <div class="icon mb-2 text-primary">
             <i class="fas fa-users fa-2x"></i>
           </div>
@@ -17,8 +19,8 @@
       </div>
 
       <!-- Competitions -->
-      <div class="col-md-2 col-6">
-        <div class="number-box text-center shadow-sm p-3 rounded" style="background-color: #e6f7f0;">
+      <div class="col-md-2 col-6" data-aos="fade-up" data-aos-delay="200">
+        <div class="number-box text-center p-4 rounded-4 shadow-sm" style="background-color: #e6f7f0; transition: all 0.3s;">
           <div class="icon mb-2 text-success">
             <i class="fas fa-trophy fa-2x"></i>
           </div>
@@ -28,8 +30,8 @@
       </div>
 
       <!-- Jobs -->
-      <div class="col-md-2 col-6">
-        <div class="number-box text-center shadow-sm p-3 rounded" style="background-color: #fff3cd;">
+      <div class="col-md-2 col-6" data-aos="fade-up" data-aos-delay="300">
+        <div class="number-box text-center p-4 rounded-4 shadow-sm" style="background-color: #fff3cd; transition: all 0.3s;">
           <div class="icon mb-2 text-warning">
             <i class="fas fa-briefcase fa-2x"></i>
           </div>
@@ -39,8 +41,8 @@
       </div>
 
       <!-- Colleges -->
-      <div class="col-md-2 col-6">
-        <div class="number-box text-center shadow-sm p-3 rounded" style="background-color: #fce4ec;">
+      <div class="col-md-2 col-6" data-aos="fade-up" data-aos-delay="400">
+        <div class="number-box text-center p-4 rounded-4 shadow-sm" style="background-color: #fce4ec; transition: all 0.3s;">
           <div class="icon mb-2 text-danger">
             <i class="fas fa-university fa-2x"></i>
           </div>
@@ -50,8 +52,8 @@
       </div>
 
       <!-- Companies -->
-      <div class="col-md-2 col-6">
-        <div class="number-box text-center shadow-sm p-3 rounded" style="background-color: #e1f5fe;">
+      <div class="col-md-2 col-6" data-aos="fade-up" data-aos-delay="500">
+        <div class="number-box text-center p-4 rounded-4 shadow-sm" style="background-color: #e1f5fe; transition: all 0.3s;">
           <div class="icon mb-2 text-info">
             <i class="fas fa-building fa-2x"></i>
           </div>
@@ -62,3 +64,11 @@
     </div>
   </div>
 </section>
+
+<!-- AOS Init -->
+<script>
+  AOS.init({
+    duration: 800,
+    once: true
+  });
+</script>

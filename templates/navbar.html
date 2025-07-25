@@ -1,17 +1,13 @@
 {% load static %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-<!-- Bootstrap JS Bundle (includes Popper) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <style>
-  /* static/css/style.css */
-/* Fixed width for search bar */
-.w-20 {
-  width: 20% !important;
-}
+/* Custom Width */
+.w-20 { width: 20% !important; }
 
-/* For Business Button */
+/* Business Button */
 .btn-for-business {
   background-color: rgba(255, 255, 0, 0.3);
   border: 1px solid orange;
@@ -24,24 +20,21 @@
   font-size: 0.9rem;
 }
 
-/* User Sidebar */
+/* Sidebar */
 .user-sidebar {
   position: fixed;
   top: 0;
-  right: -300px;
+  right: -320px;
   height: 100%;
   width: 300px;
   background-color: #f8f9fa;
   box-shadow: -2px 0 5px rgba(0,0,0,0.2);
-  transition: right 0.3s ease-in-out;
+  transition: right 0.4s ease-in-out;
   z-index: 1050;
   padding: 20px;
   border-left: 3px solid #0d6efd;
 }
-
-.user-sidebar.active {
-  right: 0;
-}
+.user-sidebar.active { right: 0; }
 
 .user-sidebar-header {
   display: flex;
@@ -49,57 +42,29 @@
   justify-content: space-between;
   margin-bottom: 20px;
 }
-
 .sidebar-links li {
   padding: 10px 0;
   cursor: pointer;
 }
+.sidebar-links li:hover { color: #0d6efd; }
 
-.sidebar-links li:hover {
-  color: #0d6efd;
-}
-
-/* Navbar Adjustments */
+/* Navbar Style */
 .navbar {
-  min-height: 70px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  box-sizing: border-box;
   background-color: #fff !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  padding: 8px 16px;
 }
-
-.navbar .nav-link {
-  position: relative;
-  padding: 10px 15px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  height: 100%;
-  font-size: 0.95rem;
-  white-space: nowrap;
-}
-
 .navbar .nav-link.active {
-  background-color: rgba(0, 123, 255, 0.1);
+  background-color: rgba(13, 110, 253, 0.1);
   border-bottom: 3px solid #0d6efd;
   font-weight: 600;
 }
-
-.navbar-nav {
-  align-items: center;
+.navbar .nav-link {
+  transition: 0.3s ease;
+  font-size: 0.95rem;
 }
 
-.navbar-brand img {
-  max-height: 32px;
-}
-
-form.d-flex input[type="search"] {
-  height: 38px;
-  font-size: 0.9rem;
-}
-
-/* Host Popup Menu Styles */
+/* Host Menu */
 .host-popup {
   position: absolute;
   top: 100%;
@@ -109,22 +74,13 @@ form.d-flex input[type="search"] {
   border-radius: 10px;
   padding: 10px;
   width: 200px;
-  z-index: 2000;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   display: none;
+  z-index: 2000;
   animation: fadeIn 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
-
-.host-popup.show {
-  display: block;
-}
-
-.host-popup ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
+.host-popup.show { display: block; }
+.host-popup ul { list-style: none; margin: 0; padding: 0; }
 .host-popup ul li {
   padding: 8px 12px;
   cursor: pointer;
@@ -132,13 +88,8 @@ form.d-flex input[type="search"] {
   transition: background 0.2s ease;
   position: relative;
 }
-
-.host-popup ul li:hover {
-  background: #f1f1f1;
-}
-
-/* Nested Dropdown */
-.host-popup .nested-menu {
+.host-popup ul li:hover { background: #f1f1f1; }
+.nested-menu {
   position: absolute;
   top: 0;
   left: 100%;
@@ -149,152 +100,98 @@ form.d-flex input[type="search"] {
   width: 180px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
+.host-popup ul li:hover .nested-menu { display: block; }
 
-.host-popup ul li:hover .nested-menu {
-  display: block;
-}
-
-/* Animation */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
 </style>
 
-<!-- templates/navbar.html -->
-<nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm px-3 py-2">
+<!-- Navbar HTML -->
+<nav class="navbar navbar-expand-lg border-bottom">
   <div class="container-fluid">
-    <!-- Logo -->
     <a class="navbar-brand me-3" href="{% url 'home' %}">
-  <img src="{% static 'images/unstop-logo.svg' %}" alt="Unstop" height="32">
-</a>
+      <img src="{% static 'images/unstop-logo.svg' %}" alt="Unstop" height="32">
+    </a>
 
-
-    <!-- Search Bar (just beside logo, slightly left aligned) -->
-    <form class="d-flex me-auto w-20 position-relative">
+    <!-- Search -->
+    <form class="d-none d-md-flex me-auto w-20 position-relative">
       <span class="position-absolute top-50 translate-middle-y ms-3 text-muted">
         <i class="bi bi-search"></i>
       </span>
-      <input class="form-control ps-5 rounded-pill" type="search" placeholder="Search events, opportunities..." aria-label="Search">
+      <input class="form-control ps-5 rounded-pill" type="search" placeholder="Search events, opportunities..." />
     </form>
 
-    <!-- Mobile Toggle -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#unstopNavbar" aria-controls="unstopNavbar" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#unstopNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Navbar Content -->
     <div class="collapse navbar-collapse" id="unstopNavbar">
-
-      <!-- Nav Links -->
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-
-  <li class="nav-item">
-    <a class="nav-link {% if request.path == '/internships/' %}active{% endif %}" href="{% url 'internships' %}">Internships</a>
-  </li>
-
-  <li class="nav-item">
-     <a class="nav-link {% if request.path == '/jobs/' %}active{% endif %}" href="{% url 'jobs' %}">Jobs</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link {% if request.path == '/competitions/' %}active{% endif %}" href="{% url 'competitions' %}">Competitions</a>
-  </li>
-  <li class="nav-item">
-     <a class="nav-link {% if request.path == '/mentorship/' %}active{% endif %}" href="{% url 'mentorship' %}">Mentorship</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#">Practice</a>
-  </li>
-
-
-        <!-- More Dropdown -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            More
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Courses</a></li>
-            <li><a class="dropdown-item" href="#">Scholarships</a></li>
-            <li><a class="dropdown-item" href="#">Cultural Events</a></li>
-            <li><a class="dropdown-item" href="#">Workshops</a></li>
-            <li><a class="dropdown-item" href="#">Conferences</a></li>
-            <li><a class="dropdown-item" href="#">Blogs</a></li>
-          </ul>
-        </li>
-      </ul>
+        <li class="nav-item"><a class="nav-link {% if request.path == '/internships/' %}active{% endif %}" href="{% url 'internships' %}">Internships</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.path == '/jobs/' %}active{% endif %}" href="{% url 'jobs' %}">Jobs</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.path == '/competitions/' %}active{% endif %}" href="{% url 'competitions' %}">Competitions</a></li>
+        <li class="nav-item"><a class="nav-link {% if request.path == '/mentorship/' %}active{% endif %}" href="{% url 'mentorship' %}">Mentorship</a></li>
+      
 
      
- <!-- templates/navbar.html -->
-{% if request.session.candidate_name %}
-  <div class="d-flex align-items-center gap-2 ms-3">
-    <div class="dropdown">
-      <button class="btn btn-light border rounded-circle p-2" id="userToggle">
-        <i class="fas fa-user text-primary"></i>
-      </button>
-    </div>
-  </div>
-{% else %}
-  <div class="d-flex align-items-center gap-2 ms-3">
-    <a href="/login/" class="btn btn-primary rounded-pill px-4">Login</a>
-   <div class="position-relative">
-  <button class="btn btn-outline-dark rounded-pill px-4 d-flex align-items-center" id="hostBtn">
-    <i class="bi bi-plus-lg me-2"></i> Host
-  </button>
+      <!-- User Panel -->
+      {% if request.session.candidate_name %}
+      <div class="d-flex align-items-center gap-2 ms-3">
+        <div class="dropdown">
+          <button class="btn btn-light border rounded-circle p-0" id="userToggle" style="width: 42px; height: 42px;">
+          <img src="{{ request.session.candidate_photo }}" alt="Profile" class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;">
 
- <div id="hostMenu" class="host-popup">
-  <ul>
-    <li>
-      User
-      <ul class="nested-menu">
-        <li>
-          <a href="{% url 'user_login_panel' %}" class="text-decoration-none text-dark">Login as User</a>
-        </li>
-      </ul>
-    </li>
-    <li>
-      College
-      <ul class="nested-menu">
-        <li><a href="{% url 'register_college' %}" class="text-decoration-none text-dark">Register as College</a></li>
-        <li><a href="{% url 'college_login' %}" class="text-decoration-none text-dark">Login as College</a></li>
-      </ul>
-    </li>
-    <li class="text-muted">
-      Company
-      <ul class="nested-menu">
-        <li><a href="{% url 'add_company_home' %}" class="text-decoration-none text-dark">Register as Company</a></li>
-        <li><a href="{% url 'company_login' %}" class="text-decoration-none text-dark">Login as Company</a></li>
-      </ul>
-    </li>
-  </ul>
-</div>
+          </button>
+        </div>
+      </div>
+      {% else %}
+      <div class="d-flex align-items-center gap-2 ms-3">
+        <a href="/login/" class="btn btn-primary rounded-pill px-4">Login</a>
+        <div class="position-relative">
+          <button class="btn btn-outline-dark rounded-pill px-4 d-flex align-items-center" id="hostBtn">
+            <i class="bi bi-plus-lg me-2"></i> Dashboards
+          </button>
 
-</div>
+          <!-- Host Menu -->
+          <div id="hostMenu" class="host-popup">
+            <ul>
+              <li>User
+                <ul class="nested-menu">
+                  <li><a href="{% url 'user_login_panel' %}" class="text-decoration-none text-dark">Login as User</a></li>
+                </ul>
+              </li>
+              <li>College
+                <ul class="nested-menu">
+                  <li><a href="{% url 'register_college' %}" class="text-decoration-none text-dark">Register as College</a></li>
+                  <li><a href="{% url 'college_login' %}" class="text-decoration-none text-dark">Login as College</a></li>
+                </ul>
+              </li>
+              <li>Company
+                <ul class="nested-menu">
+                  <li><a href="{% url 'add_company_home' %}" class="text-decoration-none text-dark">Register as Company</a></li>
+                  <li><a href="{% url 'company_login' %}" class="text-decoration-none text-dark">Login as Company</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
 
-    <a href="#" class="btn btn-for-business rounded-pill px-3">
-      <i class="bi bi-briefcase me-2 fs-5"></i> For Business
-    </a>
-  </div>
-{% endif %}
-
-
-
-</div>
-
+        <a href="#" class="btn btn-for-business rounded-pill px-3">
+          <i class="bi bi-briefcase me-2 fs-5"></i> For Business
+        </a>
+      </div>
+      {% endif %}
     </div>
   </div>
 </nav>
-<!-- User Sidebar -->
+
+<!-- Sidebar HTML -->
 <div id="userSidebar" class="user-sidebar">
   <div class="user-sidebar-header">
     <h5><i class="fas fa-user-circle me-2"></i>{{ request.session.candidate_name }}</h5>
-    <button id="closeSidebar" class="btn-close btn-sm ms-auto"></button>
+    <button id="closeSidebar" class="btn-close btn-sm"></button>
   </div>
   <div class="user-sidebar-content">
     <p><i class="fas fa-envelope me-2"></i>{{ request.session.candidate_email }}</p>
@@ -313,39 +210,31 @@ form.d-flex input[type="search"] {
     </ul>
   </div>
 </div>
+
+<!-- JS: Sidebar + Host Menu -->
 <script>
-  const userToggle = document.getElementById("userToggle");
-  const userSidebar = document.getElementById("userSidebar");
-  const closeSidebar = document.getElementById("closeSidebar");
+const userToggle = document.getElementById("userToggle");
+const userSidebar = document.getElementById("userSidebar");
+const closeSidebar = document.getElementById("closeSidebar");
 
-  if (userToggle && userSidebar && closeSidebar) {
-    userToggle.addEventListener("click", () => {
-      userSidebar.classList.add("active");
-    });
+userToggle?.addEventListener("click", () => userSidebar.classList.add("active"));
+closeSidebar?.addEventListener("click", () => userSidebar.classList.remove("active"));
 
-    closeSidebar.addEventListener("click", () => {
-      userSidebar.classList.remove("active");
-    });
+const hostBtn = document.getElementById('hostBtn');
+const hostMenu = document.getElementById('hostMenu');
+
+hostBtn?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  hostMenu.classList.toggle('show');
+});
+document.addEventListener('click', (e) => {
+  if (!hostMenu.contains(e.target) && e.target !== hostBtn) {
+    hostMenu.classList.remove('show');
   }
-</script>
-<script>
-  const hostBtn = document.getElementById('hostBtn');
-  const hostMenu = document.getElementById('hostMenu');
-
-  hostBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    hostMenu.classList.toggle('show');
-  });
-
-  // Close when clicking outside
-  document.addEventListener('click', function(e) {
-    if (!hostMenu.contains(e.target) && e.target !== hostBtn) {
-      hostMenu.classList.remove('show');
-    }
-  });
+});
 </script>
 
-<!-- YEH ADD KAR LAST ME -->
+<!-- Optional Content Block -->
 <div class="container-fluid mt-4">
   {% block content %}{% endblock %}
 </div>

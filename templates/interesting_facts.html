@@ -1,0 +1,121 @@
+{% load static %}
+<!-- AOS + Typed.js -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+
+<style>
+  .facts-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 40px;
+    width: 100%;
+    background: linear-gradient(135deg, #eaf3fb, #f0f7ff);
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .facts-text {
+    flex: 1;
+    max-width: 550px;
+    text-align: left;
+  }
+
+  .facts-text h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .facts-subtext {
+    font-style: italic;
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 16px;
+  }
+
+  .typed-text {
+    font-size: 1.1rem;
+    line-height: 1.8rem;
+    color: #333;
+    font-style: italic;
+    white-space: pre-line;
+    min-height: 160px;
+    padding-right: 15px;
+  }
+
+  .facts-image {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 30px;
+  }
+
+  .facts-image img {
+    max-width: 420px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  @media(max-width: 768px){
+    .facts-text h2 {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .facts-text, .facts-image {
+      justify-content: center;
+      text-align: center;
+      padding: 0;
+    }
+
+    .typed-text {
+      font-size: 1rem;
+      padding: 0;
+    }
+
+    .facts-image {
+      padding-top: 20px;
+    }
+  }
+</style>
+
+<!-- ========== FACTS SECTION ========== -->
+<div class="facts-section" data-aos="fade-up">
+  <div class="facts-text" data-aos="fade-right">
+    <h2 class="fw-bold mb-1">
+      <span style="color: black;">Do</span>
+      <span style="color: #2665ca;">You Know....</span>
+    </h2>
+    <p class="facts-subtext">
+      Find the internships that fit your career aspirations.
+    </p>
+    <div class="typed-text" id="typed-facts"></div>
+  </div>
+  <div class="facts-image" data-aos="fade-left">
+    <img src="{% static 'images/PR1.webp' %}" alt="Facts Banner">
+  </div>
+</div>
+
+<script>
+  AOS.init({
+    duration: 1000,
+    once: true
+  });
+
+  const typedFacts = new Typed("#typed-facts", {
+    strings: [
+      `Education has evolved significantly over the past few decades. From rigid classroom-based learning to flexible online platforms, the shift has enabled personalized, accessible, and engaging educational journeys. Students now explore subjects beyond their textbooks, unlocking creativity and critical thinking.\n\nInternships have become a key milestone in this evolution—blending academic knowledge with practical exposure, and helping individuals prepare for real-world challenges.`,
+
+      `The modern era emphasizes skills over degrees. Organizations seek adaptable minds with hands-on experience and continuous learners. As a result, education now focuses more on experiential learning, mentorship, project-based approaches, and collaborative environments. With opportunities like internships, hackathons, and virtual bootcamps, learners are better prepared than ever to thrive in an ever-changing world.`
+    ],
+    typeSpeed: 30,
+    backSpeed: 10,
+    smartBackspace: false,
+    fadeOut: true,
+    loop: true,
+    showCursor: false
+  });
+</script>

@@ -140,9 +140,17 @@
 
     @media (max-width: 768px) {
       .top-navbar img { display: none; }
-      .sidebar { left: -250px; }
-      .sidebar.active { left: 0; }
-      .content { margin-left: 0 !important; }
+      .sidebar {
+        left: -250px;
+      }
+
+      .sidebar.mobile-visible {
+        left: 0;
+      }
+
+      .content {
+        margin-left: 0 !important;
+      }
     }
   </style>
 </head>
@@ -159,9 +167,14 @@
     <span class="welcome-text">Welcome, {{ user.first_name }}</span>
   </div>
   <div>
-    <button class="user-icon" onclick="toggleProfileSidebar()">
-      <i class="fas fa-user-circle"></i>
-    </button>
+    <button class="user-icon p-0 border-0 bg-transparent" onclick="toggleProfileSidebar()">
+  {% if user.profile_photo %}
+    <img src="{{ user.profile_photo.url }}" alt="Profile" style="height: 36px; width: 36px; border-radius: 50%; object-fit: cover;">
+  {% else %}
+    <i class="fas fa-user-circle" style="font-size: 36px;"></i>
+  {% endif %}
+</button>
+
   </div>
 </div>
 
@@ -170,11 +183,21 @@
   <a href="{% url 'user_dashboard_panel' %}" class="{% if request.resolver_match.url_name == 'user_dashboard_panel' %}active{% endif %}">
     <i class="fas fa-home"></i> Dashboard
   </a>
-  <a href="{% url 'user_applied_internships' %}"><i class="fas fa-briefcase"></i> Applied Internships</a>
-  <a href="{% url 'applied_jobs_list' %}"><i class="fas fa-briefcase"></i> Applied Jobs</a>
-  <a href="{% url 'applied_competitions_list' %}"><i class="fas fa-trophy"></i> Applied Competitions</a>
-  <a href="{% url 'update_information' %}"><i class="fas fa-edit"></i> Update Information</a>
-  <a href="{% url 'user_logout' %}" class="text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  <a href="{% url 'user_applied_internships' %}" class="{% if request.resolver_match.url_name == 'user_applied_internships' %}active{% endif %}">
+    <i class="fas fa-briefcase"></i> Applied Internships
+  </a>
+  <a href="{% url 'applied_jobs_list' %}" class="{% if request.resolver_match.url_name == 'applied_jobs_list' %}active{% endif %}">
+    <i class="fas fa-briefcase"></i> Applied Jobs
+  </a>
+  <a href="{% url 'applied_competitions_list' %}" class="{% if request.resolver_match.url_name == 'applied_competitions_list' %}active{% endif %}">
+    <i class="fas fa-trophy"></i> Applied Competitions
+  </a>
+  <a href="{% url 'update_information' %}" class="{% if request.resolver_match.url_name == 'update_information' %}active{% endif %}">
+    <i class="fas fa-edit"></i> Update Information
+  </a>
+  <a href="{% url 'user_logout' %}" class="text-danger">
+    <i class="fas fa-sign-out-alt"></i> Logout
+  </a>
 </div>
 
 <!-- Right Profile Sidebar -->
@@ -206,13 +229,29 @@
 
 <script>
   function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('hidden');
-    document.getElementById('mainContent').classList.toggle('fullwidth');
+    const sidebar = document.getElementById('sidebar');
+    const content = document.getElementById('mainContent');
+
+    if (window.innerWidth < 768) {
+      sidebar.classList.toggle('mobile-visible');
+    } else {
+      sidebar.classList.toggle('hidden');
+      content.classList.toggle('fullwidth');
+    }
   }
 
   function toggleProfileSidebar() {
     document.getElementById('profileSidebar').classList.toggle('active');
   }
+
+  // Optional: Hide mobile sidebar when clicking outside
+  document.addEventListener('click', function (e) {
+    const sidebar = document.getElementById('sidebar');
+    if (window.innerWidth < 768 && !sidebar.contains(e.target) && !e.target.closest('.hamburger')) {
+      sidebar.classList.remove('mobile-visible');
+    }
+  });
 </script>
+
 </body>
 </html>

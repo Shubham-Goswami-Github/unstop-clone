@@ -35,7 +35,7 @@ urlpatterns = [
     path('admin/internship-charts/', views.internship_charts_view, name='internship_charts'),
     path('add-admin-module/', views.add_admin_module_view, name='add-admin-module'),
     path('competition/<int:competition_id>/checkout/', views.competition_checkout, name='competition_checkout'),
-
+    path('our-numbers/', views.our_numbers_view, name='our_numbers'),
     path('add-admin-module/', views.add_admin_module_view, name='add_admin_module'),
     path('jobs/<int:id>/', views.user_job_detail, name='user_job_detail'),
     path('competitions/<int:pk>/', views.competition_detail_user, name='competition_detail_user'),
@@ -141,7 +141,7 @@ urlpatterns = [
 # Student Applications
     path('college-admin/student/<int:student_id>/internships/', views.view_applied_internships_by_student, name='view_applied_internships_by_student'),
     path('college-admin/student/<int:student_id>/competitions/', views.view_applied_competitions_by_student, name='view_applied_competitions_by_student'),
-
+    path('college-admin/<int:student_id>/applied-jobs/', views.view_applied_jobs_by_student, name='view_applied_jobs_by_student'),
 # College Profile
     path('college-admin/edit-profile/', views.edit_college_profile, name='edit_college_profile'),
 
@@ -166,7 +166,9 @@ urlpatterns = [
     path('user-panel/applied-jobs/', views.applied_jobs_list_view, name='applied_jobs_list'),
     path('user-panel/applied-competitions/', views.applied_competitions_list_view, name='applied_competitions_list'),
     path('user-panel/update-information/', views.edit_candidate_user, name='update_information'),
-
+    path('user-panel/delete-applied-internship/<int:pk>/', views.delete_applied_internship, name='delete_applied_internship'),
+    path('user-panel/delete-applied-job/<int:pk>/', views.delete_applied_job, name='delete_applied_job'),
+    path('user-panel/delete-applied-competition/<int:comp_id>/', views.delete_applied_competition, name='delete_applied_competition'),
 
 ]
 if settings.DEBUG:
