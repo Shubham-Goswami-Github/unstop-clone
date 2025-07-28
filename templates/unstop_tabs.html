@@ -4,7 +4,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
 <style>
-  .tab-grid {
+  .home-tab-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 40px 30px;
@@ -13,7 +13,7 @@
     margin: 0 auto;
   }
 
-  .tab-card {
+  .home-tab-card {
     min-height: 190px;
     padding: 20px 25px;
     border-radius: 15px;
@@ -27,49 +27,49 @@
     border: 2px solid transparent;
   }
 
-  .tab-card:hover {
+  .home-tab-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     border-color: #1a73e8;
   }
 
-  .tab-card img {
+  .home-tab-card img {
     transition: transform 0.3s ease;
   }
 
-  .tab-card:hover img {
+  .home-tab-card:hover img {
     transform: scale(1.08);
   }
 
-  .tab-text {
+  .home-tab-text {
     text-align: left;
   }
 
-  .tab-title {
+  .home-tab-title {
     font-weight: 600;
     font-size: 1.3rem;
     color: #1a73e8;
     margin-bottom: 8px;
   }
 
-  .tab-desc {
+  .home-tab-desc {
     font-size: 1rem;
     color: #333;
     line-height: 1.4;
   }
 
-  .tab-desc span {
+  .home-tab-desc span {
     font-weight: 500;
     color: #555;
   }
 
-  .tab-img {
+  .home-tab-img {
     width: 110px;
     height: 110px;
     object-fit: contain;
   }
 
-  .tab-more-icon {
+  .home-tab-more-icon {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -78,21 +78,21 @@
     font-size: 1.1rem;
   }
 
-  .tab-more-icon img {
+  .home-tab-more-icon img {
     height: 26px;
     width: 26px;
   }
 
   @media (max-width: 768px) {
-    .tab-grid {
+    .home-tab-grid {
       grid-template-columns: 1fr;
     }
 
-    .tab-card {
+    .home-tab-card {
       flex-direction: row;
     }
 
-    .tab-img {
+    .home-tab-img {
       width: 90px;
       height: 90px;
     }
@@ -100,53 +100,53 @@
 </style>
 
 <!-- Section -->
-<div class="tab-grid">
-  <a href="{% url 'internships' %}" class="tab-card" style="background-color: #f0f8ff;" data-aos="fade-right">
-    <div class="tab-text">
-      <div class="tab-title">Internships</div>
-      <p class="tab-desc">Gain <br><span>Practical Experience</span></p>
+<div class="home-tab-grid">
+  <a href="{% url 'internships' %}" class="home-tab-card" style="background-color: #f0f8ff;" data-aos="fade-right">
+    <div class="home-tab-text">
+      <div class="home-tab-title">Internships</div>
+      <p class="home-tab-desc">Gain <br><span>Practical Experience</span></p>
     </div>
-    <img src="{% static 'images/U1.webp' %}" alt="Internships" class="tab-img">
+    <img src="{% static 'images/U1.webp' %}" alt="Internships" class="home-tab-img">
   </a>
 
-  <a href="{% url 'jobs' %}" class="tab-card" style="background-color: #fff8e7;" data-aos="fade-left" data-aos-delay="100">
-    <div class="tab-text">
-      <div class="tab-title">Jobs</div>
-      <p class="tab-desc">Explore <br><span>Diverse Careers</span></p>
+  <a href="{% url 'jobs' %}" class="home-tab-card" style="background-color: #fff8e7;" data-aos="fade-left" data-aos-delay="100">
+    <div class="home-tab-text">
+      <div class="home-tab-title">Jobs</div>
+      <p class="home-tab-desc">Explore <br><span>Diverse Careers</span></p>
     </div>
-    <img src="{% static 'images/U2.webp' %}" alt="Jobs" class="tab-img">
+    <img src="{% static 'images/U2.webp' %}" alt="Jobs" class="home-tab-img">
   </a>
 
-  <a href="{% url 'competitions' %}" class="tab-card" style="background-color: #e6f7f4;" data-aos="fade-right" data-aos-delay="200">
-    <div class="tab-text">
-      <div class="tab-title">Competitions</div>
-      <p class="tab-desc">Battle <br><span>For Excellence</span></p>
+  <a href="{% url 'competitions' %}" class="home-tab-card" style="background-color: #e6f7f4;" data-aos="fade-right" data-aos-delay="200">
+    <div class="home-tab-text">
+      <div class="home-tab-title">Competitions</div>
+      <p class="home-tab-desc">Battle <br><span>For Excellence</span></p>
     </div>
-    <img src="{% static 'images/U3.webp' %}" alt="Competitions" class="tab-img">
+    <img src="{% static 'images/U3.webp' %}" alt="Competitions" class="home-tab-img">
   </a>
 
-  <a href="{% url 'mentorship' %}" class="tab-card" style="background-color: #f5eefc;" data-aos="fade-left" data-aos-delay="300">
-    <div class="tab-text">
-      <div class="tab-title">Mentorships</div>
-      <p class="tab-desc">Guidance <br><span>From Top Mentors</span></p>
+  <a href="{% url 'mentorship' %}" class="home-tab-card" style="background-color: #f5eefc;" data-aos="fade-left" data-aos-delay="300">
+    <div class="home-tab-text">
+      <div class="home-tab-title">Mentorships</div>
+      <p class="home-tab-desc">Guidance <br><span>From Top Mentors</span></p>
     </div>
-    <img src="{% static 'images/U4.webp' %}" alt="Mentorships" class="tab-img">
+    <img src="{% static 'images/U4.webp' %}" alt="Mentorships" class="home-tab-img">
   </a>
 
-  <a href="#" class="tab-card" style="background-color: #e8f5e9;" data-aos="fade-right" data-aos-delay="400">
-    <div class="tab-text">
-      <div class="tab-title">Practice</div>
-      <p class="tab-desc">Refine <br><span>Skills Daily</span></p>
+  <a href="#" class="home-tab-card" style="background-color: #e8f5e9;" data-aos="fade-right" data-aos-delay="400">
+    <div class="home-tab-text">
+      <div class="home-tab-title">Practice</div>
+      <p class="home-tab-desc">Refine <br><span>Skills Daily</span></p>
     </div>
-    <img src="{% static 'images/U5.webp' %}" alt="Practice" class="tab-img">
+    <img src="{% static 'images/U5.webp' %}" alt="Practice" class="home-tab-img">
   </a>
 
-  <a href="#" class="tab-card" style="background-color: #fff3e0;" data-aos="fade-left" data-aos-delay="500">
-    <div class="tab-text tab-more-icon">
+  <a href="#" class="home-tab-card" style="background-color: #fff3e0;" data-aos="fade-left" data-aos-delay="500">
+    <div class="home-tab-text home-tab-more-icon">
       <img src="https://cdn.unstop.com/assets/icons/menu_2.svg" alt="More">
       More
     </div>
-    <img src="{% static 'images/U1.webp' %}" alt="More" class="tab-img">
+    <img src="{% static 'images/U1.webp' %}" alt="More" class="home-tab-img">
   </a>
 </div>
 

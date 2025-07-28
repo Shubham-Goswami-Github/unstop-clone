@@ -167,7 +167,7 @@ from mainapp.models import (
     CandidateProfile, Internship, Job, Competition
 )
 
-@staff_member_required
+
 def admin_panel_dashboard_view(request):
     # Total organization counts
     total_schools = School.objects.count()
@@ -313,7 +313,7 @@ def admin_panel_dashboard_view(request):
 
 
 from .models import School  # 👈 model tu bana chuka hai
-@staff_member_required
+
 def schools_list_view(request):
     schools = School.objects.all()
     return render(request, 'admin_panel/schools_list.html', {'schools': schools})
@@ -322,7 +322,7 @@ def schools_list_view(request):
 
 from django.shortcuts import render, redirect
 from .models import School
-@staff_member_required
+
 def add_school_view(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -347,7 +347,7 @@ def add_school_view(request):
 
 from django.shortcuts import render, get_object_or_404
 from .models import School
-@staff_member_required
+
 def school_detail_view(request, school_id):
     school = get_object_or_404(School, id=school_id)
     return render(request, 'admin_panel/school_detail.html', {'school': school})
@@ -356,7 +356,7 @@ def school_detail_view(request, school_id):
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import School  # ya jo bhi tera model ka naam ho
 from django.contrib import messages
-@staff_member_required
+
 def edit_school_view(request, school_id):
     school = get_object_or_404(School, id=school_id)
 
@@ -373,7 +373,7 @@ def edit_school_view(request, school_id):
 
     return render(request, 'admin_panel/edit_school.html', {'school': school})
 
-@staff_member_required
+
 def delete_school_view(request, school_id):
     school = get_object_or_404(School, id=school_id)
     school.delete()
@@ -384,11 +384,11 @@ def delete_school_view(request, school_id):
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import College
 from django.contrib import messages
-@staff_member_required
+
 def view_colleges(request):
     colleges = College.objects.all().order_by('-created_at')
     return render(request, 'admin_panel/view_colleges.html', {'colleges': colleges})
-@staff_member_required
+
 def add_college_view(request):
     if request.method == 'POST':
         College.objects.create(
@@ -405,7 +405,7 @@ def add_college_view(request):
         return redirect('colleges_list')
     return render(request, 'admin_panel/add_college.html')
 
-@staff_member_required
+
 def edit_college_view(request, college_id):
     college = get_object_or_404(College, id=college_id)
     if request.method == 'POST':
@@ -421,7 +421,7 @@ def edit_college_view(request, college_id):
         messages.success(request, 'College updated successfully.')
         return redirect('colleges_list')
     return render(request, 'admin_panel/edit_college.html', {'college': college})
-@staff_member_required
+
 def delete_college_view(request, college_id):
     college = get_object_or_404(College, id=college_id)
     college.delete()
@@ -430,7 +430,7 @@ def delete_college_view(request, college_id):
 
 from django.shortcuts import render, get_object_or_404
 from .models import College
-@staff_member_required
+
 def college_detail_view(request, college_id):
     college = get_object_or_404(College, id=college_id)
     return render(request, 'admin_panel/college_detail.html', {'college': college})
@@ -441,7 +441,7 @@ def college_detail_view(request, college_id):
 from .models import Company
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-@staff_member_required
+
 def view_companies(request):
     companies = Company.objects.all().order_by('-created_at')
     return render(request, 'admin_panel/view_companies.html', {'companies': companies})
@@ -454,7 +454,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password
 from .models import Company  # import your model
 
-@staff_member_required
+
 def add_company(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -486,7 +486,7 @@ def add_company(request):
 
 
 
-@staff_member_required
+
 def edit_company(request, company_id):
     company = get_object_or_404(Company, pk=company_id)
     if request.method == 'POST':
@@ -501,7 +501,7 @@ def edit_company(request, company_id):
         return redirect('companies_list')
 
     return render(request, 'admin_panel/edit_company.html', {'company': company})
-@staff_member_required
+
 def delete_company(request, company_id):
     company = get_object_or_404(Company, pk=company_id)
     company.delete()
@@ -551,7 +551,7 @@ def fetch_dropdown_data(request):
     })
 
 from .models import CandidateProfile, School, College, Company
-@staff_member_required
+
 def candidates_summary(request):
     school_count = CandidateProfile.objects.filter(user_type='school').count()
     college_count = CandidateProfile.objects.filter(user_type='college').count()
@@ -582,7 +582,7 @@ def candidates_summary(request):
 
 # views.py
 from django.shortcuts import get_object_or_404
-@staff_member_required
+
 def view_candidates_by_org(request, org_type, org_id):
     org_model = {'school': School, 'college': College, 'company': Company}.get(org_type)
     if not org_model:
@@ -608,7 +608,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import CandidateProfile
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
-@staff_member_required
+
 def view_candidate(request, candidate_id):
     candidate = get_object_or_404(CandidateProfile, id=candidate_id)
     return render(request, 'admin_panel/view_candidate_detail.html', {'candidate': candidate})
@@ -617,7 +617,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import CandidateProfile
 
-@staff_member_required
+
 def edit_candidate(request, candidate_id):
     candidate = get_object_or_404(CandidateProfile, pk=candidate_id)
     org_type = candidate.user_type  # 'school' | 'college' | 'professional' | 'fresher'
@@ -661,7 +661,7 @@ def edit_candidate(request, candidate_id):
         'org_type': org_type
     })
 
-@staff_member_required
+
 @csrf_exempt
 def delete_candidate(request, candidate_id):
     candidate = get_object_or_404(CandidateProfile, id=candidate_id)
@@ -674,15 +674,15 @@ def delete_candidate(request, candidate_id):
 
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import CandidateProfile
-@staff_member_required
+
 def view_freshers(request):
     freshers = CandidateProfile.objects.filter(user_type='fresher')
     return render(request, 'admin_panel/freshers_list.html', {'freshers': freshers})
-@staff_member_required
+
 def view_fresher(request, pk):
     fresher = get_object_or_404(CandidateProfile, pk=pk)
     return render(request, 'admin_panel/fresher_detail.html', {'fresher': fresher})
-@staff_member_required
+
 def edit_fresher(request, pk):
     fresher = get_object_or_404(CandidateProfile, pk=pk)
     if request.method == 'POST':
@@ -693,7 +693,7 @@ def edit_fresher(request, pk):
         fresher.save()
         return redirect('freshers_list')
     return render(request, 'admin_panel/edit_fresher.html', {'fresher': fresher})
-@staff_member_required
+
 def delete_fresher(request, pk):
     fresher = get_object_or_404(CandidateProfile, pk=pk)
     fresher.delete()
@@ -843,7 +843,7 @@ from .forms import JobForm
 def job_list(request):
     jobs = Job.objects.all().order_by('-created_at')
     return render(request, 'admin_panel/job_list.html', {'jobs': jobs})
-@staff_member_required
+
 def add_job(request):
     if request.method == 'POST':
         Job.objects.create(
@@ -864,7 +864,7 @@ def add_job(request):
     return render(request, 'admin_panel/add_job.html')
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Job
-@staff_member_required
+
 def edit_job(request, job_id):
     job = get_object_or_404(Job, pk=job_id)
     if request.method == 'POST':
@@ -884,12 +884,12 @@ def edit_job(request, job_id):
         return redirect('job_list')
 
     return render(request, 'admin_panel/edit_job.html', {'job': job})
-@staff_member_required
+
 def delete_job(request, job_id):
     job = get_object_or_404(Job, pk=job_id)
     job.delete()
     return redirect('job_list')
-@staff_member_required
+
 def view_job(request, job_id):
     job = get_object_or_404(Job, pk=job_id)
     return render(request, 'admin_panel/job_detail.html', {'job': job})
@@ -910,16 +910,16 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import Competition
 from .forms import CompetitionForm
-@staff_member_required
+
 def competitions_list(request):
     comps = Competition.objects.order_by('-created_at')
     print("COMPETITIONS:", comps)  # ye line rakho debugging ke liye
     return render(request, 'admin_panel/competitions_list.html', {'competitions': comps})
-@staff_member_required
+
 def competition_detail(request, pk):
     comp = get_object_or_404(Competition, pk=pk)
     return render(request, 'admin_panel/view_competition.html', {'comp': comp})
-@staff_member_required
+
 def add_competition(request):
     if request.method == 'POST':
         form = CompetitionForm(request.POST)
@@ -930,7 +930,7 @@ def add_competition(request):
     else:
         form = CompetitionForm()
     return render(request, 'admin_panel/add_competition.html', {'form': form})
-@staff_member_required
+
 def edit_competition(request, pk):
     comp = get_object_or_404(Competition, pk=pk)
     if request.method == 'POST':
@@ -942,7 +942,7 @@ def edit_competition(request, pk):
     else:
         form = CompetitionForm(instance=comp)
     return render(request, 'admin_panel/edit_competition.html', {'form': form, 'comp': comp})
-@staff_member_required
+
 def delete_competition(request, pk):
     comp = get_object_or_404(Competition, pk=pk)
     if request.method == 'POST':
@@ -1187,7 +1187,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect
 from .models import College, CandidateProfile
 
-@staff_member_required
+
 def college_admin_view(request):
     college_id = request.session.get('college_id')
     if not college_id:
@@ -1476,7 +1476,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import Competition
 from .forms import CompetitionForm
-@staff_member_required
+
 def competitions_list_college(request):
     comps = Competition.objects.order_by('-created_at')
     print("COMPETITIONS:", comps)  # ye line rakho debugging ke liye
@@ -1484,12 +1484,12 @@ def competitions_list_college(request):
 
 
 
-@staff_member_required
+
 def competition_detail_college(request, pk):
     comp = get_object_or_404(Competition, pk=pk)
     return render(request, 'college_admin_panel/view_competition_college.html', {'comp': comp})
 
-@staff_member_required
+
 def edit_competition_college(request, pk):
     comp = get_object_or_404(Competition, pk=pk)
     if request.method == 'POST':
@@ -1503,7 +1503,7 @@ def edit_competition_college(request, pk):
     return render(request, 'college_admin_panel/edit_competition_college.html', {'form': form, 'comp': comp})
 
 
-@staff_member_required
+
 def delete_competition_college(request, pk):
     comp = get_object_or_404(Competition, pk=pk)
     if request.method == 'POST':
@@ -1596,7 +1596,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password
 from .models import Company  # import your model
 
-@staff_member_required
+
 def add_company_home(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -1715,7 +1715,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import CandidateProfile
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
-@staff_member_required
+
 def view_candidate_company(request, candidate_id):
     candidate = get_object_or_404(CandidateProfile, id=candidate_id)
     return render(request, 'company_admin_panel/view_candidate_company.html', {'candidate': candidate})
@@ -1727,7 +1727,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import CandidateProfile
 
-@staff_member_required
+
 def edit_candidate_company(request, candidate_id):
     candidate = get_object_or_404(CandidateProfile, pk=candidate_id)
     org_type = candidate.user_type  # 'school' | 'college' | 'professional' | 'fresher'
@@ -1830,7 +1830,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Job, Company  # Import your Company model
 
-@staff_member_required
+
 def add_job_company(request):
     if request.method == 'POST':
         company_id = request.session.get('company_id')
@@ -1863,7 +1863,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, get_object_or_404
 from .models import Job, Company
 
-@staff_member_required
+
 def company_job_list(request):
     company_id = request.session.get('company_id')
     if not company_id:
@@ -1878,7 +1878,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Internship, Company
 
-@staff_member_required
+
 def add_internship_company(request):
     if request.method == 'POST':
         company_id = request.session.get('company_id')

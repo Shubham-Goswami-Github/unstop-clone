@@ -138,7 +138,7 @@
   /* Cards */
   .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 30px;
     padding: 40px 20px;
     max-width: 1200px;
@@ -146,15 +146,15 @@
   }
 
   .tab-card {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 22px 24px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
     display: none;
     justify-content: space-between;
     align-items: center;
     transition: all 0.3s ease-in-out;
-    border: 1px solid #e3e3e3;
+    border: 2px solid transparent;
   }
 
   .tab-card.show {
@@ -164,41 +164,53 @@
 
   .tab-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
-    border-color: #0056b3;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: #1a73e8;
   }
 
   .tab-text {
     max-width: 70%;
     color: #333;
+    text-align: left;
   }
 
   .tab-title {
     font-weight: 700;
-    color: #003366;
-    margin-bottom: 8px;
-    font-size: 1.2rem;
+    color: #1a73e8;
+    margin-bottom: 10px;
+    font-size: 1.4rem;
   }
 
   .tab-desc {
     font-size: 0.95rem;
-    color: #555;
+    color: #333;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .tab-desc strong {
+    color: #222;
   }
 
   .tab-desc span {
     font-weight: 500;
-    color: #000;
+    color: #555;
   }
 
   .tab-img {
-    width: 85px;
-    height: 85px;
+    width: 110px;
+    height: 110px;
     object-fit: contain;
     transition: transform 0.3s ease;
   }
 
   .tab-card:hover .tab-img {
     transform: scale(1.08);
+  }
+
+  .btn-outline-primary {
+    font-weight: 600;
+    border-radius: 8px;
   }
 
   @media (max-width: 768px) {
@@ -322,12 +334,11 @@ function typeText(){
 setInterval(typeText, 4500);
 typeText();
 </script>
- {% include 'feedback_slider.html' %}
 
- 
-  <div class="strip-container">
-    {% include 'industry_strip.html' %}
-  </div>
+{% include 'feedback_slider.html' %}
+<div class="strip-container">
+  {% include 'industry_strip.html' %}
+</div>
 <div class="bottom-footer-wrapper">
   {% include 'bottom_menu.html' %}
 </div>

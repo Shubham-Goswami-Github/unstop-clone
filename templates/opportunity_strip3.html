@@ -6,7 +6,7 @@
 
 <!-- COMPETITION STRIP CONTAINER -->
 <div class="competition-strip-wrapper">
-    <div class="mb-4 text-start">
+  <div class="mb-4 text-start">
     <h2 class="fw-bold mb-1">
       <span style="color: black;">Top</span>
       <span style="color: #0c1e3a;">Competitions</span>
@@ -21,19 +21,19 @@
       <a href="{% url 'competition_detail_user' item.pk %}" class="competition-tab-card" style="background-color: #f5faff;" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:"1" }}00">
         <div class="competition-tab-text">
           <div class="competition-tab-title">{{ item.title|truncatechars:40 }}</div>
-          <p class="competition-tab-desc">
-            <strong>Host:</strong> <span>{{ item.host_org }}</span><br>
-            <strong>Type:</strong> <span>{{ item.competition_type }}</span><br>
-            <strong>Mode:</strong> <span>{{ item.mode }}</span><br>
-            <strong>Category:</strong> <span>{{ item.category }}</span><br>
+          <div class="competition-tab-desc">
+            <p><i class="fas fa-user-tie" style="color:#0c1e3a;"></i> <strong>Host:</strong> <span>{{ item.host_org }}</span></p>
+            <p><i class="fas fa-trophy" style="color:#ff9800;"></i> <strong>Type:</strong> <span>{{ item.competition_type }}</span></p>
+            <p><i class="fas fa-laptop-house" style="color:#4caf50;"></i> <strong>Mode:</strong> <span>{{ item.mode }}</span></p>
+            <p><i class="fas fa-tags" style="color:#9c27b0;"></i> <strong>Category:</strong> <span>{{ item.category }}</span></p>
             {% if item.fee_amount %}
-              <strong>Fee:</strong> ₹<span>{{ item.fee_amount }}</span><br>
+              <p><i class="fas fa-rupee-sign" style="color:#e91e63;"></i> <strong>Fee:</strong> ₹<span>{{ item.fee_amount }}</span></p>
             {% endif %}
             {% if item.prize_pool %}
-              <strong>Prize:</strong> <span>{{ item.prize_pool }}</span><br>
+              <p><i class="fas fa-gift" style="color:#03a9f4;"></i> <strong>Prize:</strong> <span>{{ item.prize_pool }}</span></p>
             {% endif %}
-            <small class="text-muted">Deadline: {{ item.registration_deadline }}</small>
-          </p>
+            <p><i class="fas fa-clock" style="color:#795548;"></i> <strong>Deadline:</strong> <span>{{ item.registration_deadline }}</span></p>
+          </div>
         </div>
         <img src="{% static 'images/C1.webp' %}" alt="Competition" class="competition-tab-img">
       </a>
@@ -55,11 +55,11 @@
   .competition-tab-strip {
     display: flex;
     overflow-x: auto;
+    overflow-y: hidden;
     scroll-behavior: smooth;
-    overflow-y: hidden; /* prevent vertical scroll */
-    gap: 30px;
+    gap: 25px;
     padding: 0 15px;
-      overscroll-behavior-x: contain; /* prevent vertical drag from affecting horizontal */
+    overscroll-behavior-x: contain;
   }
 
   .competition-tab-strip::-webkit-scrollbar {
@@ -96,15 +96,15 @@
 
   .competition-tab-card {
     flex: 0 0 auto;
-    min-width: 350px;
-    max-width: 380px;
-    padding: 20px 25px;
+    width: 450px; /* same as job/internship */
+    padding: 18px 22px;
     border-radius: 15px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-    background-color: #6be485;
+    background-color: #ffffff;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 20px;
     transition: all 0.3s ease;
     text-decoration: none;
     border: 2px solid transparent;
@@ -118,31 +118,45 @@
 
   .competition-tab-text {
     text-align: left;
+    flex: 1;
   }
 
   .competition-tab-title {
-    font-weight: 600;
-    font-size: 1.3rem;
+    font-weight: 700;
+    font-size: 1.4rem;
     color: #0c1e3a;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
 
   .competition-tab-desc {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: #333;
-    line-height: 1.4;
+    line-height: 1.5;
+  }
+
+  .competition-tab-desc p {
+    margin: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+  }
+
+  .competition-tab-desc strong {
+    font-weight: 600;
+    color: #222;
   }
 
   .competition-tab-desc span {
-    font-weight: 500;
     color: #555;
+    font-weight: 500;
   }
 
   .competition-tab-img {
-    width: 110px;
-    height: 110px;
+    width: 150px;
+    height: 150px;
     object-fit: contain;
-    margin-left: 15px;
+    flex-shrink: 0;
     transition: transform 0.3s ease;
   }
 
@@ -150,22 +164,29 @@
     transform: scale(1.08);
   }
 
+  @media (max-width: 992px) {
+    .competition-tab-card {
+      width: 400px;
+    }
+    .competition-tab-img {
+      width: 120px;
+      height: 120px;
+    }
+  }
+
   @media (max-width: 768px) {
     .competition-tab-card {
       flex-direction: row;
-      min-width: 90%;
-      max-width: 90%;
+      width: 95%;
+      gap: 15px;
     }
-
     .competition-tab-img {
-      width: 90px;
-      height: 90px;
+      width: 110px;
+      height: 110px;
     }
-
     .competition-scroll-btn {
       display: none;
     }
-
     .competition-tab-strip {
       padding: 0 10px;
     }

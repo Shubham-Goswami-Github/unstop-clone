@@ -1,12 +1,12 @@
 {% load static %}
 
-<!-- AOS CSS (already included globally if above exists) -->
+<!-- AOS CSS -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
 <!-- JOB STRIP CONTAINER -->
 <div class="job-strip-wrapper">
-   <div class="mb-4 text-start">
+  <div class="mb-4 text-start">
     <h2 class="fw-bold mb-1">
       <span style="color: black;">Top</span>
       <span style="color: #0c1e3a;">Jobs</span>
@@ -20,15 +20,15 @@
       <a href="{% url 'user_job_detail' job.id %}" class="job-tab-card" style="background-color: #fff9f0;" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:"1" }}00">
         <div class="job-tab-text">
           <div class="job-tab-title">{{ job.title }}</div>
-          <p class="job-tab-desc">
-            <strong>Company:</strong> <span>{{ job.company_name }}</span><br>
-            <strong>Domain:</strong> <span>{{ job.domain }}</span><br>
-            <strong>Type:</strong> <span>{{ job.employment_type }}</span><br>
-            <strong>Category:</strong> <span>{{ job.category }}</span><br>
+          <div class="job-tab-desc">
+            <p><i class="fas fa-building" style="color:#e67e22;"></i> <strong>Company:</strong> <span>{{ job.company_name }}</span></p>
+            <p><i class="fas fa-network-wired" style="color:#ff9800;"></i> <strong>Domain:</strong> <span>{{ job.domain }}</span></p>
+            <p><i class="fas fa-briefcase" style="color:#4caf50;"></i> <strong>Type:</strong> <span>{{ job.employment_type }}</span></p>
+            <p><i class="fas fa-tags" style="color:#9c27b0;"></i> <strong>Category:</strong> <span>{{ job.category }}</span></p>
             {% if job.salary_min_lpa %}
-              <strong>Salary:</strong> ₹<span>{{ job.salary_min_lpa }} - {{ job.salary_max_lpa }} LPA</span>
+              <p><i class="fas fa-rupee-sign" style="color:#e91e63;"></i> <strong>Salary:</strong> ₹<span>{{ job.salary_min_lpa }} - {{ job.salary_max_lpa }} LPA</span></p>
             {% endif %}
-          </p>
+          </div>
         </div>
         <img src="{% static 'images/J1.webp' %}" alt="Job" class="job-tab-img">
       </a>
@@ -50,11 +50,11 @@
   .job-tab-strip {
     display: flex;
     overflow-x: auto;
-      overflow-y: hidden; /* prevent vertical scroll */
+    overflow-y: hidden;
     scroll-behavior: smooth;
-    gap: 30px;
+    gap: 25px;
     padding: 0 15px;
-      overscroll-behavior-x: contain; /* prevent vertical drag from affecting horizontal */
+    overscroll-behavior-x: contain;
   }
 
   .job-tab-strip::-webkit-scrollbar {
@@ -67,7 +67,7 @@
     transform: translateY(-50%);
     background-color: transparent;
     border: none;
-    color: #d35400;
+    color: #e67e22;
     font-size: 26px;
     padding: 10px 12px;
     border-radius: 50%;
@@ -91,15 +91,15 @@
 
   .job-tab-card {
     flex: 0 0 auto;
-    min-width: 350px;
-    max-width: 380px;
-    padding: 20px 25px;
+    width: 450px; /* same as internship */
+    padding: 18px 22px;
     border-radius: 15px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
     background-color: #ffffff;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 20px; /* space between text and image */
     transition: all 0.3s ease;
     text-decoration: none;
     border: 2px solid transparent;
@@ -113,31 +113,45 @@
 
   .job-tab-text {
     text-align: left;
+    flex: 1;
   }
 
   .job-tab-title {
-    font-weight: 600;
-    font-size: 1.3rem;
+    font-weight: 700;
+    font-size: 1.4rem;
     color: #e67e22;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
 
   .job-tab-desc {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: #333;
-    line-height: 1.4;
+    line-height: 1.5;
+  }
+
+  .job-tab-desc p {
+    margin: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+  }
+
+  .job-tab-desc strong {
+    font-weight: 600;
+    color: #222;
   }
 
   .job-tab-desc span {
-    font-weight: 500;
     color: #555;
+    font-weight: 500;
   }
 
   .job-tab-img {
-    width: 110px;
-    height: 110px;
+    width: 150px; /* bigger image like internship */
+    height: 150px;
     object-fit: contain;
-    margin-left: 15px;
+    flex-shrink: 0;
     transition: transform 0.3s ease;
   }
 
@@ -145,22 +159,29 @@
     transform: scale(1.08);
   }
 
+  @media (max-width: 992px) {
+    .job-tab-card {
+      width: 400px;
+    }
+    .job-tab-img {
+      width: 120px;
+      height: 120px;
+    }
+  }
+
   @media (max-width: 768px) {
     .job-tab-card {
       flex-direction: row;
-      min-width: 90%;
-      max-width: 90%;
+      width: 95%;
+      gap: 15px;
     }
-
     .job-tab-img {
-      width: 90px;
-      height: 90px;
+      width: 110px;
+      height: 110px;
     }
-
     .job-scroll-btn {
       display: none;
     }
-
     .job-tab-strip {
       padding: 0 10px;
     }
