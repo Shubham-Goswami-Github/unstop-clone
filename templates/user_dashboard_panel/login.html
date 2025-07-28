@@ -6,13 +6,33 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 <style>
+  body {
+    background-color: #f4f6f9;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    0% {opacity: 0; transform: translateY(20px);}
+    100% {opacity: 1; transform: translateY(0);}
+  }
+
+  @keyframes slideInLeft {
+    0% {opacity: 0; transform: translateX(-50px);}
+    100% {opacity: 1; transform: translateX(0);}
+  }
+
+  @keyframes slideInRight {
+    0% {opacity: 0; transform: translateX(50px);}
+    100% {opacity: 1; transform: translateX(0);}
+  }
+
   .form-container {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f4f6f9;
-    font-family: 'Segoe UI', sans-serif;
+    animation: fadeIn 1s ease-in-out;
   }
 
   .form-section {
@@ -21,9 +41,10 @@
     border-radius: 15px;
     width: 100%;
     max-width: 900px;
-    box-shadow: 0px 0px 20px rgba(0,0,0,0.1);
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.1);
     display: flex;
     gap: 30px;
+    animation: fadeIn 1.2s ease-in-out;
   }
 
   .form-left {
@@ -31,6 +52,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    animation: slideInLeft 1.2s ease;
   }
 
   .form-left img {
@@ -38,19 +60,27 @@
     height: auto;
     border-radius: 12px;
     object-fit: contain;
+    transition: transform 0.5s ease;
+  }
+
+  .form-left img:hover {
+    transform: scale(1.05);
   }
 
   .form-right {
     flex: 1.2;
+    animation: slideInRight 1.2s ease;
   }
 
   .btn-darkblue {
     background-color: #003366;
     color: white;
+    transition: all 0.3s ease;
   }
 
   .btn-darkblue:hover {
     background-color: #001d3d;
+    transform: scale(1.05);
   }
 
   .form-label {
@@ -61,6 +91,7 @@
   .alert {
     font-size: 0.9rem;
     padding: 8px 12px;
+    animation: fadeIn 0.8s ease-in-out;
   }
 
   .login-heading {
@@ -68,6 +99,18 @@
     font-size: 1.8rem;
     color: #003366;
     margin-bottom: 10px;
+    animation: fadeIn 1.5s ease;
+  }
+
+  /* Input Focus Effect */
+  input.form-control {
+    transition: 0.3s ease;
+    border: 1px solid #ccc;
+  }
+
+  input.form-control:focus {
+    border-color: #003366;
+    box-shadow: 0 0 8px rgba(0, 51, 102, 0.2);
   }
 </style>
 

@@ -1,0 +1,190 @@
+{% load static %}
+
+<!-- Feedback Slider -->
+<style>
+.feedback-section {
+  background: #f8f9fa;
+  padding: 50px 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.feedback-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #003366;
+  margin-bottom: 35px;
+}
+
+.feedback-slider {
+  display: flex;
+  gap: 20px;
+  animation: scrollSlide 30s linear infinite;
+}
+
+.feedback-card {
+  flex: 0 0 300px;
+  padding: 20px;
+  border-radius: 14px;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  transform: scale(0.95);
+  transition: transform 0.3s ease-in-out;
+  animation: fadeInUp 1s ease;
+}
+
+.feedback-card:hover {
+  transform: scale(1);
+}
+
+.feedback-text {
+  font-size: 1rem;
+  margin-bottom: 15px;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.user-info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+}
+
+.user-info span {
+  font-weight: 600;
+}
+
+/* Different Background Colors for Each Card */
+.feedback-card:nth-child(1) { background: #003366; }
+.feedback-card:nth-child(2) { background: #0056b3; }
+.feedback-card:nth-child(3) { background: #0077cc; }
+.feedback-card:nth-child(4) { background: #004080; }
+.feedback-card:nth-child(5) { background: #1a5f7a; }
+.feedback-card:nth-child(6) { background: #006494; }
+.feedback-card:nth-child(7) { background: #004c91; }
+.feedback-card:nth-child(8) { background: #003e73; }
+
+/* Animation */
+@keyframes scrollSlide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes fadeInUp {
+  0% {opacity: 0; transform: translateY(20px);}
+  100% {opacity: 1; transform: translateY(0);}
+}
+
+/* Duplicate Cards for Infinite Loop Effect */
+.feedback-wrapper {
+  display: flex;
+  width: max-content;
+}
+
+@media (max-width: 768px) {
+  .feedback-card {
+    flex: 0 0 250px;
+  }
+}
+</style>
+
+<div class="feedback-section">
+  <h2 class="feedback-title">What Our Users Say</h2>
+  <div class="feedback-wrapper">
+    <div class="feedback-slider">
+      <!-- Original Feedback Cards -->
+      <div class="feedback-card">
+        <p class="feedback-text">"This platform is a game-changer for my career!"</p>
+        <div class="user-info">
+        <i class="fas fa-user-circle" style="font-size: 40px; color: #fff;"></i>
+
+          <span>Rahul Sharma</span>
+        </div>
+      </div>
+      <div class="feedback-card">
+        <p class="feedback-text">"Amazing experience! Found the perfect internship here."</p>
+        <div class="user-info">
+       <i class="fas fa-user-circle" style="font-size: 40px; color: #fff;"></i>
+
+          <span>Ananya Verma</span>
+        </div>
+      </div>
+      <div class="feedback-card">
+        <p class="feedback-text">"Smooth and professional platform for job seekers."</p>
+        <div class="user-info">
+      <i class="fas fa-user-circle" style="font-size: 40px; color: #fff;"></i>
+
+          <span>Karan Patel</span>
+        </div>
+      </div>
+      <div class="feedback-card">
+        <p class="feedback-text">"Got multiple offers within days. Highly recommended!"</p>
+        <div class="user-info">
+        <i class="fas fa-user-circle" style="font-size: 40px; color: #fff;"></i>
+
+          <span>Pooja Singh</span>
+        </div>
+      </div>
+      <div class="feedback-card">
+        <p class="feedback-text">"User-friendly and a great variety of opportunities."</p>
+        <div class="user-info">
+        <i class="fas fa-user-circle" style="font-size: 40px; color: #fff;"></i>
+
+        </div>
+      </div>
+      <div class="feedback-card">
+        <p class="feedback-text">"Love the easy application process. Very smooth!"</p>
+        <div class="user-info">
+      <i class="fas fa-user-circle" style="font-size: 40px; color: #fff;"></i>
+
+          <span>Shruti Jain</span>
+        </div>
+      </div>
+      <div class="feedback-card">
+        <p class="feedback-text">"Best platform to kickstart a professional journey."</p>
+        <div class="user-info">
+       <i class="fas fa-user-circle" style="font-size: 40px; color: #fff;"></i>
+
+          <span>Arjun Das</span>
+        </div>
+      </div>
+      <div class="feedback-card">
+        <p class="feedback-text">"Simple, effective, and career-changing experience."</p>
+        <div class="user-info">
+       <i class="fas fa-user-circle" style="font-size: 40px; color: #fff;"></i>
+
+          <span>Megha Kapoor</span>
+        </div>
+      </div>
+
+      <!-- Duplicate Feedback Cards for Loop -->
+      <div class="feedback-card">
+        <p class="feedback-text">"This platform is a game-changer for my career!"</p>
+        <div class="user-info">
+         <i class="fas fa-user-circle" style="font-size: 40px; color: #fff;"></i>
+
+          <span>Rahul Sharma</span>
+        </div>
+      </div>
+      <div class="feedback-card">
+        <p class="feedback-text">"Amazing experience! Found the perfect internship here."</p>
+        <div class="user-info">
+          <i class="fas fa-user-circle" style="font-size: 40px; color: #fff;"></i>
+
+          <span>Ananya Verma</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

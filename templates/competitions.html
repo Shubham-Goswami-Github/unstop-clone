@@ -7,31 +7,32 @@
 <style>
   body {
     font-family: 'Segoe UI', sans-serif;
+    background-color: #f8f9fa;
+    overflow-x: hidden;
   }
 
+  /* Hero Section */
   .hero-section {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    padding: 60px 40px;
+    padding: 80px 10%;
     background: linear-gradient(145deg, #eaf3fb, #f0f7ff);
     gap: 40px;
     flex-wrap: wrap;
-    animation: fadeInUp 0.8s ease;
+    animation: fadeInUp 1s ease-in-out;
   }
 
   .hero-text {
     flex: 1;
     max-width: 550px;
-    text-align: left;
     animation: slideInLeft 1s ease-in-out;
   }
 
   .hero-text h1 {
-    font-size: 3.2rem;
+    font-size: 3rem;
     font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
 
   .hero-text .unlock {
@@ -47,32 +48,36 @@
     margin-left: 12px;
   }
 
-  .hero-text p.subtext {
+  .typing-text {
     font-style: italic;
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: #444;
-    margin-top: 10px;
-    animation: blinkText 1.8s infinite;
+    border-right: 2px solid #333;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0;
+    animation: typing 4s steps(50, end) forwards, blink 0.8s infinite;
   }
 
-  .hero-image {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    padding-right: 30px;
-    animation: slideInRight 1s ease-in-out;
+  .extra-lines {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #666;
   }
 
   .hero-image img {
-    max-width: 420px;
+    max-width: 450px;
     border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    animation: slideInRight 1s ease-in-out;
   }
 
+  /* Filters */
   .filter-section {
-    padding: 40px 20px 20px;
-    background: #ffffff;
-    animation: fadeInUp 0.8s ease;
+    padding: 30px 20px;
+    background: #fff;
+    text-align: center;
+    animation: fadeInUp 1.2s ease;
   }
 
   .filter-buttons-group {
@@ -84,7 +89,7 @@
   }
 
   .filter-buttons-group button {
-    background-color: #ffffff;
+    background-color: #fff;
     color: #003366;
     border: 2px solid #003366;
     padding: 10px 25px;
@@ -92,182 +97,214 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   }
 
-  .filter-buttons-group button:hover {
-    background-color: #003366;
-    color: white;
-  }
-
+  .filter-buttons-group button:hover,
   .filter-buttons-group button.active {
     background-color: #003366;
     color: white;
-    transform: scale(1.05);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    transform: scale(1.08);
   }
 
+  /* Competitions Cards */
   .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
     padding: 40px 20px;
     max-width: 1200px;
     margin: auto;
-    justify-content: center;
   }
 
-  .banner-card {
+  .tab-card {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 16px;
-    padding: 25px 20px;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+    padding: 20px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    text-align: center;
     transition: all 0.3s ease-in-out;
     border: 1px solid #e3e3e3;
-    animation: fadeInUp 0.5s ease;
+    text-decoration: none;
+    display: none;
+    opacity: 0;
+    transform: translateY(20px);
   }
 
-  .banner-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-    border-color: #0056b350;
+  .tab-card.show {
+    display: flex;
+    animation: fadeInCard 0.6s ease forwards;
   }
 
-  .banner-card .icon {
-    font-size: 45px;
-    margin-bottom: 15px;
+  .tab-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    border-color: #0056b3;
+  }
+
+  .tab-text {
+    max-width: 70%;
+    color: #333;
+  }
+
+  .tab-title {
+    font-weight: 700;
     color: #003366;
-    transition: transform 0.4s ease-in-out;
-  }
-
-  .banner-card:hover .icon {
-    transform: scale(1.2) rotate(8deg);
-  }
-
-  .banner-card h5 {
-    font-weight: 600;
+    margin-bottom: 8px;
     font-size: 1.2rem;
-    margin-bottom: 5px;
   }
 
-  .banner-card p {
-    font-size: 0.9rem;
+  .tab-desc {
+    font-size: 0.95rem;
     color: #555;
-    margin: 0;
   }
 
-  .apply-btn {
-    margin-top: 15px;
-    transition: all 0.3s;
-    border-radius: 20px;
+  .tab-desc span {
+    font-weight: 500;
+    color: #000;
   }
 
-  .apply-btn:hover {
-    background-color: #003366;
-    color: #fff;
-    transform: translateY(-2px);
+  .tab-img {
+    width: 85px;
+    height: 85px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
   }
 
-  @keyframes fadeInUp {
-    0% { opacity: 0; transform: translateY(30px); }
-    100% { opacity: 1; transform: translateY(0); }
+  .tab-card:hover .tab-img {
+    transform: scale(1.08);
   }
 
-  @keyframes slideInLeft {
-    0% { opacity: 0; transform: translateX(-40px); }
-    100% { opacity: 1; transform: translateX(0); }
-  }
-
-  @keyframes slideInRight {
-    0% { opacity: 0; transform: translateX(40px); }
-    100% { opacity: 1; transform: translateX(0); }
-  }
-
-  @keyframes blinkText {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-
-  @media (max-width: 576px) {
-    .hero-text h1 {
-      font-size: 2.2rem;
-    }
-    .filter-buttons-group {
+  @media (max-width: 768px) {
+    .hero-section {
       flex-direction: column;
-      gap: 10px;
+      text-align: center;
     }
+    .hero-text h1 {
+      font-size: 2.4rem;
+    }
+    .tab-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .tab-img {
+      margin-top: 15px;
+    }
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-50px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes fadeInCard {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes typing {
+    0% { width: 0; }
+    100% { width: 100%; }
+  }
+  @keyframes blink {
+    0%, 50%, 100% { border-color: transparent; }
+    25%, 75% { border-color: #333; }
   }
 </style>
 
-<!-- ===== Hero Section ===== -->
+<!-- Hero -->
 <div class="hero-section">
   <div class="hero-text">
-    <h1><span class="unlock">UNLOCK</span><span class="opportunities">OPPORTUNITIES</span></h1>
-    <p class="subtext">Explore global challenges and test your skills!</p>
+    <h1><span class="unlock">UNLOCK</span><span class="opportunities">CHALLENGES</span></h1>
+    <p class="typing-text">Explore global competitions and test your skills!</p>
+    <div class="extra-lines">
+      ✅ Compete with the best minds globally.<br>
+      ✅ Win exciting rewards and recognition.<br>
+      ✅ Enhance your resume with real achievements.
+    </div>
   </div>
   <div class="hero-image">
-    <img src="{% static 'images/c1.webp' %}" alt="Hero Image">
+    <img src="{% static 'images/c1.webp' %}" alt="Hero">
   </div>
 </div>
 
-<!-- ===== Filter Buttons ===== -->
+<!-- Filters -->
 <div class="filter-section">
   <div class="filter-buttons-group">
-    <button id="allBtn" onclick="setType('all')" class="active">Show All</button>
+    <button id="allBtn" onclick="setType('all')">Show All</button>
     {% for key, label in competition_type_choices %}
-    <button id="{{ key|slugify }}Btn" onclick="setType('{{ key }}')">{{ label }}</button>
+      <button id="{{ key|slugify }}Btn" onclick="setType('{{ key }}')">{{ label }}</button>
     {% endfor %}
   </div>
 </div>
 
-<!-- ===== Cards Grid ===== -->
+<!-- Competitions Cards -->
 <div class="cards-grid" id="compCards">
   {% for comp in competitions %}
-  <div class="banner-card" data-type="{{ comp.competition_type }}">
-    <i class="fas fa-trophy icon"></i>
-    <h5>{{ comp.title|truncatechars:40 }}</h5>
-    <p><strong>{{ comp.host_org }}</strong></p>
-    <span class="badge bg-secondary">{{ comp.mode }} • {{ comp.category }}</span>
-    <p class="mt-2 small">
-      {{ comp.competition_type }}{% if comp.registration_deadline %} • Apply by {{ comp.registration_deadline }}{% endif %}
-    </p>
-    <a href="{% url 'competition_detail_user' comp.pk %}" class="btn btn-sm btn-outline-primary apply-btn">View Details</a>
-  </div>
+    <div class="tab-card" data-type="{{ comp.competition_type }}">
+      <div class="tab-text">
+        <div class="tab-title">{{ comp.title|truncatechars:40 }}</div>
+        <p class="tab-desc">
+          <strong>Host:</strong> <span>{{ comp.host_org }}</span><br>
+          <strong>Mode:</strong> <span>{{ comp.mode }}</span><br>
+          <strong>Category:</strong> <span>{{ comp.category }}</span><br>
+          <strong>Type:</strong> <span>{{ comp.competition_type }}</span><br>
+          {% if comp.registration_deadline %}
+            <strong>Apply by:</strong> <span>{{ comp.registration_deadline }}</span>
+          {% endif %}
+        </p>
+        <a href="{% url 'competition_detail_user' comp.pk %}" class="btn btn-sm btn-outline-primary">View Details</a>
+      </div>
+      <img src="{% static 'images/C1.webp' %}" alt="Competition" class="tab-img">
+    </div>
   {% empty %}
     <p class="text-center text-muted">No competitions available.</p>
   {% endfor %}
 </div>
 
-<!-- ===== Filtering Script (Untouched) ===== -->
+<!-- Filtering Script -->
 <script>
 let compType = null;
 
-function setType(t){
+function setType(t) {
   compType = (t === 'all') ? null : t;
   document.querySelectorAll('.filter-buttons-group button').forEach(btn => btn.classList.remove('active'));
   document.getElementById((t === 'all' ? 'all' : t.toLowerCase().replace(/\s/g, '-') ) + 'Btn')?.classList.add('active');
 
-  document.querySelectorAll('.banner-card').forEach(card => {
+  const cards = document.querySelectorAll('.tab-card');
+  cards.forEach(card => {
+    card.classList.remove('show');
     const show = !compType || card.dataset.type === compType;
-    card.style.display = show ? 'flex' : 'none';
+    if (show) {
+      setTimeout(() => card.classList.add('show'), 100);
+    }
   });
 }
-window.addEventListener('load', setType.bind(null, 'all'));
 </script>
+ {% include 'feedback_slider.html' %}
 
+   <div class="strip-container">
+    {% include 'industry_strip.html' %}
+  </div>
 <div class="bottom-footer-wrapper">
   {% include 'bottom_menu.html' %}
 </div>
 
 <style>
-  footer.bg-footer {
-    margin-left: calc(-1 * (100vw - 100%)/2);
-    margin-right: calc(-1 * (100vw - 100%)/2);
-    width: 100vw;
-  }
+footer.bg-footer {
+  margin-left: calc(-1 * (100vw - 100%)/2);
+  margin-right: calc(-1 * (100vw - 100%)/2);
+  width: 100vw;
+}
 </style>
 {% endblock %}
+

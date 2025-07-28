@@ -2147,3 +2147,7 @@ def our_numbers_view(request):
         'company_count': Company.objects.count(),
     }
     return render(request, 'our_numbers.html', context)
+from django.shortcuts import render
+
+def about_us(request):
+    return render(request, 'about_us.html')

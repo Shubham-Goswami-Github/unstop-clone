@@ -8,17 +8,46 @@
   body {
     font-family: 'Segoe UI', sans-serif;
     background-color: #f8f9fa;
+    overflow-x: hidden;
   }
 
+  /* Animations */
+  @keyframes fadeInUp {
+    0% {opacity: 0; transform: translateY(30px);}
+    100% {opacity: 1; transform: translateY(0);}
+  }
+  @keyframes slideInLeft {
+    0% {opacity: 0; transform: translateX(-40px);}
+    100% {opacity: 1; transform: translateX(0);}
+  }
+  @keyframes slideInRight {
+    0% {opacity: 0; transform: translateX(40px);}
+    100% {opacity: 1; transform: translateX(0);}
+  }
+  @keyframes scaleFade {
+    0% {opacity: 0; transform: scale(0.8);}
+    100% {opacity: 1; transform: scale(1);}
+  }
+
+  /* Typing Effect */
+  @keyframes typing {
+    from {width: 0;}
+    to {width: 100%;}
+  }
+  @keyframes blink {
+    50% {border-color: transparent;}
+  }
+
+  /* Hero Section */
   .hero-section {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     padding: 60px 40px;
     background: linear-gradient(145deg, #eaf3fb, #f0f7ff);
     gap: 40px;
     flex-wrap: wrap;
-    animation: fadeInUp 0.8s ease;
+    animation: fadeInUp 1s ease;
   }
 
   .hero-text {
@@ -31,7 +60,6 @@
   .hero-text h1 {
     font-size: 3.2rem;
     font-weight: 700;
-    line-height: 1.2;
     margin-bottom: 10px;
   }
 
@@ -48,12 +76,16 @@
     margin-left: 12px;
   }
 
-  .hero-text p.subtext {
+  .typing-text {
     font-style: italic;
-    font-size: 1rem;
+    font-size: 1.2rem;
     color: #444;
-    margin-top: 10px;
-    animation: blinkText 1.8s infinite;
+    margin-top: 15px;
+    border-right: 3px solid #003366;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0;
+    display: inline-block;
   }
 
   .hero-image {
@@ -61,7 +93,7 @@
     display: flex;
     justify-content: flex-end;
     padding-right: 30px;
-    animation: slideInRight 1s ease-in-out;
+    animation: slideInRight 1.2s ease-in-out;
   }
 
   .hero-image img {
@@ -70,9 +102,10 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   }
 
+  /* Filters */
   .filter-section {
     padding: 40px 20px 20px;
-    background: #ffffff;
+    background: #fff;
     animation: fadeInUp 0.8s ease;
   }
 
@@ -85,7 +118,7 @@
   }
 
   .filter-buttons-group button {
-    background-color: #ffffff;
+    background-color: #fff;
     color: #003366;
     border: 2px solid #003366;
     padding: 10px 25px;
@@ -96,18 +129,13 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   }
 
-  .filter-buttons-group button:hover {
-    background-color: #003366;
-    color: white;
-  }
-
+  .filter-buttons-group button:hover,
   .filter-buttons-group button.active {
     background-color: #003366;
     color: white;
-    transform: scale(1.05);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   }
 
+  /* Cards */
   .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -115,7 +143,6 @@
     padding: 40px 20px;
     max-width: 1200px;
     margin: auto;
-    justify-content: center;
   }
 
   .tab-card {
@@ -123,12 +150,16 @@
     border-radius: 16px;
     padding: 20px;
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
-    display: flex;
+    display: none;
     justify-content: space-between;
     align-items: center;
     transition: all 0.3s ease-in-out;
     border: 1px solid #e3e3e3;
-    text-decoration: none;
+  }
+
+  .tab-card.show {
+    display: flex;
+    animation: scaleFade 0.6s ease;
   }
 
   .tab-card:hover {
@@ -151,7 +182,6 @@
 
   .tab-desc {
     font-size: 0.95rem;
-    line-height: 1.5;
     color: #555;
   }
 
@@ -171,53 +201,26 @@
     transform: scale(1.08);
   }
 
-  @keyframes fadeInUp {
-    0% { opacity: 0; transform: translateY(30px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes slideInLeft {
-    0% { opacity: 0; transform: translateX(-40px); }
-    100% { opacity: 1; transform: translateX(0); }
-  }
-
-  @keyframes slideInRight {
-    0% { opacity: 0; transform: translateX(40px); }
-    100% { opacity: 1; transform: translateX(0); }
-  }
-
-  @keyframes blinkText {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-
   @media (max-width: 768px) {
-    .hero-text h1 {
-      font-size: 2.4rem;
-    }
-    .tab-card {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .tab-text {
-      max-width: 100%;
-    }
-    .tab-img {
-      margin-top: 15px;
-    }
+    .hero-text h1 {font-size: 2.4rem;}
+    .tab-card {flex-direction: column;align-items: flex-start;}
+    .tab-img {margin-top: 15px;}
+    .hero-image {justify-content: center;padding-right: 0;}
   }
 </style>
 
+<!-- Hero -->
 <div class="hero-section">
   <div class="hero-text">
     <h1><span class="unlock">UNLOCK</span><span class="opportunities">EXPOSURE</span></h1>
-    <p class="subtext">Discover curated internships tailored for your growth!</p>
+    <div class="typing-text" id="typingText"></div>
   </div>
   <div class="hero-image">
     <img src="{% static 'images/I1.webp' %}" alt="Hero">
   </div>
 </div>
 
+<!-- Filters -->
 <div class="filter-section">
   <div class="filter-buttons-group">
     <button id="paidBtn" onclick="filterCategory('Paid')">Paid</button>
@@ -230,10 +233,10 @@
   </div>
 </div>
 
+<!-- Cards -->
 <div class="cards-grid" id="internshipCards">
   {% for internship in internships %}
-   <div class="tab-card" data-category="{{ internship.category }}" data-mode="{{ internship.mode }}" style="display: none;">
-
+   <div class="tab-card" data-category="{{ internship.category }}" data-mode="{{ internship.mode }}">
       <div class="tab-text">
         <div class="tab-title">{{ internship.title|truncatechars:40 }}</div>
         <p class="tab-desc">
@@ -245,67 +248,95 @@
             <strong>Stipend:</strong> ₹<span>{{ internship.stipend_amount }}</span>
           {% endif %}
         </p>
-        <a href="{% url 'user_internship_detail' internship.id %}" class="btn btn-sm btn-outline-primary apply-btn">Apply Now</a>
+        <a href="{% url 'user_internship_detail' internship.id %}" class="btn btn-sm btn-outline-primary">Apply Now</a>
       </div>
       <img src="{% static 'images/U1.webp' %}" alt="Internships" class="tab-img">
     </div>
   {% endfor %}
 </div>
 
+<!-- Scripts -->
 <script>
-  let selectedCategory = null;
-  let selectedMode = null;
+let selectedCategory = null;
+let selectedMode = null;
 
-  function updateButtonState(groupIds, selectedId) {
-    groupIds.forEach(id => document.getElementById(id)?.classList.remove('active'));
-    const btn = document.getElementById(selectedId);
-    if (btn) btn.classList.add('active');
-  }
+function updateButtonState(groupIds, selectedId) {
+  groupIds.forEach(id => document.getElementById(id)?.classList.remove('active'));
+  const btn = document.getElementById(selectedId);
+  if (btn) btn.classList.add('active');
+}
 
-  function filterCategory(category) {
-    selectedCategory = category.trim().toLowerCase();
-    updateButtonState(['paidBtn', 'unpaidBtn'], selectedCategory + 'Btn');
-    document.getElementById('modeFilters').style.display = 'flex';
-    applyFilters();
-  }
+function filterCategory(category) {
+  selectedCategory = category.trim().toLowerCase();
+  updateButtonState(['paidBtn', 'unpaidBtn'], selectedCategory + 'Btn');
+  document.getElementById('modeFilters').style.display = 'flex';
+  applyFilters();
+}
 
-  function filterMode(mode) {
-    selectedMode = mode.trim().toLowerCase();
-    updateButtonState(['onlineBtn', 'offlineBtn', 'hybridBtn'], selectedMode + 'Btn');
-    applyFilters();
-  }
+function filterMode(mode) {
+  selectedMode = mode.trim().toLowerCase();
+  updateButtonState(['onlineBtn', 'offlineBtn', 'hybridBtn'], selectedMode + 'Btn');
+  applyFilters();
+}
 
-  function applyFilters() {
-    const cards = document.querySelectorAll('.tab-card');
-    let visible = 0;
+function applyFilters() {
+  const cards = document.querySelectorAll('.tab-card');
+  let visible = 0;
 
-    cards.forEach(card => {
-      const cardCategory = (card.dataset.category || '').trim().toLowerCase();
-      const cardMode = (card.dataset.mode || '').trim().toLowerCase();
+  cards.forEach(card => {
+    const cardCategory = (card.dataset.category || '').trim().toLowerCase();
+    const cardMode = (card.dataset.mode || '').trim().toLowerCase();
 
-      const matchCategory = !selectedCategory || cardCategory === selectedCategory;
-      const matchMode = !selectedMode || cardMode === selectedMode;
+    const show = (!selectedCategory || cardCategory === selectedCategory) &&
+                 (!selectedMode || cardMode === selectedMode);
 
-      const show = matchCategory && matchMode;
-      card.style.display = show ? 'flex' : 'none';
-      if (show) visible++;
-    });
+    if (show) {
+      card.classList.add('show');
+    } else {
+      card.classList.remove('show');
+    }
+    if (show) visible++;
+  });
 
-    const grid = document.getElementById('internshipCards');
-    grid.style.justifyContent = (visible === 1) ? 'center' : 'initial';
-  }
+  document.getElementById('internshipCards').style.justifyContent = (visible === 1) ? 'center' : 'initial';
+}
+
+// Typing Effect like Jobs Page
+const texts = [
+  "Discover curated internships tailored for your growth!",
+  "Gain real-world experience with top companies!",
+  "Kickstart your career with the right internship!",
+  "Opportunities that prepare you for success!",
+  "Internships that match your ambitions!"
+];
+let index = 0;
+const element = document.getElementById('typingText');
+
+function typeText(){
+  element.style.width = '0';
+  element.textContent = texts[index];
+  element.style.animation = 'typing 4s steps(40, end), blink 0.7s infinite';
+  index = (index + 1) % texts.length;
+}
+
+setInterval(typeText, 4500);
+typeText();
 </script>
+ {% include 'feedback_slider.html' %}
 
-
+ 
+  <div class="strip-container">
+    {% include 'industry_strip.html' %}
+  </div>
 <div class="bottom-footer-wrapper">
   {% include 'bottom_menu.html' %}
 </div>
 
 <style>
-  footer.bg-footer {
-    margin-left: calc(-1 * (100vw - 100%)/2);
-    margin-right: calc(-1 * (100vw - 100%)/2);
-    width: 100vw;
-  }
+footer.bg-footer {
+  margin-left: calc(-1 * (100vw - 100%)/2);
+  margin-right: calc(-1 * (100vw - 100%)/2);
+  width: 100vw;
+}
 </style>
 {% endblock %}

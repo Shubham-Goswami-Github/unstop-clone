@@ -169,6 +169,7 @@ urlpatterns = [
     path('user-panel/delete-applied-internship/<int:pk>/', views.delete_applied_internship, name='delete_applied_internship'),
     path('user-panel/delete-applied-job/<int:pk>/', views.delete_applied_job, name='delete_applied_job'),
     path('user-panel/delete-applied-competition/<int:comp_id>/', views.delete_applied_competition, name='delete_applied_competition'),
+    path('about-us/', views.about_us, name='about_us'),
 
 ]
 if settings.DEBUG:

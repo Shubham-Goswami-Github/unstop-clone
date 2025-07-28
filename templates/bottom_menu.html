@@ -1,65 +1,52 @@
 {% load static %}
 <head>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 
-<footer class="footer mt-5 text-light" style="background-color: #051d3a; font-family: 'Inter', sans-serif;">
-  <div class="container py-5 animate-on-scroll">
-    <div class="row gy-4">
-
+<footer class="footer text-light" style="font-family: 'Inter', sans-serif;">
+  <div class="container-fluid p-0">
+    <div class="row g-0">
+      
       <!-- LEFT PANEL -->
-      <div class="col-lg-4">
-        <img src="{% static 'images/unstop-logo.svg' %}" alt="Unstop Logo" width="150" class="mb-3">
-        <p class="text-secondary">Built with <span class="text-danger">❤</span> in India for the world.</p>
+      <div class="col-lg-4 left-footer d-flex flex-column justify-content-between text-white p-4 animate-on-scroll">
+        <div>
+          <img src="{% static 'images/unstop-logo.svg' %}" alt="Unstop Logo" width="150" class="mb-3">
+          <p class="text-light">Built with <span class="text-danger">❤</span> in India for the world.</p>
 
-        <div class="mt-4">
-          <h6 class="text-white fw-semibold">Sales Inquiries</h6>
-          <p><i class="fas fa-envelope me-2"></i> <a href="mailto:sales@unstop.com" class="footer-link">sales@unstop.com</a></p>
-          <p><i class="fas fa-phone me-2"></i> <a href="tel:+919311777388" class="footer-link">+91-9311777388</a> <br><small class="text-secondary">(Mon–Fri, 9 AM–6 PM)</small></p>
-        </div>
+          <div class="mt-4">
+            <h6 class="fw-semibold">Sales Inquiries</h6>
+            <p><i class="fas fa-envelope me-2"></i> <a href="mailto:sales@unstop.com" class="footer-link">sales@unstop.com</a></p>
+            <p><i class="fas fa-phone me-2"></i> <a href="tel:+919311777388" class="footer-link">+91-9311777388</a><br><small>(Mon–Fri, 9 AM–6 PM)</small></p>
+          </div>
 
-        <div class="mt-3">
-          <h6 class="text-white fw-semibold">Support Inquiries</h6>
-          <p><i class="fas fa-envelope me-2"></i> <a href="mailto:support@unstop.com" class="footer-link">support@unstop.com</a></p>
+          <div class="mt-3">
+            <h6 class="fw-semibold">Support Inquiries</h6>
+            <p><i class="fas fa-envelope me-2"></i> <a href="mailto:support@unstop.com" class="footer-link">support@unstop.com</a></p>
+          </div>
+
+          <!-- App Download Buttons -->
+          <div class="mt-4">
+            <h6 class="text-white">Download App</h6>
+            <div class="d-flex gap-2 flex-wrap">
+              <a href="#"><img src="https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/google-play.svg" width="140" alt="Google Play"></a>
+              <a href="#"><img src="https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/app-store.svg" width="140" alt="App Store"></a>
+            </div>
+            <p class="small text-light mt-2">Available on Android & iOS</p>
+          </div>
         </div>
 
         <!-- Social Icons -->
-        <div class="d-flex gap-3 mt-3">
-          {% for icon in social_icons %}
-            <a href="#"><img src="{{ icon }}" width="20" height="20" alt="icon"></a>
-          {% endfor %}
-        </div>
-
-        <!-- Newsletter -->
-        <div class="mt-4">
-          <h6 class="text-white">Stay Updated</h6>
-          <p class="small text-secondary">Get the latest updates on competitions, jobs, and learning opportunities.</p>
-          <a href="/about/newsletter" class="btn btn-sm text-white px-3" style="background-color: #1a73e8;">
-            <i class="fas fa-paper-plane me-1"></i> Subscribe
-          </a>
-        </div>
-
-        <!-- CTA Buttons -->
-        <div class="d-flex flex-wrap gap-2 mt-3">
-          <a href="/blog/share-your-story-and-get-featured/" class="btn btn-sm text-white" style="background-color:#004aad;">Share Your Story</a>
-          <a href="/organiser-panel/dashboard" class="btn btn-sm text-white d-flex align-items-center gap-1" style="background-color:#1976d2;">
-            <img src="https://cdn.unstop.com/uploads/images/unstop/menu_icons/host-icon.svg" width="16" alt="Host"> Publish Opportunity
-          </a>
-        </div>
-
-        <!-- App Downloads -->
-        <div class="mt-4">
-          <h6 class="text-white">Download App</h6>
-          <div class="d-flex gap-2 flex-wrap">
-            <a href="#"><img src="https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/google-play.svg" width="140"></a>
-            <a href="#"><img src="https://d8it4huxumps7.cloudfront.net/uploads/images/unstop/app-store.svg" width="140"></a>
-          </div>
-          <p class="small text-secondary mt-2">Available on Android & iOS</p>
+        <div class="d-flex gap-3 mt-4">
+          <a href="#"><i class="fab fa-facebook-f social-icon"></i></a>
+          <a href="#"><i class="fab fa-twitter social-icon"></i></a>
+          <a href="#"><i class="fab fa-instagram social-icon"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in social-icon"></i></a>
         </div>
       </div>
 
       <!-- RIGHT PANEL -->
-      <div class="col-lg-8">
+      <div class="col-lg-8 right-footer p-5 animate-on-scroll">
         <div class="row gy-4">
           <!-- Products -->
           <div class="col-md-4">
@@ -128,16 +115,27 @@
           <p class="small text-secondary mb-0">© 2025 <a href="/" class="footer-link">FLIVE Consulting Pvt Ltd</a> - All rights reserved.</p>
         </div>
       </div>
+
     </div>
   </div>
 </footer>
 
-
 <style>
+.footer {
+  background-color: #051d3a;
+}
+.left-footer {
+  background-color: #00264d; /* Removed dot pattern */
+  color: #fff;
+}
+.right-footer {
+  background-color: #051d3a;
+  color: #ccc;
+}
 .footer a {
   color: #ccc;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color 0.3s ease;
 }
 .footer a:hover {
   color: #fff;
@@ -153,20 +151,30 @@
 .footer-list a {
   font-size: 14px;
 }
+.social-icon {
+  font-size: 18px;
+  color: #fff;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+.social-icon:hover {
+  transform: scale(1.2);
+  color: #1a73e8;
+}
+
+/* Scroll Animation */
 .animate-on-scroll {
   opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.6s ease;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
 }
 .animate-on-scroll.visible {
   opacity: 1;
   transform: translateY(0);
 }
-
 </style>
+
 <script>
   const animatedElements = document.querySelectorAll('.animate-on-scroll');
-
   const animateOnScroll = () => {
     animatedElements.forEach(el => {
       const rect = el.getBoundingClientRect();
@@ -175,7 +183,6 @@
       }
     });
   };
-
   window.addEventListener('scroll', animateOnScroll);
   window.addEventListener('load', animateOnScroll);
 </script>
