@@ -843,25 +843,52 @@ from .forms import JobForm
 def job_list(request):
     jobs = Job.objects.all().order_by('-created_at')
     return render(request, 'admin_panel/job_list.html', {'jobs': jobs})
+from datetime import date
+from django.shortcuts import render, redirect
+from .models import Job
 
 def add_job(request):
     if request.method == 'POST':
+        title = request.POST.get('title', '').strip()
+        company_name = request.POST.get('company_name', '').strip()
+        domain = request.POST.get('domain', '').strip()
+        employment_type = request.POST.get('employment_type', '')
+        experience_level = request.POST.get('experience_level', '')
+        location = request.POST.get('location', '').strip()
+        apply_by = request.POST.get('apply_by') or None
+        job_description = request.POST.get('job_description', '').strip()
+        category = request.POST.get('category', '')
+
+        # Handle optional fields
+        salary_min = request.POST.get('salary_min_lpa')
+        salary_max = request.POST.get('salary_max_lpa')
+
+        salary_min = float(salary_min) if salary_min else None
+        salary_max = float(salary_max) if salary_max else None
+
+        remote_allowed = 'remote_allowed' in request.POST  # checkbox handling
+
         Job.objects.create(
-            title=request.POST.get('title'),
-            company_name=request.POST.get('company_name'),
-            domain=request.POST.get('domain'),
-            employment_type=request.POST.get('employment_type'),
-            salary_min_lpa=request.POST.get('salary_min_lpa') or None,
-            salary_max_lpa=request.POST.get('salary_max_lpa') or None,
-            experience_level=request.POST.get('experience_level'),
-            location=request.POST.get('location'),
-            remote_allowed=bool(request.POST.get('remote_allowed')),
-            apply_by=request.POST.get('apply_by') or None,
-            job_description=request.POST.get('job_description'),
-            category=request.POST.get('category')
+            title=title,
+            company_name=company_name,
+            domain=domain,
+            employment_type=employment_type,
+            salary_min_lpa=salary_min,
+            salary_max_lpa=salary_max,
+            experience_level=experience_level,
+            location=location,
+            remote_allowed=remote_allowed,
+            apply_by=apply_by,
+            job_description=job_description,
+            category=category
         )
         return redirect('job_list')
-    return render(request, 'admin_panel/add_job.html')
+
+    # For GET request, pass today's date to template
+    return render(request, 'admin_panel/add_job.html', {
+        'today_date': date.today().isoformat()
+    })
+
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Job
 
@@ -2151,3 +2178,5 @@ from django.shortcuts import render
 
 def about_us(request):
     return render(request, 'about_us.html')
+
+

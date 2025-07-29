@@ -170,7 +170,7 @@ urlpatterns = [
     path('user-panel/delete-applied-job/<int:pk>/', views.delete_applied_job, name='delete_applied_job'),
     path('user-panel/delete-applied-competition/<int:comp_id>/', views.delete_applied_competition, name='delete_applied_competition'),
     path('about-us/', views.about_us, name='about_us'),
-
+  
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

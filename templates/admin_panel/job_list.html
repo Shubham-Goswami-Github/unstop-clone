@@ -18,14 +18,23 @@
       </a>
       <!-- Export Buttons -->
       <button class="btn btn-sm btn-outline-success" id="exportCSV">
-        <i class="fas fa-file-csv me-1"></i> Export CSV
-      </button>
-      <button class="btn btn-sm btn-outline-danger" id="exportPDF">
-        <i class="fas fa-file-pdf me-1"></i> Export PDF
-      </button>
-    </div>
-  </div>
+  <i class="fas fa-file-csv me-1"></i> Export CSV
+</button>
+<button class="btn btn-sm btn-outline-danger" id="exportPDF">
+  <i class="fas fa-file-pdf me-1"></i> Export PDF
+</button>
+<button class="btn btn-sm btn-outline-success" id="triggerCSVImport">
+  <i class="fas fa-file-import me-1"></i> Import CSV
+</button>
+<button class="btn btn-sm btn-outline-warning" id="triggerPDFImport">
+  <i class="fas fa-file-upload me-1"></i> Import PDF
+</button>
+<input type="file" id="importCSVInput" accept=".csv" style="display: none;">
+<input type="file" id="importPDFInput" accept="application/pdf" style="display: none;">
 
+    </div>
+    
+  </div>
 
 
   <div class="card-body p-0">
@@ -120,8 +129,9 @@
         exportPDF.style.backgroundColor = "#dc3545";  // Bootstrap red
         exportPDF.innerHTML = '<i class="fas fa-file-pdf me-1"></i>Export PDF';
 
-        btnWrapper.appendChild(exportCSV);
-        btnWrapper.appendChild(exportPDF);
+      btnWrapper.appendChild(exportCSV);
+btnWrapper.appendChild(exportPDF);
+
 
         header.classList.add("d-flex", "align-items-center", "justify-content-between", "flex-wrap");
         header.appendChild(btnWrapper);
@@ -159,6 +169,41 @@
       });
     }
   });
+
+
+  // Trigger hidden file inputs from visible buttons
+document.getElementById("triggerCSVImport").onclick = () => document.getElementById("importCSVInput").click();
+document.getElementById("triggerPDFImport").onclick = () => document.getElementById("importPDFInput").click();
+
+  // ✅ CSV Import Handler
+document.getElementById("importCSVInput").addEventListener("change", function (e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const text = e.target.result;
+    const rows = text.split("\n").map(row => row.split(","));
+    console.log("CSV Data:", rows);
+    alert("CSV Imported Successfully!\nCheck console for preview.");
+  };
+  reader.readAsText(file);
+});
+
+// ✅ PDF Import Handler
+document.getElementById("importPDFInput").addEventListener("change", function (e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  if (file.type !== "application/pdf") {
+    alert("Please upload a valid PDF file.");
+    return;
+  }
+
+  alert("PDF Imported Successfully!\n(Now send this to backend for processing)");
+  console.log("Uploaded PDF:", file.name);
+});
+
 </script>
 
 <!-- Styles -->

@@ -110,6 +110,17 @@
       max-height: none;
     }
   }
+  .custom-select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 20 40 L 70 90 L 120 40' stroke='%23003366' stroke-width='14' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 30px !important;
+}
+
 </style>
 
 <section class="container py-5">
@@ -146,41 +157,50 @@
                   <input type="text" name="company_name" class="form-control" required>
                 </div>
 
-                <div class="mb-3">
-                  <label class="form-label icon-label"><i class="fas fa-code"></i>Domain *</label>
-                  <input type="text" name="domain" class="form-control" required>
-                </div>
+                <!-- Domain -->
+<div class="mb-3">
+  <label class="form-label icon-label"><i class="fas fa-code"></i>Domain *</label>
+  <select name="domain" class="form-control custom-select" required>
+    <option value="" disabled selected>Select domain</option>
+    <option value="Software">Software</option>
+    <option value="Marketing">Marketing</option>
+    <option value="Sales">Sales</option>
+    <option value="finance">Finance</option>
+     </select>
+</div>
 
-                <div class="mb-3">
-                  <label class="form-label icon-label"><i class="fas fa-globe"></i>Mode</label>
-                  <select name="mode" class="form-control">
-                    <option value="Online">Online</option>
-                    <option value="Offline">Offline</option>
-                    <option value="Hybrid">Hybrid</option>
-                  </select>
-                </div>
-
-                <div class="mb-3">
-                  <label class="form-label icon-label"><i class="fas fa-tags"></i>Category</label>
-                  <select name="category" id="categorySelect" class="form-control">
-                    <option value="Paid">Paid</option>
-                    <option value="Unpaid">Unpaid</option>
-                  </select>
-                </div>
+               <div class="mb-3">
+  <label class="form-label icon-label"><i class="fas fa-globe"></i>Mode</label>
+  <select name="mode" class="form-control custom-select" required>
+    <option value="" disabled selected>Select mode</option>
+    <option value="Online">Online</option>
+    <option value="Offline">Offline</option>
+    <option value="Hybrid">Hybrid</option>
+  </select>
+</div>
+<!-- Category -->
+<div class="mb-3">
+  <label class="form-label icon-label"><i class="fas fa-tags"></i>Category</label>
+  <select name="category" id="categorySelect" class="form-control custom-select" required>
+    <option value="" disabled selected>Select category</option>
+    <option value="Paid">Paid</option>
+    <option value="Unpaid">Unpaid</option>
+  </select>
+</div>
 
                 <div class="mb-3" id="stipendField">
                   <label class="form-label icon-label"><i class="fas fa-coins"></i>Stipend Amount</label>
-                  <input type="number" name="stipend_amount" class="form-control" step="0.01">
+                  <input type="number" name="stipend_amount" class="form-control" step="0.01" required>
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label icon-label"><i class="fas fa-calendar-day"></i>Start Date</label>
-                  <input type="date" name="start_date" id="startDate" class="form-control">
+                  <input type="date" name="start_date" id="startDate" class="form-control" required>
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label icon-label"><i class="fas fa-calendar-check"></i>End Date</label>
-                  <input type="date" name="end_date" id="endDate" class="form-control">
+                  <input type="date" name="end_date" id="endDate" class="form-control" required>
                 </div>
 
                 <div class="mb-3">
@@ -190,12 +210,12 @@
 
                 <div class="mb-3">
                   <label class="form-label icon-label"><i class="fas fa-map-marker-alt"></i>Location</label>
-                  <input type="text" name="location" class="form-control">
+                  <input type="text" name="location" class="form-control" required>
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label icon-label"><i class="fas fa-link"></i>Application Link</label>
-                  <input type="url" name="application_link" class="form-control">
+                  <input type="url" name="application_link" class="form-control" required>
                 </div>
 
                 <div class="d-flex justify-content-end">
@@ -213,40 +233,52 @@
 </section>
 
 <script>
+
   const categorySelect = document.getElementById("categorySelect");
   const stipendField = document.getElementById("stipendField");
   const stipendInput = stipendField.querySelector("input");
 
   function toggleStipendVisibility() {
     if (categorySelect.value === "Unpaid") {
-      stipendInput.value = "";
       stipendField.style.display = "none";
+      stipendInput.value = 0;  // set 0 for form submission
     } else {
       stipendField.style.display = "block";
     }
   }
 
   categorySelect.addEventListener("change", toggleStipendVisibility);
-  window.addEventListener("DOMContentLoaded", toggleStipendVisibility);
 
-  // Duration calculator
-  const startDateInput = document.getElementById('startDate');
-  const endDateInput = document.getElementById('endDate');
-  const durationWeeksInput = document.getElementById('durationWeeks');
+  window.addEventListener("DOMContentLoaded", () => {
+    toggleStipendVisibility();
 
-  function calculateDuration() {
-    const start = new Date(startDateInput.value);
-    const end = new Date(endDateInput.value);
-    if (start && end && end >= start) {
-      const weeks = Math.ceil((end - start) / (1000 * 60 * 60 * 24 * 7));
-      durationWeeksInput.value = weeks;
-    } else {
-      durationWeeksInput.value = '';
+    const today = new Date().toISOString().split('T')[0];
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    const durationWeeksInput = document.getElementById('durationWeeks');
+
+    startDateInput.setAttribute('min', today);
+
+    function calculateDuration() {
+      const start = new Date(startDateInput.value);
+      const end = new Date(endDateInput.value);
+      if (start && end && end >= start) {
+        const weeks = Math.ceil((end - start) / (1000 * 60 * 60 * 24 * 7));
+        durationWeeksInput.value = weeks;
+      } else {
+        durationWeeksInput.value = '';
+      }
     }
-  }
 
-  startDateInput.addEventListener('change', calculateDuration);
-  endDateInput.addEventListener('change', calculateDuration);
+    startDateInput.addEventListener('change', function () {
+      endDateInput.setAttribute('min', this.value);
+      calculateDuration();
+    });
+
+    endDateInput.addEventListener('change', calculateDuration);
+  });
 </script>
+
+
 
 {% endblock %}
