@@ -13,16 +13,27 @@
   <div class="card-header bg-white fw-semibold fs-5 border-bottom-0">
   <i class="fas fa-university me-2 text-primary"></i> Registered Colleges
   <div class="d-flex gap-2 float-end">
-    <button id="exportCSV" class="btn btn-sm btn-outline-success">
-      <i class="fas fa-file-csv me-1 text-success"></i> Export CSV
-    </button>
-    <button id="exportPDF" class="btn btn-sm btn-outline-danger">
-      <i class="fas fa-file-pdf me-1 text-danger"></i> Export PDF
-    </button>
-    <a href="{% url 'add_college' %}" class="btn btn-sm btn-dark-blue">
-      <i class="fas fa-plus me-1"></i> Add College
-    </a>
-  </div>
+  <button id="exportCSV" class="btn btn-sm btn-outline-success">
+    <i class="fas fa-file-csv me-1 text-success"></i> Export CSV
+  </button>
+  <button id="exportPDF" class="btn btn-sm btn-outline-danger">
+    <i class="fas fa-file-pdf me-1 text-danger"></i> Export PDF
+  </button>
+  <button id="importCSV" class="btn btn-sm btn-outline-primary">
+    <i class="fas fa-file-import me-1 text-primary"></i> Import CSV
+  </button>
+  <button id="importPDF" class="btn btn-sm btn-outline-warning">
+    <i class="fas fa-file-upload me-1 text-warning"></i> Import PDF
+  </button>
+  <a href="{% url 'add_college' %}" class="btn btn-sm btn-dark-blue">
+    <i class="fas fa-plus me-1"></i> Add College
+  </a>
+</div>
+
+<!-- 👇 Hidden file inputs for import -->
+<input type="file" id="importCSVInput" accept=".csv" style="display: none;">
+<input type="file" id="importPDFInput" accept="application/pdf" style="display: none;">
+
 </div>
 
 
@@ -170,7 +181,50 @@
       doc.save("colleges_export.pdf");
     });
   });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // 🔁 Import CSV Trigger
+    document.getElementById("importCSV").addEventListener("click", function () {
+      document.getElementById("importCSVInput").click();
+    });
+
+    // 🔁 Import PDF Trigger
+    document.getElementById("importPDF").addEventListener("click", function () {
+      document.getElementById("importPDFInput").click();
+    });
+
+    // 📥 Handle CSV File
+    document.getElementById("importCSVInput").addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const csvText = e.target.result;
+        const rows = csvText.split("\n").map(row => row.split(","));
+        console.log("CSV Contents:", rows);
+        alert("✅ CSV imported successfully!\n(Open console to preview rows)");
+        // TODO: Send to backend via fetch/AJAX if needed
+      };
+      reader.readAsText(file);
+    });
+
+    // 📥 Handle PDF File
+    document.getElementById("importPDFInput").addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (!file || file.type !== "application/pdf") {
+        alert("❌ Please upload a valid PDF file.");
+        return;
+      }
+
+      console.log("Imported PDF:", file.name);
+      alert("✅ PDF imported successfully!\n(You can now send it to the backend)");
+      // TODO: Handle further actions like upload or preview
+    });
+  });
 </script>
+
+
 
 
 <!-- Styling for DataTable -->

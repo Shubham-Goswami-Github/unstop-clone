@@ -1265,11 +1265,10 @@ def register_college(request):
 
     return render(request, 'register_college.html')
 
-
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth.hashers import check_password
 from .models import College
-from mainapp.models import CandidateProfile
 
 def college_login_view(request):
     if request.method == 'POST':
@@ -1277,18 +1276,20 @@ def college_login_view(request):
         password = request.POST.get('password')
 
         try:
-            college = College.objects.get(email=email, password=password)
-            if college.is_approved:
-                request.session['college_id'] = college.id
-                request.session['college_name'] = college.name
-                return redirect('college_admin_dashboard')
+            college = College.objects.get(email=email)
+            if check_password(password, college.password):
+                if college.is_approved:
+                    request.session['college_id'] = college.id
+                    request.session['college_name'] = college.name
+                    return redirect('college_admin_dashboard')
+                else:
+                    messages.error(request, "Your college is not approved yet.")
             else:
-                messages.error(request, "Your college is not approved yet.")
+                messages.error(request, "Invalid email or password.")
         except College.DoesNotExist:
             messages.error(request, "Invalid email or password.")
     
     return render(request, 'college_admin_panel/college_login.html')
-
 
 def college_admin_dashboard(request):
     college_id = request.session.get('college_id')

@@ -12,17 +12,28 @@
 <div class="card shadow mb-4 border-0">
  <div class="card-header bg-white fw-semibold fs-5 border-bottom-0">
   <i class="fas fa-building me-2 text-primary"></i> Registered Companies
-  <div class="d-flex gap-2 float-end">
-    <button id="exportCSV" class="btn btn-sm btn-outline-success">
-      <i class="fas fa-file-csv me-1 text-success"></i> Export CSV
-    </button>
-    <button id="exportPDF" class="btn btn-sm btn-outline-danger">
-      <i class="fas fa-file-pdf me-1 text-danger"></i> Export PDF
-    </button>
-    <a href="{% url 'add_company' %}" class="btn btn-sm btn-dark-blue">
-      <i class="fas fa-plus me-1"></i> Add Company
-    </a>
-  </div>
+<div class="d-flex gap-2 float-end">
+  <button id="exportCSV" class="btn btn-sm btn-outline-success">
+    <i class="fas fa-file-csv me-1 text-success"></i> Export CSV
+  </button>
+  <button id="exportPDF" class="btn btn-sm btn-outline-danger">
+    <i class="fas fa-file-pdf me-1 text-danger"></i> Export PDF
+  </button>
+  <button id="importCSV" class="btn btn-sm btn-outline-primary">
+    <i class="fas fa-file-import me-1 text-primary"></i> Import CSV
+  </button>
+  <button id="importPDF" class="btn btn-sm btn-outline-warning">
+    <i class="fas fa-file-upload me-1 text-warning"></i> Import PDF
+  </button>
+  <a href="{% url 'add_company' %}" class="btn btn-sm btn-dark-blue">
+    <i class="fas fa-plus me-1"></i> Add Company
+  </a>
+</div>
+
+<!-- Hidden File Inputs -->
+<input type="file" id="importCSVInput" accept=".csv" style="display: none;">
+<input type="file" id="importPDFInput" accept="application/pdf" style="display: none;">
+
 </div>
 
 
@@ -171,7 +182,53 @@
       });
     }
   });
+
+
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const table = document.querySelector("#customDataTable");
+
+    // 🟢 Import Triggers
+    document.getElementById("importCSV").addEventListener("click", function () {
+      document.getElementById("importCSVInput").click();
+    });
+
+    document.getElementById("importPDF").addEventListener("click", function () {
+      document.getElementById("importPDFInput").click();
+    });
+
+    // 📥 Handle CSV Upload
+    document.getElementById("importCSVInput").addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const csvText = e.target.result;
+        const rows = csvText.split("\n").map(r => r.split(","));
+        console.log("📄 CSV Imported:", rows);
+        alert("✅ CSV imported successfully! Check console for preview.");
+        // TODO: Backend ya table inject karna ho to yahan logic daalein
+      };
+      reader.readAsText(file);
+    });
+
+    // 📥 Handle PDF Upload
+    document.getElementById("importPDFInput").addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (!file || file.type !== "application/pdf") {
+        alert("❌ Please upload a valid PDF.");
+        return;
+      }
+
+      console.log("📄 PDF Imported:", file.name);
+      alert("✅ PDF imported successfully! You can now send it to backend.");
+    });
+  });
 </script>
+
+
 
 <!-- Styling for DataTable -->
 <style>

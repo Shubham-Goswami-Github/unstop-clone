@@ -1,8 +1,6 @@
-
 {% load static %}
 {% block content %}
   {% include "navbar.html" %}
-
 
 <!-- Bootstrap & Icons -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -85,6 +83,22 @@
     margin-bottom: 20px;
     display: inline-block;
   }
+
+  .tag-badge {
+    background-color: #003366;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tag-badge i {
+    cursor: pointer;
+  }
+
 </style>
 
 <div class="form-container">
@@ -93,22 +107,19 @@
       <img src="{% static 'images/j1.webp' %}" alt="College Image">
     </div>
     <div class="form-right">
-    <div class="d-flex justify-content-between align-items-start mb-3">
-  <!-- Back button left -->
-  <a href="javascript:history.back()" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-1"></i>Back
-      </a>
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+          <i class="fas fa-arrow-left me-1"></i>Back
+        </a>
+        <img src="{% static 'images/unstop-logo.svg' %}" alt="Unstop Logo" style="height: 45px;">
+      </div>
 
-  <!-- Logo right -->
-  <img src="{% static 'images/unstop-logo.svg' %}" alt="Unstop Logo" style="height: 45px;">
-</div>
+      <div class="text-center mb-4">
+        <h3>Add College</h3>
+      </div>
 
-<!-- Heading center me neeche -->
-<div class="text-center mb-4">
-  <h3>Add College</h3>
-</div>
+     <form method="post" onsubmit="return handleSubmit(event)">
 
-      <form method="post">
         {% csrf_token %}
         <div class="row mb-3">
           <div class="col-md-6">
@@ -117,40 +128,54 @@
           </div>
           <div class="col-md-6">
             <label class="form-label">City</label>
-            <input type="text" name="city" class="form-control">
+            <input type="text" name="city" class="form-control" required>
           </div>
         </div>
 
         <div class="mb-3">
           <label class="form-label">Address</label>
-          <input type="text" name="address" class="form-control">
+          <input type="text" name="address" class="form-control" required>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label">Contact Number</label>
-            <input type="text" name="contact_number" class="form-control">
+            <input type="number" name="contact_number" class="form-control" required>
           </div>
           <div class="col-md-6">
             <label class="form-label">Email</label>
-            <input type="email" name="email" class="form-control">
+            <input type="email" name="email" class="form-control" required>
           </div>
         </div>
+
         <div class="mb-3">
-  <label class="form-label">Password</label>
-  <input type="password" name="password" class="form-control" required>
+          <label class="form-label">Password</label>
+          <input type="password" name="password" class="form-control" required>
+        </div>
+
+        <!-- ✅ FIXED -->
+       <div class="row mb-3">
+  <div class="col-md-6">
+    <label class="form-label">Domains Accepted</label>
+    <div class="input-group mb-2">
+      <input type="text" id="domainsAcceptedInput" class="form-control" placeholder="Add Domain" >
+      <button type="button" class="btn btn-outline-secondary" onclick="addDomain()">Add</button>
+    </div>
+    <div id="domainsTags" class="d-flex flex-wrap gap-2 mb-2"></div>
+    <input type="hidden" name="domains_accepted" id="domainsJson">
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Courses Accepted</label>
+    <div class="input-group mb-2">
+      <input type="text" id="coursesAcceptedInput" class="form-control" placeholder="Add Course" >
+      <button type="button" class="btn btn-outline-secondary" onclick="addCourse()">Add</button>
+    </div>
+    <div id="coursesTags" class="d-flex flex-wrap gap-2 mb-2"></div>
+    <input type="hidden" name="courses_accepted" id="coursesJson">
+  </div>
 </div>
 
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label class="form-label">Domains Accepted</label>
-            <input type="text" name="domains_accepted" class="form-control" placeholder="E.g. Engineering, Management">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Courses Accepted</label>
-            <input type="text" name="courses_accepted" class="form-control" placeholder="E.g. B.Tech, MBA">
-          </div>
-        </div>
 
         <div class="form-check mb-3">
           <input type="checkbox" class="form-check-input" name="is_approved" id="approvedCheck">
@@ -165,5 +190,122 @@
     </div>
   </div>
 </div>
+
+<script>
+ document.addEventListener("DOMContentLoaded", function () {
+  const form = document.querySelector("form");
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();  // Stop normal submission
+
+    // Get values
+    const rawDomains = document.getElementById("domainsAccepted").value;
+    const rawCourses = document.getElementById("coursesAccepted").value;
+
+    const domainsArray = rawDomains.split(",").map(s => s.trim()).filter(Boolean);
+    const coursesArray = rawCourses.split(",").map(s => s.trim()).filter(Boolean);
+
+    // Set hidden field values
+    document.getElementById("domainsJson").value = JSON.stringify(domainsArray);
+    document.getElementById("coursesJson").value = JSON.stringify(coursesArray);
+
+    // ✅ Delay submit to ensure DOM update
+    setTimeout(() => {
+      form.submit();
+    }, 50);  // Small delay (50ms) ensures fields update
+  });
+});
+
+</script>
+<script>
+  function handleSubmit(event) {
+    event.preventDefault(); // stop default form submission
+
+    // Get raw values
+    const rawDomains = document.getElementById("domainsAccepted").value;
+    const rawCourses = document.getElementById("coursesAccepted").value;
+
+    // Parse into array
+    const domainsArray = rawDomains.split(',').map(item => item.trim()).filter(Boolean);
+    const coursesArray = rawCourses.split(',').map(item => item.trim()).filter(Boolean);
+
+    // Set values in hidden fields
+    document.getElementById("domainsJson").value = JSON.stringify(domainsArray);
+    document.getElementById("coursesJson").value = JSON.stringify(coursesArray);
+
+    // ✅ Submit the form AFTER setting values
+    setTimeout(() => {
+      event.target.submit();
+    }, 0); // zero delay but ensures value update first
+
+    return false; // to prevent default submission
+  }
+</script>
+
+<script>
+  let domains = [];
+  let courses = [];
+
+  function updateHiddenFields() {
+    document.getElementById("domainsJson").value = JSON.stringify(domains);
+    document.getElementById("coursesJson").value = JSON.stringify(courses);
+  }
+
+  function renderTags(type) {
+    const container = document.getElementById(type === 'domain' ? 'domainsTags' : 'coursesTags');
+    const items = type === 'domain' ? domains : courses;
+
+    container.innerHTML = '';
+    items.forEach((item, index) => {
+      const tag = document.createElement('span');
+      tag.className = 'tag-badge';
+      tag.innerHTML = `${item} <i class="fas fa-times" onclick="removeTag('${type}', ${index})"></i>`;
+      container.appendChild(tag);
+    });
+
+    updateHiddenFields();
+  }
+
+  function addDomain() {
+    const input = document.getElementById('domainsAcceptedInput');
+    const value = input.value.trim();
+    if (value && !domains.includes(value)) {
+      domains.push(value);
+      input.value = '';
+      renderTags('domain');
+    }
+  }
+
+  function addCourse() {
+    const input = document.getElementById('coursesAcceptedInput');
+    const value = input.value.trim();
+    if (value && !courses.includes(value)) {
+      courses.push(value);
+      input.value = '';
+      renderTags('course');
+    }
+  }
+
+  function removeTag(type, index) {
+    if (type === 'domain') {
+      domains.splice(index, 1);
+      renderTags('domain');
+    } else {
+      courses.splice(index, 1);
+      renderTags('course');
+    }
+  }
+
+  // Populate hidden fields before form submit (already used in handleSubmit)
+  function handleSubmit(event) {
+    event.preventDefault();
+    updateHiddenFields();
+    setTimeout(() => {
+      event.target.submit();
+    }, 0);
+    return false;
+  }
+</script>
+
 
 {% endblock %}
