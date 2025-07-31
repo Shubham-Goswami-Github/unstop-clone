@@ -1,16 +1,8 @@
 {% extends "admin_panel/admin_base.html" %}
 {% load static %}
-
-{% block content %}
-
 {% csrf_token %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Register Page</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+{% block content %}
 
 
   <!-- Select2 CSS -->
@@ -407,7 +399,6 @@ datalist option {
 
 <div class="outer-wrapper">
   <div class="login-wrapper">
-    
     <!-- Left Section -->
     <div class="login-left">
       <img src="{% static 'images/F1.webp' %}" class="active" />
@@ -442,11 +433,9 @@ datalist option {
     </div>
   </div>
 </div>
-
 <script>
 
   let candidateData = {};  // ✅ Global object to hold form data across steps
-
 
   const images = document.querySelectorAll('.login-left img');
   let current = 0;
@@ -478,118 +467,139 @@ datalist option {
       icon.classList.remove("fa-eye-slash");
     }
   }
-function selectGender(elem, genderValue) {
-  const colorMap = {
-    Male: '#1e88e5',
-    Female: '#e91e63',
-    Other: '#9e9e9e'
-  };
-  document.querySelectorAll('.gender-box').forEach(el => {
-    el.classList.remove('selected');
-    el.style.borderColor = 'transparent';
-    el.style.backgroundColor = 'transparent';
-  });
-  elem.classList.add('selected');
-  elem.style.borderColor = colorMap[genderValue];
-  elem.style.backgroundColor = colorMap[genderValue] + '20'; // add transparency
-  document.getElementById('selectedGender').value = genderValue;
-}
-function showCandidateForm() {
-  const section = document.getElementById('registerSection');
-  section.innerHTML = `
-    <form id="candidateForm">
-     
 
-      <div class="form-row">
-        <div class="form-group">
-          <input type="text" id="firstName" name="first_name" placeholder="First Name *" required value="${candidateData.first_name || ''}">
-        </div>
-        <div class="form-group">
-          <input type="text" id="lastName" name="last_name" placeholder="Last Name *" required value="${candidateData.last_name || ''}">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <input type="email" id="email" name="email" placeholder="Email *" required value="${candidateData.email || ''}">
-      </div>
-      <div class="form-group">
-        <input type="tel" id="phone" name="phone" placeholder="Phone Number *" required value="${candidateData.phone || ''}">
-      </div>
-
-      <div class="gender-options" id="genderOptions">
-        <div class="gender-box" onclick="selectGender(this, 'Male')">
-          <i class="fa-solid fa-mars" style="color:#1e88e5; font-size: 20px;"></i><div>Male</div>
-        </div>
-        <div class="gender-box" onclick="selectGender(this, 'Female')">
-          <i class="fa-solid fa-venus" style="color:#e91e63; font-size: 20px;"></i><div>Female</div>
-        </div>
-        <div class="gender-box" onclick="selectGender(this, 'Other')">
-          <i class="fa-solid fa-genderless" style="color:#9e9e9e; font-size: 20px;"></i><div>Other</div>
-        </div>
-      </div>
-      <input type="hidden" id="selectedGender" name="gender" required value="${candidateData.gender || ''}">
-
-      <div class="form-row">
-        <div class="form-group password-group">
-          <input type="password" id="passwordField" name="password" placeholder="Password *" required value="${candidateData.password || ''}">
-          <i class="fa-solid fa-eye" onclick="togglePassword(this, 'passwordField')"></i>
-        </div>
-        <div class="form-group password-group">
-          <input type="password" id="confirmPassword" name="confirm_password" placeholder="Confirm Password *" required>
-          <i class="fa-solid fa-eye" onclick="togglePassword(this, 'confirmPassword')"></i>
-        </div>
-      </div>
-
-      <div class="checkbox-group">
-        <input type="checkbox" id="info" name="agreed_info" ${candidateData.agreed_info ? 'checked' : ''} required>
-        <label for="info">All information is correct</label>
-      </div>
-      <div class="checkbox-group">
-        <input type="checkbox" id="loop" name="stay_in_loop" ${candidateData.stay_in_loop ? 'checked' : ''}>
-        <label for="loop">Stay in the LOOP</label>
-      </div>
-
-      <div class="bottom-bar">
-     
-        <button type="submit" class="next-btn">Next</button>
-      </div>
-    </form>
-  `;
-
-  // Restore gender selection UI
-  setTimeout(() => {
-    if (candidateData.gender) {
-      const genderBoxes = document.querySelectorAll('.gender-box');
-      genderBoxes.forEach(box => {
-        if (box.textContent.trim() === candidateData.gender) {
-          selectGender(box, candidateData.gender);
-        }
-      });
-    }
-  }, 100);
-
-  // Submit → Save to candidateData → Go to next
-document.getElementById('candidateForm').addEventListener('submit', function (e) {
-  e.preventDefault();
-
-  candidateData.first_name = document.getElementById('firstName')?.value || '';
-  candidateData.last_name = document.getElementById('lastName')?.value || '';
-  candidateData.email = document.getElementById('email')?.value || '';
-  candidateData.phone = document.getElementById('phone')?.value || '';
-  candidateData.gender = document.getElementById('selectedGender')?.value || '';
-  candidateData.password = document.getElementById('passwordField')?.value || '';
-  candidateData.agreed_info = document.getElementById('info')?.checked || false;
-  candidateData.stay_in_loop = document.getElementById('loop')?.checked || false;
-
-  if (!candidateData.gender) {
-    alert('Please select your gender!');
-    return;
+  function selectGender(elem, genderValue) {
+    const colorMap = {
+      Male: '#1e88e5',
+      Female: '#e91e63',
+      Other: '#9e9e9e'
+    };
+    document.querySelectorAll('.gender-box').forEach(el => {
+      el.classList.remove('selected');
+      el.style.borderColor = 'transparent';
+      el.style.backgroundColor = 'transparent';
+    });
+    elem.classList.add('selected');
+    elem.style.borderColor = colorMap[genderValue];
+    elem.style.backgroundColor = colorMap[genderValue] + '20';
+    document.getElementById('selectedGender').value = genderValue;
   }
 
-  showUserTypeStep();
-});
+  function checkPasswordMatch() {
+    const password = document.getElementById('passwordField').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    const error = document.getElementById('passwordError');
 
-}
+    if (password && confirm && password !== confirm) {
+      error.style.display = 'block';
+    } else {
+      error.style.display = 'none';
+    }
+  }
+
+  function showCandidateForm() {
+    const section = document.getElementById('registerSection');
+    section.innerHTML = `
+      <form id="candidateForm">
+      
+
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" id="firstName" name="first_name" placeholder="First Name *" required value="${candidateData.first_name || ''}">
+          </div>
+          <div class="form-group">
+            <input type="text" id="lastName" name="last_name" placeholder="Last Name *" required value="${candidateData.last_name || ''}">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <input type="email" id="email" name="email" placeholder="Email *" required value="${candidateData.email || ''}">
+        </div>
+        <div class="form-group">
+          <input type="number" id="phone" name="phone" placeholder="Phone Number *" required value="${candidateData.phone || ''}">
+        </div>
+
+        <div class="gender-options" id="genderOptions">
+          <div class="gender-box" onclick="selectGender(this, 'Male')">
+            <i class="fa-solid fa-mars" style="color:#1e88e5; font-size: 20px;"></i><div>Male</div>
+          </div>
+          <div class="gender-box" onclick="selectGender(this, 'Female')">
+            <i class="fa-solid fa-venus" style="color:#e91e63; font-size: 20px;"></i><div>Female</div>
+          </div>
+          <div class="gender-box" onclick="selectGender(this, 'Other')">
+            <i class="fa-solid fa-genderless" style="color:#9e9e9e; font-size: 20px;"></i><div>Other</div>
+          </div>
+        </div>
+        <input type="hidden" id="selectedGender" name="gender" required value="${candidateData.gender || ''}">
+
+        <div class="form-row">
+          <div class="form-group password-group">
+            <input type="password" id="passwordField" name="password" placeholder="Password *" required value="${candidateData.password || ''}">
+            <i class="fa-solid fa-eye" onclick="togglePassword(this, 'passwordField')"></i>
+          </div>
+          <div class="form-group password-group">
+            <input type="password" id="confirmPassword" name="confirm_password" placeholder="Confirm Password *" required oninput="checkPasswordMatch()">
+            <i class="fa-solid fa-eye" onclick="togglePassword(this, 'confirmPassword')"></i>
+            <small id="passwordError" style="color: red; display: none;">Passwords do not match.</small>
+          </div>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="info" name="agreed_info" ${candidateData.agreed_info ? 'checked' : ''} required>
+          <label for="info">All information is correct</label>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="loop" name="stay_in_loop" ${candidateData.stay_in_loop ? 'checked' : ''}>
+          <label for="loop">Stay in the LOOP</label>
+        </div>
+
+        <div class="bottom-bar">
+          <div class="login-link">Already have an account? <a href="/login/">Login</a></div>
+          <button type="submit" class="next-btn">Next</button>
+        </div>
+      </form>
+    `;
+
+    setTimeout(() => {
+      if (candidateData.gender) {
+        const genderBoxes = document.querySelectorAll('.gender-box');
+        genderBoxes.forEach(box => {
+          if (box.textContent.trim() === candidateData.gender) {
+            selectGender(box, candidateData.gender);
+          }
+        });
+      }
+    }, 100);
+
+    document.getElementById('candidateForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const password = document.getElementById('passwordField')?.value || '';
+      const confirmPassword = document.getElementById('confirmPassword')?.value || '';
+
+      if (password !== confirmPassword) {
+        document.getElementById('passwordError').style.display = 'block';
+        return;
+      }
+
+      candidateData.first_name = document.getElementById('firstName')?.value || '';
+      candidateData.last_name = document.getElementById('lastName')?.value || '';
+      candidateData.email = document.getElementById('email')?.value || '';
+      candidateData.phone = document.getElementById('phone')?.value || '';
+      candidateData.gender = document.getElementById('selectedGender')?.value || '';
+      candidateData.password = password;
+      candidateData.agreed_info = document.getElementById('info')?.checked || false;
+      candidateData.stay_in_loop = document.getElementById('loop')?.checked || false;
+
+      if (!candidateData.gender) {
+        alert('Please select your gender!');
+        return;
+      }
+
+      showUserTypeStep();
+    });
+  }
+
 
 
 
@@ -665,36 +675,71 @@ function storeUserTypeFieldsAndNext() {
 
   const type = candidateData.user_type;
 
-  // ✅ Save fields BEFORE DOM changes
+  // === School Validation ===
   if (type === 'school') {
-    candidateData.school_name = document.getElementById('schoolName')?.value || '';
-    candidateData.current_class = parseInt(document.querySelector('.circle-option.selected')?.getAttribute('data-class')) || null;
-    candidateData.school_city = document.getElementById('schoolCity')?.value || '';
-    
+    const schoolName = document.getElementById('schoolName')?.value;
+    const schoolCity = document.getElementById('schoolCity')?.value;
+    const currentClass = document.querySelector('.circle-option.selected')?.getAttribute('data-class');
+
+    if (!schoolName || !schoolCity || !currentClass) {
+      alert("Please fill all required school fields!");
+      return;
+    }
+
+    candidateData.school_name = schoolName;
+    candidateData.current_class = parseInt(currentClass);
+    candidateData.school_city = schoolCity;
+
   }
 
+  // === College / Fresher Validation ===
   if (type === 'college' || type === 'fresher') {
-    candidateData.domain = document.querySelector('.circle-option-college.selected')?.getAttribute('data-domain') || '';
-    candidateData.course_name = document.getElementById('courseName')?.value || '';
-    candidateData.start_year = document.getElementById('startYear')?.value || '';
-    candidateData.end_year = document.getElementById('endYear')?.value || '';
-    candidateData.college_name = document.getElementById('collegeName')?.value || '';
-    candidateData.college_city = document.getElementById('collegeCity')?.value || '';
+    const collegeName = document.getElementById('collegeName')?.value;
+    const courseName = document.getElementById('courseName')?.value;
+    const startYear = document.getElementById('startYear')?.value;
+    const endYear = document.getElementById('endYear')?.value;
+    const collegeCity = document.getElementById('collegeCity')?.value;
+    const domain = document.querySelector('.circle-option-college.selected')?.getAttribute('data-domain');
+
+    if (!collegeName || !courseName || !startYear || !endYear || !collegeCity || !domain) {
+      alert("Please fill all required college/fresher fields!");
+      return;
+    }
+
+    candidateData.college_name = collegeName;
+    candidateData.course_name = courseName;
+    candidateData.start_year = startYear;
+    candidateData.end_year = endYear;
+    candidateData.college_city = collegeCity;
+    candidateData.domain = domain;
   }
 
+  // === Professional Validation ===
   if (type === 'professional') {
-    candidateData.experience_years = document.getElementById('experienceYears')?.value || '';
-    candidateData.current_job_role = document.getElementById('jobRole')?.value || '';
-    candidateData.current_company = document.getElementById('company')?.value || '';
-    candidateData.job_start_year = document.getElementById('jobStartYear')?.value || '';
-    candidateData.job_end_year = document.getElementById('jobEndYear')?.value || '';
-    candidateData.job_city = document.getElementById('jobCity')?.value || '';
+    const experience = document.getElementById('experienceYears')?.value;
+    const jobRole = document.getElementById('jobRole')?.value;
+    const company = document.getElementById('company')?.value;
+    const startYear = document.getElementById('jobStartYear')?.value;
+    const endYear = document.getElementById('jobEndYear')?.value;
+    const jobCity = document.getElementById('jobCity')?.value;
+
+    if (!experience || !jobRole || !company || !startYear || !endYear || !jobCity) {
+      alert("Please fill all required professional fields!");
+      return;
+    }
+
+    candidateData.experience_years = experience;
+    candidateData.current_job_role = jobRole;
+    candidateData.current_company = company;
+    candidateData.job_start_year = startYear;
+    candidateData.job_end_year = endYear;
+    candidateData.job_city = jobCity;
   }
 
   console.log("✅ USER TYPE STEP FINAL DATA BEFORE CAREER:", candidateData);
-
   showCareerPurposeStep();
 }
+
 function showSchoolFields() {
   if (!dropdownData || !dropdownData.schools) {
     console.warn("Dropdown data not loaded yet.");
@@ -791,6 +836,16 @@ function showCollegeFields() {
       >${c.name}</option>`;
   }).join('');
 
+  // Generate years
+  const currentYear = new Date().getFullYear();
+  const yearOptions = (selectedVal) => {
+    return Array.from({ length: (currentYear + 5 - 2010 + 1) }, (_, i) => {
+      const year = 2010 + i;
+      const selected = selectedVal == year ? 'selected' : '';
+      return `<option value="${year}" ${selected}>${year}</option>`;
+    }).join('');
+  };
+
   document.getElementById('userDetailsFields').innerHTML = `
 
     <!-- College Name Dropdown -->
@@ -814,17 +869,25 @@ function showCollegeFields() {
     <!-- Start and End Year -->
     <div class="form-row mb-3" style="display: flex; gap: 10px;">
       <div class="form-group" style="flex: 1;">
-        <input type="text" id="startYear" name="start_year" placeholder="Start Year *" value="${startYear}" class="form-control">
+        <label for="startYear" style="font-weight: 500; margin-bottom: 6px;">Start Year <span style="color: red;">*</span></label>
+        <select id="startYear" name="start_year" class="form-control" required style="padding: 10px; border-radius: 6px;" onchange="validateYearRange()">
+          <option value="">Select Start Year</option>
+          ${yearOptions(startYear)}
+        </select>
       </div>
       <div class="form-group" style="flex: 1;">
-        <input type="text" id="endYear" name="end_year" placeholder="End Year *" value="${endYear}" class="form-control">
+        <label for="endYear" style="font-weight: 500; margin-bottom: 6px;">End Year <span style="color: red;">*</span></label>
+        <select id="endYear" name="end_year" class="form-control" required style="padding: 10px; border-radius: 6px;" onchange="validateYearRange()">
+          <option value="">Select End Year</option>
+          ${yearOptions(endYear)}
+        </select>
       </div>
     </div>
 
     <!-- College City -->
     <div class="form-group mb-3">
       <label for="collegeCity" style="font-weight: 500; margin-bottom: 6px;">College City <span style="color: red;">*</span></label>
-      <input type="text" id="collegeCity" name="college_city" value="${collegeCity}" class="form-control" placeholder="College City">
+      <input type="text" id="collegeCity" name="college_city" value="${collegeCity}" class="form-control" placeholder="College City" required>
     </div>
 
     <!-- Domain Circles -->
@@ -840,6 +903,18 @@ function showCollegeFields() {
     if (collegeName) handleCollegeChange();
     if (domain) updateCourseDropdown();
   }, 0);
+}
+
+// Year validation
+function validateYearRange() {
+  const start = parseInt(document.getElementById("startYear").value);
+  const end = parseInt(document.getElementById("endYear").value);
+
+  if (!isNaN(start) && !isNaN(end) && start > end) {
+    alert("Start Year cannot be greater than End Year.");
+    document.getElementById("startYear").value = "";
+    document.getElementById("endYear").value = "";
+  }
 }
 
 function handleCollegeChange() {
@@ -912,17 +987,36 @@ function showProfessionalFields() {
   const jobEndYear = candidateData.job_end_year || '';
   const jobCity = candidateData.job_city || '';
 
+  const currentYear = new Date().getFullYear();
+
+  const experienceOptions = Array.from({ length: 21 }, (_, i) => {
+    const selected = experienceYears == i ? 'selected' : '';
+    return `<option value="${i}" ${selected}>${i} year${i === 1 ? '' : 's'}</option>`;
+  }).join('');
+
+  const yearOptions = (selectedVal) => {
+    return Array.from({ length: (currentYear + 5 - 2010 + 1) }, (_, i) => {
+      const year = 2010 + i;
+      const selected = selectedVal == year ? 'selected' : '';
+      return `<option value="${year}" ${selected}>${year}</option>`;
+    }).join('');
+  };
+
   const companyOptions = dropdownData.companies.map(c => {
-  const name = typeof c === 'string' ? c : c.name;
-  const city = typeof c === 'string' ? '' : c.city || '';
-  const id = typeof c === 'string' ? '' : c.id || '';
-  const selected = name === company ? 'selected' : '';
-  return `<option value="${name}" data-city="${city}" data-id="${id}" ${selected}>${name}</option>`;
-}).join('');
+    const name = typeof c === 'string' ? c : c.name;
+    const city = typeof c === 'string' ? '' : c.city || '';
+    const id = typeof c === 'string' ? '' : c.id || '';
+    const selected = name === company ? 'selected' : '';
+    return `<option value="${name}" data-city="${city}" data-id="${id}" ${selected}>${name}</option>`;
+  }).join('');
 
   document.getElementById('userDetailsFields').innerHTML = `
     <div class="form-group">
-      <input type="text" id="experienceYears" name="experience_years" placeholder="Experience (in years) *" value="${experienceYears}">
+      <label for="experienceYears" style="margin-bottom: 6px; font-weight: 500;">Experience (in years) <span style="color: red;">*</span></label>
+      <select id="experienceYears" name="experience_years" class="form-control">
+        <option value="">Select Experience</option>
+        ${experienceOptions}
+      </select>
     </div>
 
     <div class="form-group">
@@ -938,17 +1032,24 @@ function showProfessionalFields() {
     </div>
 
     <div class="form-row">
-      <div class="form-group">
-        <input type="text" id="jobStartYear" name="job_start_year" placeholder="Start Year *" value="${jobStartYear}">
+      <div class="form-group" style="margin-right: 10px;">
+        <label for="jobStartYear" style="margin-bottom: 6px; font-weight: 500;">Start Year <span style="color: red;">*</span></label>
+        <select id="jobStartYear" name="job_start_year" class="form-control" onchange="validateProfessionalYearRange()">
+          <option value="">Select Start Year</option>
+          ${yearOptions(jobStartYear)}
+        </select>
       </div>
       <div class="form-group">
-        <input type="text" id="jobEndYear" name="job_end_year" placeholder="End Year *" value="${jobEndYear}">
+        <label for="jobEndYear" style="margin-bottom: 6px; font-weight: 500;">End Year <span style="color: red;">*</span></label>
+        <select id="jobEndYear" name="job_end_year" class="form-control" onchange="validateProfessionalYearRange()">
+          <option value="">Select End Year</option>
+          ${yearOptions(jobEndYear)}
+        </select>
       </div>
     </div>
 
     <div class="form-group">
       <input type="text" id="jobCity" name="job_city" placeholder="Job City *" value="${jobCity}">
-
     </div>
   `;
 
@@ -988,15 +1089,22 @@ function handleCompanyChange()
 
 }
 
+function validateProfessionalYearRange() {
+  const start = parseInt(document.getElementById("jobStartYear").value);
+  const end = parseInt(document.getElementById("jobEndYear").value);
+
+  if (!isNaN(start) && !isNaN(end) && start > end) {
+    alert("Start Year cannot be greater than End Year.");
+    document.getElementById("jobStartYear").value = "";
+    document.getElementById("jobEndYear").value = "";
+  }
+}
 
 
 
 
 
-
-
-
- function showCareerPurposeStep() {
+function showCareerPurposeStep() {
   const section = document.getElementById('registerSection');
   const savedPurpose = candidateData.career_purpose?.replace(/_/g, ' ')?.toLowerCase() || '';
 
@@ -1022,7 +1130,7 @@ function handleCompanyChange()
     <p>Plan Your Career</p>
 
     <label style="font-weight: bold; display: block; margin-bottom: 14px; margin-top: 20px;">Purpose *</label>
-    <div class="form-row" style="flex-wrap: wrap; gap: 14px;" id="purposeOptions">
+    <div class="form-row" style="flex-wrap: wrap; gap: 14px;" id="purposeOptions" required>
       ${purposeHTML}
     </div>
 
@@ -1036,13 +1144,22 @@ function handleCompanyChange()
     </div>
   `;
 
-  // ✅ Attach event listener after DOM render
+  // ✅ Finish button validation before submission
   document.getElementById('finishBtn').addEventListener('click', function (e) {
     e.preventDefault();
+
+    const selectedCard = document.querySelector('.career-purpose-card.selected');
+    if (!selectedCard) {
+      alert("Please select your career purpose before continuing.");
+      return;
+    }
+
+    const selectedLabel = selectedCard.innerText.trim().toLowerCase();
+    candidateData.career_purpose = selectedLabel.replace(/ /g, '_');
+
     completeRegistration();
   });
 }
-
 
 
 
@@ -1134,6 +1251,5 @@ fetch('/fetch-dropdown-data/')
 
 </body>
 </html>
-
 
 {% endblock %}

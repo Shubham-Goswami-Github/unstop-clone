@@ -24,6 +24,10 @@ urlpatterns = [
     path('', views.home_view, name='home'),  # 👈 root URL
     path('signup/', views.signup_view, name='signup'),
     path('login/', views.login_view, name='login'),
+
+    path('forgot-password/', views.forgot_password, name='forgot_password'),
+    path('reset-password/', views.reset_password, name='reset_password'),
+
     path('logout/', views.logout_view, name='logout'),
     path('explore/', views.explore_sections_view, name='explore-sections'),
     path('slogan/', views.slogan_view, name='slogan'),
@@ -168,7 +172,10 @@ urlpatterns = [
     path('user-panel/update-information/', views.edit_candidate_user, name='update_information'),
     path('user-panel/delete-applied-internship/<int:pk>/', views.delete_applied_internship, name='delete_applied_internship'),
     path('user-panel/delete-applied-job/<int:pk>/', views.delete_applied_job, name='delete_applied_job'),
-    path('user-panel/delete-applied-competition/<int:comp_id>/', views.delete_applied_competition, name='delete_applied_competition'),
+    path('user-panel/delete-applied-competition/<int:pk>/', views.delete_applied_competition, name='delete_applied_competition'),
+    path('user-panel/view-applied-competition/<int:pk>/', views.view_applied_competition_user, name='view_applied_competition_user'),
+
+
     path('about-us/', views.about_us, name='about_us'),
   
 ]

@@ -2142,14 +2142,22 @@ def delete_applied_job(request, pk):
     job.delete()
     return redirect('applied_jobs_list')
 
+def delete_applied_competition(request, pk):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('user_login')
 
-from .models import CompetitionsApplied
+    try:
+        candidate = CandidateProfile.objects.get(id=user_id)
+        comp = get_object_or_404(CompetitionsApplied, application_id=pk, candidate=candidate)
+        comp.delete()
+        messages.success(request, "Applied competition deleted successfully.")
+    except CandidateProfile.DoesNotExist:
+        messages.error(request, "Candidate not found.")
 
-def delete_applied_competition(request, user_id):
-    applied_obj = get_object_or_404(CompetitionsApplied, id=user_id)
-    applied_obj.delete()
-    messages.success(request, "Applied competition deleted successfully.")
-    return redirect('applied_competitions')  # your list view name
+    return redirect('applied_competitions_list')
+
+
 
 from django.shortcuts import render, get_object_or_404
 from .models import CandidateProfile, AppliedForJob
@@ -2180,4 +2188,67 @@ from django.shortcuts import render
 def about_us(request):
     return render(request, 'about_us.html')
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from mainapp.models import CandidateProfile
 
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip().lower()
+
+        try:
+            candidate = CandidateProfile.objects.get(email=email)
+            request.session['reset_email'] = email  # Temporarily store email
+            return redirect('reset_password')
+        except CandidateProfile.DoesNotExist:
+            messages.error(request, "Email not found. Please enter a registered email.")
+
+    return render(request, 'forgot_password.html')
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.hashers import make_password
+from mainapp.models import CandidateProfile
+
+def reset_password(request):
+    email = request.session.get('reset_email')
+    if not email:
+        messages.error(request, "Session expired or invalid access.")
+        return redirect('forgot_password')
+
+    try:
+        candidate = CandidateProfile.objects.get(email=email)
+    except CandidateProfile.DoesNotExist:
+        messages.error(request, "User not found.")
+        return redirect('forgot_password')
+
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if new_password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+            return redirect('reset_password')
+
+        candidate.password = make_password(new_password)
+        candidate.save()
+
+        messages.success(request, "Password reset successful. You can now log in.")
+        return redirect('login')
+
+    return render(request, 'reset_password.html')
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import CompetitionsApplied, CandidateProfile
+
+def view_applied_competition_user(request, pk):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('user_login')
+
+    candidate = get_object_or_404(CandidateProfile, id=user_id)
+    comp = get_object_or_404(CompetitionsApplied, application_id=pk, candidate=candidate)
+
+    return render(request, 'user_dashboard_panel/view_applied_competition.html', {
+        'comp': comp
+    })
