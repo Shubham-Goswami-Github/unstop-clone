@@ -431,13 +431,26 @@ datalist option {
 
         <div class="bottom-bar">
           <div class="login-link">Already have an account? <a href="/login/">Login</a></div>
-          <button class="next-btn" onclick="showCandidateForm()">Next</button>
+          <button class="next-btn" onclick="goToNextStep()">Next</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 <script>
+  function goToNextStep() {
+    const candidateSelected = document.getElementById('candidateCard').classList.contains('selected');
+    const recruiterSelected = document.getElementById('recruiterCard').classList.contains('selected');
+    if (!candidateSelected && !recruiterSelected) {
+      alert('Please select Candidate or Recruiter to continue.');
+      return;
+    }
+    if (candidateSelected) {
+      showCandidateForm();
+    } else {
+      window.location.href = '/register-recruiter/';
+    }
+  }
 
   let candidateData = {};  // ✅ Global object to hold form data across steps
 
@@ -504,9 +517,20 @@ datalist option {
   function showCandidateForm() {
     const section = document.getElementById('registerSection');
     section.innerHTML = `
-      <form id="candidateForm">
-        <h2> Sign Up as Candidate</h2>
-
+      <form id="candidateForm" enctype="multipart/form-data">
+        <h2>Sign Up as Candidate</h2>
+        <div class="form-group" style="margin-bottom: 22px;">
+          <label style="font-weight: 500; margin-bottom: 8px; display: block;">Profile Photo <span style="color: #1a73e8;">(optional)</span></label>
+          <div style="display: flex; align-items: center; gap: 18px;">
+            <div id="photoPreviewWrapper" style="width: 60px; height: 60px; border-radius: 50%; background: #f5f5f5; border: 2px solid #e0e0e0; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <img id="photoPreview" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            </div>
+            <label for="profilePhoto" style="background: #fff; color: #1a73e8; border: 2px solid #1a73e8; border-radius: 20px; padding: 8px 22px; font-weight: 500; cursor: pointer; transition: background 0.2s, color 0.2s; display: inline-block;">
+              <i class="fa fa-upload"></i> Choose Photo
+              <input type="file" id="profilePhoto" name="profile_photo" accept="image/*" style="display: none;" />
+            </label>
+          </div>
+        </div>
         <div class="form-row">
           <div class="form-group">
             <input type="text" id="firstName" name="first_name" placeholder="First Name *" required value="${candidateData.first_name || ''}">
@@ -564,7 +588,9 @@ datalist option {
       </form>
     `;
 
+
     setTimeout(() => {
+      // Gender preselect
       if (candidateData.gender) {
         const genderBoxes = document.querySelectorAll('.gender-box');
         genderBoxes.forEach(box => {
@@ -573,19 +599,30 @@ datalist option {
           }
         });
       }
+      // Photo preview logic
+      const photoInput = document.getElementById('profilePhoto');
+      const photoPreview = document.getElementById('photoPreview');
+      photoInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            photoPreview.src = e.target.result;
+          };
+          reader.readAsDataURL(this.files[0]);
+        } else {
+          photoPreview.src = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+        }
+      });
     }, 100);
 
     document.getElementById('candidateForm').addEventListener('submit', function (e) {
       e.preventDefault();
-
       const password = document.getElementById('passwordField')?.value || '';
       const confirmPassword = document.getElementById('confirmPassword')?.value || '';
-
       if (password !== confirmPassword) {
         document.getElementById('passwordError').style.display = 'block';
         return;
       }
-
       candidateData.first_name = document.getElementById('firstName')?.value || '';
       candidateData.last_name = document.getElementById('lastName')?.value || '';
       candidateData.email = document.getElementById('email')?.value || '';
@@ -594,12 +631,15 @@ datalist option {
       candidateData.password = password;
       candidateData.agreed_info = document.getElementById('info')?.checked || false;
       candidateData.stay_in_loop = document.getElementById('loop')?.checked || false;
-
+      // Save profile photo file in candidateData
+      const fileInput = document.getElementById('profilePhoto');
+      if (fileInput && fileInput.files.length > 0) {
+        candidateData.profile_photo = fileInput.files[0];
+      }
       if (!candidateData.gender) {
         alert('Please select your gender!');
         return;
       }
-
       showUserTypeStep();
     });
   }
@@ -1204,27 +1244,26 @@ function getCSRFToken() {
   const getChecked = (selector) => document.querySelector(selector)?.checked || false;
   const getAttr = (selector, attr) => document.querySelector(selector)?.getAttribute(attr) || '';
 
-  // Merge all values into formData
-  const formData = { ...candidateData };
-
-
-  console.log('📤 Sending to backend:', formData);
-
+  // Use FormData for file upload
+  const formData = new FormData();
+  for (const key in candidateData) {
+    if (candidateData.hasOwnProperty(key)) {
+      formData.append(key, candidateData[key]);
+    }
+  }
   fetch('/submit-candidate-form/', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
       'X-CSRFToken': getCSRFToken()
     },
-    body: JSON.stringify(formData)
+    body: formData
   })
   .then(res => res.json())
   .then(data => {
     if (data.status === 'success') {
-      alert('Registration successful!');
       window.location.href = '/login/';
     } else {
-      alert('Error: ' + data.message);
+      alert('Registration failed: ' + (data.message || 'Unknown error.'));
     }
   })
   .catch(error => {
@@ -1241,11 +1280,8 @@ fetch('/fetch-dropdown-data/')
   .then(response => response.json())
   .then(data => {
     dropdownData = data;
-
     console.log("Dropdown data loaded:", dropdownData);
-
-    // ✅ Call this only after dropdownData is ready
-    showCandidateForm(); // or showSchoolFields() or showCollegeFields()
+    // Do not auto showCandidateForm()
   })
   .catch(error => {
     console.error('Error loading dropdown data:', error);

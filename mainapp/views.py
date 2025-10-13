@@ -76,7 +76,13 @@ import json
 def submit_candidate_form(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
+            # If multipart, use request.POST and request.FILES
+            if request.content_type.startswith('multipart/form-data'):
+                data = request.POST
+                files = request.FILES
+            else:
+                data = json.loads(request.body)
+                files = None
             print("✅ Incoming Candidate Data:", data)
 
             # Foreign key IDs (can be None)
@@ -84,39 +90,38 @@ def submit_candidate_form(request):
             college_id = data.get('college_id') or None
             company_id = data.get('company_id') or None
 
+            # Handle checkboxes (may come as 'on', 'true', True, or '1')
+            def parse_bool(val):
+                return str(val).lower() in ['true', 'on', '1']
+
             # Create candidate profile
-            candidate = CandidateProfile.objects.create(
+            candidate = CandidateProfile(
                 first_name = data.get('first_name', ''),
                 last_name = data.get('last_name', ''),
                 email = data.get('email', ''),
                 phone = data.get('phone', ''),
                 gender = data.get('gender', ''),
                 password = make_password(data.get('password', '')),
-                agreed_info = data.get('agreed_info', False),
-                stay_in_loop = data.get('stay_in_loop', False),
+                agreed_info = parse_bool(data.get('agreed_info', False)),
+                stay_in_loop = parse_bool(data.get('stay_in_loop', False)),
                 user_type = data.get('user_type', ''),
-                
                 # Name fields for easy lookup
                 school_name = data.get('school_name', ''),
                 college_name = data.get('college_name', ''),
                 current_company = data.get('current_company', ''),
-
                 # Foreign Key relations
                 school_id = school_id,
                 college_id = college_id,
                 company_id = company_id,
-
                 # School-specific fields
                 current_class = data.get('current_class') or None,
                 school_city = data.get('school_city', ''),
-
                 # College/Fresher fields
                 domain = data.get('domain', ''),
                 course_name = data.get('course_name', ''),
                 start_year = data.get('start_year', ''),
                 end_year = data.get('end_year', ''),
                 college_city = data.get('college_city', ''),
-
                 # Professional fields
                 experience_years = data.get('experience_years', ''),
                 current_job_role = data.get('current_job_role', ''),
@@ -124,6 +129,10 @@ def submit_candidate_form(request):
                 job_end_year = data.get('job_end_year', ''),
                 job_city = data.get('job_city', ''),
             )
+            # Handle profile photo
+            if files and files.get('profile_photo'):
+                candidate.profile_photo = files['profile_photo']
+            candidate.save()
 
             # Career Purpose
             purpose_text = data.get('career_purpose', '')
