@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: unstop-clone
+    env: python
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
+    startCommand: gunicorn unstop_clone.wsgi:application
+    envVars:
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        generateValue: true
+      - key: MYSQL_DATABASE
+        value: railway
+      - key: MYSQL_USER
+        value: root
+      - key: MYSQL_PASSWORD
+        value: MzXBdnTcxbetPpUbpdzUuSHxEHTcPFHT
+      - key: MYSQL_HOST
+        value: yamabiko.proxy.rlwy.net
+      - key: MYSQL_PORT
+        value: 39157
+      - key: ALLOWED_HOSTS
+        value: .onrender.com
