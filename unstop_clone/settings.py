@@ -72,9 +72,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'railway',  # database name from Railway
         'USER': 'root',  # your username
-        'PASSWORD': 'HnHaZLvDYKTcuxYJdOhqXptqBBaDCaqW',  # your password
-        'HOST': 'switchyard.proxy.rlwy.net',  # Railway MySQL host
-        'PORT': '17343',  # Railway MySQL port
+        'PASSWORD': 'MzXBdnTcxbetPpUbpdzUuSHxEHTcPFHT',  # your password
+        'HOST': 'yamabiko.proxy.rlwy.net',  # Railway MySQL host
+        'PORT': '39157',  # Railway MySQL port
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
