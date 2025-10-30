@@ -1,25 +1,23 @@
 import os
 from pathlib import Path
 import pymysql
+from dotenv import load_dotenv
 
-# 👇 Required for PyMySQL (since Railway uses MySQL)
+# ✅ Load environment variables (for Vercel / local)
+load_dotenv()
+
+# ✅ Required for PyMySQL (since Railway uses MySQL)
 pymysql.install_as_MySQLdb()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9+t6cnrm6h5f2=#fgbacjeft$$8=cl$**=t==$-__8fw%fn6-$'
+# ✅ Secret key & debug via env (never hardcode in production)
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-local-key")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True  # Set to False before final deployment
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
-# 👇 Add your Railway domain here
-ALLOWED_HOSTS = [
-    'secure-happiness.up.railway.app',
-    '127.0.0.1',
-    'localhost',
-]
+# ✅ Hosts allowed (add vercel domain here)
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost,secure-happiness.up.railway.app").split(",")
 
 # Login URL
 LOGIN_URL = '/login/'
@@ -37,6 +35,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ Move whitenoise just below security
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -65,22 +64,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'unstop_clone.wsgi.application'
 
-
-# ✅ MySQL Database Configuration (Railway)
+# ✅ MySQL Database Configuration (Reads from env vars if available)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'railway',  # database name from Railway
-        'USER': 'root',  # your username
-        'PASSWORD': 'MzXBdnTcxbetPpUbpdzUuSHxEHTcPFHT',  # your password
-        'HOST': 'yamabiko.proxy.rlwy.net',  # Railway MySQL host
-        'PORT': '39157',  # Railway MySQL port
+        'NAME': os.getenv('MYSQL_DATABASE', 'railway'),
+        'USER': os.getenv('MYSQL_USER', 'root'),
+        'PASSWORD': os.getenv('MYSQL_PASSWORD', 'MzXBdnTcxbetPpUbpdzUuSHxEHTcPFHT'),
+        'HOST': os.getenv('MYSQL_HOST', 'yamabiko.proxy.rlwy.net'),
+        'PORT': os.getenv('MYSQL_PORT', '39157'),
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
     }
 }
-
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -90,28 +87,22 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = False
 
-
-# 🔵 Static files (CSS, JS, Images)
+# ✅ Static files (CSS, JS, Images)
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-
-# 👇 Add this line for collectstatic
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# ✅ WhiteNoise compressed/static caching
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# 🟢 Media files (uploads)
+# ✅ Media files (uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
